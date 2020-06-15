@@ -1,0 +1,11 @@
+{
+  "name": "backend_semillero",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": ""
+  },
+  "author": "Eloy Gonzalez",
+  "license": "ISC"
+}
