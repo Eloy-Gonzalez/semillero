@@ -1,0 +1,13 @@
+{
+	"databases": {
+		"semillero": {
+			"path": "postgres://desarrollo:desarrollo@localhost:5432/semillero",
+			"pool": {
+		    "max": 2,
+		    "min": 0,
+		    "acquire": 30000,
+		    "idle": 3000
+			}
+		}
+	}
+}
