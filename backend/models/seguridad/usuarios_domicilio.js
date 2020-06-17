@@ -2,7 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define('usuarios_domicilio', {
     id_usuario: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     },
     telefono_habitacional: {
     	type: DataTypes.STRING,

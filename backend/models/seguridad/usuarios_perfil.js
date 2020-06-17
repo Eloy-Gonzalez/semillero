@@ -1,8 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
-	 return sequelize.define('usuarios_perfil', {
+	return sequelize.define('usuarios_perfil', {
     id_usuario: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      primaryKey: true
     },
     cedula: {
     	type: DataTypes.STRING,
@@ -29,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     	allowNull: false
     },
     fecha_nacimiento: {
-    	type: DataTypes.DATE,
+    	type: DataTypes.DATEONLY,
     	allowNull: false
     },
     version: {

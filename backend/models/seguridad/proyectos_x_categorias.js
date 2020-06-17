@@ -15,5 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false,
     createdAt: false,
     updatedAt: false,
+    indexes: [
+      // Create a unique index on email
+      {
+        unique: true,
+        fields: ['id_proyecto', 'id_categoria']
+      },
+    ]
   });
 };

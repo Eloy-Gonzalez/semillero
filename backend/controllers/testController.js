@@ -6,6 +6,7 @@ const db = require('../config/databases.js');
 
 /* Model */
 const Usuarios = db.Usuarios;
+const ProyectosXCategorias = db.ProyectosXCategorias;
 
 /* Faker */
 let faker = require('faker');
@@ -52,5 +53,16 @@ exports.generatePassword = (req, res) => {
 	password = bcrypt.hashSync(password, 8);
 	res.status(200).json({
 		password : password
+	})
+}
+
+exports.insertProyectosMasivo = (req, res) => {
+	const data = [1,2]
+
+	ProyectosXCategorias.bulkCreate({id_categoria : data})
+	.then(proyeto => {
+		console.log(proyecto);
+	}).catch(err => {
+		res.status(200).json(err);
 	})
 }

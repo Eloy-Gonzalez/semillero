@@ -27,5 +27,8 @@ db.ProyectosXCategorias = require('../models/seguridad/proyectos_x_categorias')(
 db.Usuarios	= require('../models/seguridad/usuarios')(db['semillero'], Sequelize);
 db.UsuariosPerfil = require('../models/seguridad/usuarios_perfil')(db['semillero'], Sequelize);
 db.UsuariosDomicilio = require('../models/seguridad/usuarios_domicilio')(db['semillero'], Sequelize);
+db.Estados = require('../models/public/estados')(db['semillero'], Sequelize);
+db.Municipios = require('../models/public/municipios')(db['semillero'], Sequelize);
+db.Parroquias = require('../models/public/parroquias')(db['semillero'], Sequelize);
 
 module.exports = db;

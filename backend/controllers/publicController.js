@@ -28,6 +28,9 @@ const ProyectosXCategorias = db.ProyectosXCategorias;
 const Usuarios = db.Usuarios;
 const UsuariosPerfil = db.UsuariosPerfil;
 const UsuariosDomicilio = db.UsuariosDomicilio;
+const Estados = db.Estados;
+const Municipios = db.Municipios;
+const Parroquias = db.Parroquias;
 
 /* API REGISTER
 	@params username string, email string, password string, nacionalidad string, cedula string
@@ -38,7 +41,27 @@ exports.register = (req, res) => {
 	console.log('func -> Register');
 	if (req.body.params != undefined) {
 		// Añadir el resto de parametros emitidos por el cliente!!
-		const { username, password, id_pregunta, respuesta_seguridad } = req.body.params;
+		const { 
+			username, 
+			password, 
+			id_pregunta, 
+			respuesta_seguridad, 
+			cedula,
+			primer_nombre,
+			segundo_nombre,
+			primer_apellido,
+			segundo_apellido,
+			genero,
+			fecha_nacimiento,
+			telefono_habitacional,
+			telefono_personal,
+			id_parroquia,
+			direccion_habitacional,
+			nombre,
+			descripcion,
+			url_video
+ 		} = req.body.params;
+		
 		db.semillero.query("\
 			SELECT\
 				count(*)\
@@ -49,14 +72,16 @@ exports.register = (req, res) => {
 		).then(result => {
 			if (result[0].count == 0) {
 				var passwordHashed = bcrypt.hashSync(password, 8);
+				// Inicio de proceso transaccional
 				Usuarios.create({
 				  username : username,
 				  password : passwordHashed,
 				  id_pregunta : id_pregunta,
 				  respuesta_seguridad : respuesta_seguridad
 				}).then(user => {
+					console.log('Step 1 -> success');
 					// Usuarios Perfil
-					UsuariosPerfil({
+					UsuariosPerfil.create({
 						id_usuario : user.dataValues.id,
 						cedula : cedula,
   					primer_nombre : primer_nombre,
@@ -66,22 +91,25 @@ exports.register = (req, res) => {
   					genero : genero,
 					  fecha_nacimiento : fecha_nacimiento,
 					}).then(user2 => {
+						console.log('Step 2 -> success');
 						// Usuarios Domicilio
-						UsuariosDomicilio({
-							id_usuario: user2.dataValues.id_usuario,
-  						telefono_habitacional: telefono_habitacional,
+						UsuariosDomicilio.create({
+							id_usuario : user2.dataValues.id_usuario,
+  						telefono_habitacional : telefono_habitacional,
   						telefono_personal : telefono_personal,
   						id_parroquia : id_parroquia,
   						direccion_habitacional : direccion_habitacional,
 						}).then(user3 => {
+							console.log('Step 3 -> success');
 							// Proyecto
-							Proyectos({
+							Proyectos.create({
 								id_usuario : user3.dataValues.id_usuario,
 								nombre : nombre,
 								descripcion : descripcion,
 								url_video : url_video
-							}).then(Proyecto => {
-								// proyectos_x_categorias
+							}).then(proyecto => {
+								console.log('Step 4 -> success');
+								// Proyectos_x_categorias
 								// Obtener el id del proyecto
 								// id_categoria es un array, ¿Como se inserta un array usando sequelize?
 								// ProyectosXCategorias({
@@ -92,10 +120,10 @@ exports.register = (req, res) => {
 								// }).catch(err => {
 								// 	res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
 								// })
+								res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 							}).catch(err => {
 								res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
 							})
-							res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 						}).catch(err => {
 							res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
 						});
@@ -234,85 +262,85 @@ exports.login = (req, res) => {
 // 	}
 // };
 
-/* API PAISES
-	@params nothing
-	@return object
-*/
-exports.paises = (req, res) => {
-	console.log('func -> Paises');
-
-	db.nomina.query("\
-		SELECT id_pais, abreviatura, cod_pais, nombre\
-		FROM public.pais\
-		ORDER BY id_pais\
-	", { type: db.nomina.QueryTypes.SELECT})
-	.then(result => {
-		if (result !== null) {
-			res.status(200).json(result)
-		} else {
-			res.status(200).json(null)
-		}
-	});
-};
-
 /* API ESTADOS
-	@params nothing
+	@params nothing or string
 	@return object
 */
 exports.estados = (req, res) => {
 	console.log('func -> Estados');
-
-	db.nomina.query("\
-		SELECT id_estado, nombre\
-  	FROM public.estado\
-	", { type: db.nomina.QueryTypes.SELECT})
-  .then(result => {
-    if (result !== null) {
-    	res.status(200).json(result);
-    } else{
-    	res.status(200).json(null)
-    }
-  });
+	if (req.body.params != undefined) {
+		const { id_estado } = req.body.params;
+		if (id_estado == undefined) {
+				Estados.findAll()
+				.then(estados => {
+					res.status(200).json(estados);
+				});
+		} else {
+			Estados.findOne({
+				where : {
+					id_estado : id_estado
+				}
+			}).then(estado => {
+				res.status(200).json(estado);
+			})
+		}
+	} else {
+		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
 };
 
 /* API MUNICIPIOS
-	@params nothing
+	@params nothing or string
 	@return object
 */
 exports.municipios = (req, res) => {
 	console.log('func -> Municipios');
-
-	db.nomina.query("\
-		SELECT id_municipio, nombre\
-		FROM public.municipio\
-	", { type: db.nomina.QueryTypes.SELECT})
-	.then(result => {
-		if (result !== null) {
-			res.status(200).json(result)
+	if (req.body.params != undefined) {
+		const { id_estado } = req.body.params;
+		if (id_estado != undefined) {
+			Municipios.findAll({
+				where : {
+					id_estado : id_estado
+				}
+			}).then(municipios => {
+				res.status(200).json(municipios);
+			})
 		} else {
-			res.status(200).json(null)
+			Municipios.findAll()
+			.then(municipios => {
+				res.status(200).json(municipios);
+			});
 		}
-	})
+	} else {
+		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
 };
 
 /* API PARROQUIAS
-	@params nothing
+	@params nothing or string
 	@return object
 */
 exports.parroquias = (req, res) => {
-	console.log(' func -> Parroquias');
-
-	db.nomina.query("\
-		SELECT id_parroquia, nombre\
-		FROM public.parroquia\
-	", { type : db.nomina.QueryTypes.SELECT })
-	.then(result => {
-		if (result !== null) {
-			res.status(200).json(result)
+	console.log('func -> Parroquias');
+	if (req.body.params != undefined) {
+		const { id_municipio } = req.body.params;
+		if (id_municipio != undefined) {
+			Parroquias.findAll({
+				where : {
+					id_municipio : id_municipio
+				}
+			}).then(parroquias => {
+				res.status(200).json(parroquias);
+			})
 		} else {
-			res.status(200).json(null)
+			Parroquias.findAll()
+			.then(parroquias => {
+				res.status(200).json(parroquias);
+			});
 		}
-	})
+	} else {
+		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
 };
 
 /* API CATEGORIAS

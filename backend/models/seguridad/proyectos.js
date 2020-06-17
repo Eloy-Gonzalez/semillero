@@ -3,17 +3,17 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
       autoIncrement: true
     },
     id_usuario: {
       type: DataTypes.INTEGER,
+      primaryKey: true,
       allowNull: false,
     },
     fecha: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
-      defaultValue: 'now()::date'
+      defaultValue: DataTypes.NOW
     },
     nombre: {
       type: DataTypes.STRING,

@@ -25,9 +25,6 @@ module.exports = (app) => {
 	// UpdatePassword
 	//app.post('/updatepassword', rutasProtegidas.verifyToken, publicController.updatepassword);
 
-	// Paises
-	app.post('/paises', publicController.paises);
-
 	// Estados
 	app.post('/estados', publicController.estados);
 
@@ -54,4 +51,5 @@ module.exports = (app) => {
 	// app.post('/test/generatetoken', testController.generateToken);
 	app.post('/test/generatepassword', testController.generatePassword);
 	app.post('/test/registro/usuario', testController.usuario);
+	app.post('/test/proyectosmasivo', testController.insertProyectosMasivo);
 }
