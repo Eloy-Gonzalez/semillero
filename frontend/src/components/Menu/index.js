@@ -6,8 +6,8 @@ import ItemMenu from './ItemMenu'
 import './index.scss'
 
 const items = [
-    { url: "/registro", label:"Crear cuenta" },
     { url: "/login", label:"Iniciar Sesión" },
+    { url: "/registro", label:"Crear cuenta" }
 ]
 
 function index() {

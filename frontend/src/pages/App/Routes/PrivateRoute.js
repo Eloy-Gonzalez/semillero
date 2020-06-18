@@ -6,7 +6,7 @@ import { Route, useLocation } from 'wouter'
 import AppFrame from 'components/AppFrame'
 
 function PrivateRoute({ component: Component, path, alias}) {
-    const user = { logged : true }
+    const user = { logged : false }
     const [_, setLocation] = useLocation()
 
     return (

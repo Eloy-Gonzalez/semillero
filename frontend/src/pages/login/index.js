@@ -1,8 +1,14 @@
 import React from 'react'
 
+import styled from 'styled-components'
+
+import './index.scss'
+
 function index() {
     return (
-        <div>Desde Login</div>
+        <div className="box--login">
+            <h3>Iniciar Sesión</h3>
+        </div>
     )
 }
 

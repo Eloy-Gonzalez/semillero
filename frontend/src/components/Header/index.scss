@@ -1,7 +1,10 @@
 .header__primary {
     overflow-x: hidden;
     .header__primary-logo {
-        grid-column: 1 / 4;
+        grid-column: 2/ 6;
+        img {
+            max-width: 280px;
+        }
     }
     
     .top--wave, .wave--cirlces {
@@ -17,5 +20,41 @@
     img, svg {
         float: left;
         width: 100%;
+    }
+}
+
+#path277 {
+    animation: anim_bubble_blue .6s cubic-bezier(0.83, 0.22, 0.35, 1.04);
+    animation-fill-mode: forwards;
+    opacity: 0;
+    transform: translateX(10px);
+}
+
+#path117 {
+    animation: anim_bubble_orange .6s cubic-bezier(0.83, 0.22, 0.35, 1.04);
+    opacity: 0;
+    animation-fill-mode: forwards;
+    transform: translateX(30px);
+}
+
+@keyframes anim_bubble_orange {
+    from {
+        transform: translateX(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes anim_bubble_blue {
+    from {
+        transform: translateX(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
