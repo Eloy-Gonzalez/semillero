@@ -1,0 +1,23 @@
+// @Imports
+@import 'variables.scss';
+
+.container--row {
+    display: grid;
+    grid-template-columns: 1280px;
+    justify-content: center;
+    
+    .row {
+        display: grid;
+        grid-template-columns:repeat(12, 1fr);
+        
+        @media (min-width: $desktop) {
+            grid-column-gap: 30px;
+        }
+        @media (min-width: $tabletport) {
+            grid-column-gap: 20px;
+        }
+        @media (min-width: $mobile) {
+            grid-column-gap: 10px;
+        }
+    }
+}

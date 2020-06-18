@@ -1,0 +1,26 @@
+.footer__primary  {
+    .content-footer { text-align: center; }
+}
+
+.top__wave-footer {
+	position: absolute;
+    width: 150px;
+    height: 110px;
+    background: #3fb7f6;
+    border-radius: 50%;
+    bottom: -50px;
+    z-index: -1;
+    left: 0;
+    transform: translateX(-60px) rotate(45deg) translateY(-60px);
+    opacity: .7;
+    animation: waveFooter 600ms cubic-bezier(0.83, 0.22, 0.35, 1.04);
+    animation-fill-mode: forwards;
+}
+
+@keyframes waveFooter {
+	from {
+		transform: translateX(-60px) rotate(45deg) translateY(60px);
+	} to {
+		transform: translateX(-60px) rotate(45deg) translateY(-30px);
+	}
+}

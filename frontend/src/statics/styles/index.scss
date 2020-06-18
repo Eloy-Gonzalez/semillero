@@ -1,26 +1,30 @@
 /* ## @Imports ## */
 @import 'fonts.scss';
+@import 'variables.scss';
 
 /* ## Fuentes ##  */ 
-
 @include font-face("Instant Harmony Lite DEMO Regular", "fonts/Instant_Harmony_Lite_DEMO", null, null, "ttf");
 @include font-face("nasalization-rg", "fonts/nasalization-rg", null, null, "ttf");
 
 body {
   margin: 0;
-  font-family: 'nasalization-rg', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
   'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
   sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   }
-  
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
+
+  h1, h2, h3, h4, h5, h6, p, i {
+    color:#444;
+  }
+
+  .app--text {
+    font-size: 1em;
+    font-family: 'nasalization-rg';
   }
   
-  *::before, *::after {
-      content: "";
-      box-sizing: border-box;
+  .app-title {
+    font-weight: bold;
+    font-family: 'nasalization-rg';
   }

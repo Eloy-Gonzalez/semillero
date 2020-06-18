@@ -1,3 +1,21 @@
 .header__primary {
+    overflow-x: hidden;
+    .header__primary-logo {
+        grid-column: 1 / 4;
+    }
     
+    .top--wave, .wave--cirlces {
+        position: absolute;
+        right: 0;
+    }
+    
+    .wave--cirlces {
+        top: 230px;
+        opacity: .9;
+    }
+
+    img, svg {
+        float: left;
+        width: 100%;
+    }
 }

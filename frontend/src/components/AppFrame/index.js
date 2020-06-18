@@ -8,6 +8,7 @@ import Footer from 'components/Footer'
 
 // @Statics > Icon
 import Logo from 'statics/images/logos/juventud.png'
+import './index.scss'
 
 function index({ title = "Inicio", children } = {}) {
     return (
@@ -17,8 +18,10 @@ function index({ title = "Inicio", children } = {}) {
                 <title>{title} | CRS</title> 
             </Helmet>
             <Header />
-            <main role="main">
-                {children}
+            <main role="main" className="container--row">
+                <div className="main--content">
+                    {children}
+                </div>
             </main>
             <Footer />
         </div>
