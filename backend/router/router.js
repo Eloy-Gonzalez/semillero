@@ -2,8 +2,8 @@ module.exports = (app) => {
 
 	// Controllers
 	const publicController = require('../controllers/publicController');
-	//const privateController = require('../controllers/privateController');
-	const testController = require('../controllers/testController');
+	const privateController = require('../controllers/privateController');
+	//const testController = require('../controllers/testController');
 
 	// Middleware
 	const rutasProtegidas = require('../middlewares/rutasProtegidas');
@@ -43,13 +43,19 @@ module.exports = (app) => {
 	// Preguntas Seguridad
 	app.post('/preguntas', publicController.preguntas);
 
-	// // Proyectos
+	// Proyectos
 	app.post('/proyectos', publicController.proyectos);
+
+	// Saime
+	app.post('/saime', publicController.saime);
+
+	// Periodos
+	app.post('/periodos', privateController.periodos);
 
 	// TEST ROUTES
 	// app.post('/test/gettoken', testController.getToken);
 	// app.post('/test/generatetoken', testController.generateToken);
-	app.post('/test/generatepassword', testController.generatePassword);
-	app.post('/test/registro/usuario', testController.usuario);
-	app.post('/test/proyectosmasivo', testController.insertProyectosMasivo);
+	// app.post('/test/generatepassword', testController.generatePassword);
+	// app.post('/test/registro/usuario', testController.usuario);
+	// app.post('/test/proyectosmasivo', testController.insertProyectosMasivo);
 }

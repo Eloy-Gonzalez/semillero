@@ -1,17 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('proyectos_x_categorias', {
-    id_proyecto: {
+  return sequelize.define('usuarios_permisos', {
+    id_usuario: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    id_categoria: {
+    id_permiso: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
   }, {
-    tableName: 'proyectos_x_categorias',
+    tableName: 'usuarios_permisos',
     schema: 'seguridad',
     version: false,
     timestamps: false,
