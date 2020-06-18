@@ -56,13 +56,31 @@ exports.generatePassword = (req, res) => {
 	})
 }
 
-exports.insertProyectosMasivo = (req, res) => {
-	const data = [1,2]
+exports.insertProyectosMasivo = async (req, res) => {
+	if (req.body.params != undefined) {
+		const {
+			url_video
+ 		} = req.body.params;
+		
+		var data = [
+		  {
+		  		'id_proyecto' : "7",
+		      'id_categoria': "1"
+		  },
+		  {
+		  		'id_proyecto': "7",
+		      'id_categoria': "2"
+		  }
+	  ];
 
-	ProyectosXCategorias.bulkCreate({id_categoria : data})
-	.then(proyeto => {
-		console.log(proyecto);
-	}).catch(err => {
-		res.status(200).json(err);
-	})
+	  try {
+			var response = await ProyectosXCategorias.bulkCreate(data);
+			res.status(200).json(response);
+			console.log(response);
+	  } catch(err) {
+			res.status(200).json(err);
+	  }
+	} else {
+		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
 }

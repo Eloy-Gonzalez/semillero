@@ -1,24 +1,36 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('usuarios_domicilio', {
+	return sequelize.define('usuarios_representante', {
     id_usuario: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    telefono_habitacional: {
-    	type: DataTypes.STRING,
-        allowNull: true
-    },
-    telefono_personal: {
+    cedula: {
     	type: DataTypes.STRING,
     	allowNull: false
     },
-    id_parroquia: {
-    	type: DataTypes.INTEGER,
+    primer_nombre: {
+    	type: DataTypes.STRING,
     	allowNull: false
     },
-    direccion_habitacional: {
-    	type: DataTypes.TEXT,
+    segundo_nombre: {
+    	type: DataTypes.STRING,
+    	allowNull: false
+    },
+    primer_apellido: {
+    	type: DataTypes.STRING,
+    	allowNull: false
+    },
+    segundo_apellido: {
+    	type: DataTypes.STRING,
+    	allowNull: false
+    },
+    genero: {
+    	type: DataTypes.CHAR(1),
+    	allowNull: false
+    },
+    fecha_nacimiento: {
+    	type: DataTypes.DATEONLY,
     	allowNull: false
     },
     creado_por: {
@@ -36,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0
     }
   }, {
-    tableName: 'usuarios_domicilio',
+    tableName: 'usuarios_representante',
     schema: 'seguridad',
     version: true,
     timestamps: false,

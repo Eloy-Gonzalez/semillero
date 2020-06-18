@@ -28,9 +28,12 @@ const ProyectosXCategorias = db.ProyectosXCategorias;
 const Usuarios = db.Usuarios;
 const UsuariosPerfil = db.UsuariosPerfil;
 const UsuariosDomicilio = db.UsuariosDomicilio;
+const UsuariosRepresentante = db.UsuariosRepresentante;
 const Estados = db.Estados;
 const Municipios = db.Municipios;
 const Parroquias = db.Parroquias;
+
+const Saime = db.Saime;
 
 /* API REGISTER
 	@params username string, email string, password string, nacionalidad string, cedula string
@@ -53,13 +56,22 @@ exports.register = (req, res) => {
 			segundo_apellido,
 			genero,
 			fecha_nacimiento,
+			cedula_representante,
+			primer_nombre_representante,
+			segundo_nombre_representante,
+			primer_apellido_representante,
+			segundo_apellido_representante,
+			genero_representante,
+			fecha_nacimiento_representante,
 			telefono_habitacional,
 			telefono_personal,
 			id_parroquia,
 			direccion_habitacional,
+			id_periodo,
 			nombre,
 			descripcion,
-			url_video
+			url_video,
+			categorias
  		} = req.body.params;
 		
 		db.semillero.query("\
@@ -78,8 +90,23 @@ exports.register = (req, res) => {
 				  password : passwordHashed,
 				  id_pregunta : id_pregunta,
 				  respuesta_seguridad : respuesta_seguridad
-				}).then(user => {
+				}).then( async user => {
 					console.log('Step 1 -> success');
+					if (cedula == '') {
+						// Usuarios Representante
+						let representante = await UsuariosRepresentante.create({
+							id_usuario : user.dataValues.id,
+							cedula : cedula_representante,
+	  					primer_nombre : primer_nombre_representante,
+	  					segundo_nombre : segundo_nombre_representante,
+						  primer_apellido : primer_apellido_representante,
+						  segundo_apellido : segundo_apellido_representante,
+	  					genero : genero_representante,
+						  fecha_nacimiento : fecha_nacimiento_representante
+						});
+						console.log('Representante cargado exitosamente');
+						// Validar carga de representante
+					} 
 					// Usuarios Perfil
 					UsuariosPerfil.create({
 						id_usuario : user.dataValues.id,
@@ -104,23 +131,29 @@ exports.register = (req, res) => {
 							// Proyecto
 							Proyectos.create({
 								id_usuario : user3.dataValues.id_usuario,
+								id_periodo : id_periodo,
 								nombre : nombre,
 								descripcion : descripcion,
 								url_video : url_video
 							}).then(proyecto => {
 								console.log('Step 4 -> success');
 								// Proyectos_x_categorias
-								// Obtener el id del proyecto
-								// id_categoria es un array, ¿Como se inserta un array usando sequelize?
-								// ProyectosXCategorias({
-								// 	id_proyecto : 
-								// 	id_categoria 
-								// }).then(success => {
-								// 	console.log(success); // Evaluar si el registro fue exitoso ( Continuar Aquí )
-								// }).catch(err => {
-								// 	res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
-								// })
-								res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+								var data = [];
+								categorias.forEach((index, value) => {
+									data.push({
+										id_proyecto : proyecto.dataValues.id,
+										id_categoria : index
+									})
+								});
+								ProyectosXCategorias.bulkCreate(data)
+								.then(success => {
+									console.log('Step 5 -> success');
+									//console.log(success);
+									// Validar!
+									res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+								}).catch(err => {
+									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
+								})
 							}).catch(err => {
 								res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
 							})
@@ -385,4 +418,31 @@ exports.proyectos = (req, res) => {
 	Proyectos.findAll().then(proyectos => {
 		res.status(200).json(proyectos);
 	})
+}
+
+/* API SAIME
+ @params string
+ @return object
+*/
+exports.saime = (req, res) => {
+	console.log('func -> Saime');
+	if (req.body.params != undefined) {
+		const { cedula } = req.body.params;
+		if (cedula != undefined) {
+			Saime.findAll({
+				where : {
+					cedula : cedula
+				}
+			}).then(persona => {
+				res.status(200).json(persona);
+			})
+		} else {
+			Saime.findAll()
+			.then(personas => {
+				res.status(200).json(personas);
+			});
+		}
+	} else {
+		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
 }
