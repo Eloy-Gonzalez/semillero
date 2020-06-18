@@ -33,6 +33,15 @@ module.exports = (sequelize, DataTypes) => {
     	type: DataTypes.DATEONLY,
     	allowNull: false
     },
+    creado_por: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    actualizado_por: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     version: {
       type: DataTypes.INTEGER,
       allowNull: false,

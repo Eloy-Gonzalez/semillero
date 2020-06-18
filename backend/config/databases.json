@@ -8,6 +8,15 @@
 		    "acquire": 30000,
 		    "idle": 3000
 			}
+		},
+		"saime": {
+			"path": "postgres://desarrollo:desarrollo@localhost:5432/saime",
+			"pool": {
+		    "max": 2,
+		    "min": 0,
+		    "acquire": 30000,
+		    "idle": 3000
+			}
 		}
 	}
 }

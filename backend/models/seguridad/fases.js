@@ -1,25 +1,31 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('usuarios_domicilio', {
-    id_usuario: {
+  return sequelize.define('fases', {
+    id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
-    telefono_habitacional: {
-    	type: DataTypes.STRING,
-        allowNull: true
+    id_periodo: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
-    telefono_personal: {
-    	type: DataTypes.STRING,
-    	allowNull: false
+    id_fase_descripcion: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
-    id_parroquia: {
-    	type: DataTypes.INTEGER,
-    	allowNull: false
+    fecha_inicio: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
     },
-    direccion_habitacional: {
-    	type: DataTypes.TEXT,
-    	allowNull: false
+    fecha_fin: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
     creado_por: {
       type: DataTypes.INTEGER,
@@ -36,11 +42,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0
     }
   }, {
-    tableName: 'usuarios_domicilio',
+    tableName: 'fases',
     schema: 'seguridad',
     version: true,
     timestamps: false,
     createdAt: false,
     updatedAt: false,
   });
-}
+};
