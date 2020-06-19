@@ -20,9 +20,6 @@ var transporter = nodemailer.createTransport({
 });
 
 /* Model */
-const Categorias = db.Categorias;
-const Estatus = db.Estatus;
-const PreguntasSeguridad = db.PreguntasSeguridad;
 const Proyectos = db.Proyectos;
 const ProyectosXCategorias = db.ProyectosXCategorias;
 const Usuarios = db.Usuarios;
@@ -375,39 +372,6 @@ exports.parroquias = (req, res) => {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
-
-/* API CATEGORIAS
-	@params nothing
-	@return object
-*/
-exports.categorias = (req, res) => {
-	console.log('func -> Categorias');
-	Categorias.findAll().then(categorias => {
-		res.status(200).json(categorias);
-	});
-};
-
-/* API ESTATUS
- @params nothing
- @return object
-*/
-exports.estatus = (req, res) => {
-	console.log('func -> Estatus');
-	Estatus.findAll().then(estatus => {
-		res.status(200).json(estatus);
-	})
-};
-
-/* API PREGUNTAS SEGURIDAD
- @params nothing
- @return object
-*/
-exports.preguntas = (req, res) => {
-	console.log('func -> Preguntas de Seguridad');
-	PreguntasSeguridad.findAll().then(preguntas => {
-		res.status(200).json(preguntas);
-	})
-}
 
 /* API PROYECTOS
  @params nothing

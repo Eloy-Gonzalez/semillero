@@ -14,11 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    fecha_inicio: {
+    fecha_desde: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
-    fecha_fin: {
+    fecha_hasta: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
