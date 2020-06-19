@@ -1,0 +1,26 @@
+.footer__primary  {
+    .content-footer { text-align: center; }
+}
+
+.top__wave-footer {
+    width: 80px;
+    position: absolute;
+    opacity: .8;
+    animation: animBubble .6s cubic-bezier(0.83, 0.22, 0.35, 1.04) .24s;
+    animation-fill-mode: forwards;
+    left: -20%;
+    bottom:0;
+    img {
+       float: left; 
+       width: 100%;
+    }
+}
+
+@keyframes animBubble {
+    from {
+        left:-20%;
+    }
+    to {
+        left:0;
+    }
+}

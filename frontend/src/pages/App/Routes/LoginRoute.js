@@ -5,12 +5,12 @@ import { Route, useLocation } from 'wouter'
 // @Components
 import AppFrame from 'components/AppFrame'
 
-function PrivateRoute({ component: Component, path, alias}) {
+function PrivateRoute({ component: Component, path, alias="Login"}) {
     const user = { logged : false }
     const [_, setLocation] = useLocation()
 
     return (
-    user.logged ?  
+    !user.logged ?  
         <Route exact path={path}>
             {props => 
                 <AppFrame title={alias}>
@@ -18,7 +18,7 @@ function PrivateRoute({ component: Component, path, alias}) {
                 </AppFrame>
             }
         </Route>
-        : setLocation("/login")
+        : setLocation("/")
     )
 }
 
