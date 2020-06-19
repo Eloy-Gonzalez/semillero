@@ -8,7 +8,7 @@ import bubbleTexture from 'statics/images/logos/footer_bubble.svg'
 function index() {
     return (
         <footer className="footer__primary">
-            <div class="top__wave-footer">
+            <div className="top__wave-footer">
                 <img src={bubbleTexture} alt="Texture bubble"/>
             </div>
             <div className="content-footer container--row">

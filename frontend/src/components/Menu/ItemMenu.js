@@ -4,10 +4,10 @@ import  {upperFirst} from 'lodash'
 
 import {Link} from 'wouter'
 
-function ItemMenu({ url, label }) {
+function ItemMenu({ url, label, onClick }) {
     return (
         <li className="item--menu">
-            <Link href={url}>
+            <Link href={url} className="app--text" onClick={onClick}>
                 {upperFirst(label)}
             </Link>
         </li>

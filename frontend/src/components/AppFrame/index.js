@@ -10,14 +10,14 @@ import Footer from 'components/Footer'
 import Logo from 'statics/images/logos/juventud.png'
 import './index.scss'
 
-function index({ title = "Inicio", children } = {}) {
+function index({ title = "Inicio", children, authenticated = false} = {}) {
     return (
         <div className="app--frame">
             <Helmet> 
                 <link rel="icon" href={Logo} type="image/gif" sizes="16x16" />
                 <title>{title} | CRS</title> 
             </Helmet>
-            <Header />
+            <Header authenticated={authenticated}/>
             <main role="main" className="container--row">
                 <div className="main--content">
                     {children}

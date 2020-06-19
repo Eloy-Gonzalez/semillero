@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, GET_AUTH } from './auth.actionsTypes';
+import { LOGIN, LOGOUT, CHECK_AUTH } from './auth.actionsTypes';
 
 const login = (params = {}) => {
   return (dispatch) => {
@@ -9,10 +9,10 @@ const login = (params = {}) => {
   };
 };
 
-const getAuth = () => {
+const checkAutentication = () => {
   return (dispatch) => {
     dispatch({
-      type: GET_AUTH,
+      type: CHECK_AUTH,
     });
   };
 };
@@ -24,4 +24,5 @@ const logout = () => {
     });
   };
 };
-export { login, getAuth, logout };
+
+export { login, logout, checkAutentication };

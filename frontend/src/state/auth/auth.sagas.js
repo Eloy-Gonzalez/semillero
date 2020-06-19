@@ -1,79 +1,71 @@
+// @Vendors
 import { put, takeLatest, call } from 'redux-saga/effects';
-import { get } from 'lodash';
+import jsonwebtoken from 'jsonwebtoken'
 
-//Api
-import { postLogin, getUser } from './auth.services';
+// @services
+import { postLogin } from './auth.services';
 
+// @ActionsTypes
 import {
   REQUEST_STARTED,
   REQUEST_FINISHED,
   REQUEST_FAILURE,
-  GET_AUTH,
-  USER_LOADED,
+  SET_USER,
   LOGIN,
   LOGOUT,
-  CLEAR_LOGIN,
+  CHECK_AUTH
 } from './auth.actionsTypes';
 
+// @Helpers
+import { getToken, setToken, removeToken } from 'utils/helpers';
+
 function* failureWorker({ payload }) {
-  yield put({ type: REQUEST_FAILURE });
+  yield put({ type: REQUEST_FAILURE, payload });
 }
 
 function* login({ payload }) {
   try {
     yield put({ type: REQUEST_STARTED });
-    
     const response = yield call(postLogin, payload);
-    // console.log(response);
-    const token = get(response, 'data.jwt', {});
-    localStorage.setItem('token', token);
-    const data = {
-      isAuthenticated: true,
-      username: response.data.user.username,
-      email: response.data.user.email,
-      role: response.data.user.role.name,
-    };
-    yield put({
-      type: USER_LOADED,
-      payload: data,
-    });
+    
+    if(response.data.token){
+
+      const payload = { isAuthenticated: true, username: "Prueba" }
+      const {token} = response.data
+      yield put({ type: SET_USER, payload })
+      yield call(setToken,token)
+    }
+
     yield put({ type: REQUEST_FINISHED });
   } catch (err) {
-    console.log(err.data);
+    throw new console.error(err);
   }
 }
 
-function* getAuthWorker() {
-  try {
-    yield put({ type: REQUEST_STARTED });
-    const response = yield call(getUser);
-    const data = {
-      isAuthenticated: true,
-      username: response.data.username,
-      email: response.data.email,
-      role: response.data.role.name,
-    };
-    yield put({
-      type: USER_LOADED,
-      payload: data,
-    });
-  } catch (err) {}
-  yield put({ type: REQUEST_FINISHED });
+function* checkAuthentication() {
+  const _TOKEN_ = yield call(getToken)
+
+  if(_TOKEN_) {
+    const {username, exp} = jsonwebtoken.decode(_TOKEN_)
+    if(exp < Math.floor(Date.now() / 1000)){
+      yield put({ type: LOGOUT })
+    } else {
+      const payload = { isAuthenticated: true, username }
+      yield put({ type: SET_USER, payload });
+    }
+  }
 }
 
 function* logoutWorker() {
-  localStorage.removeItem('token');
-  yield put({
-    type: CLEAR_LOGIN,
-  });
+  yield call(removeToken)
 }
 
 // Whatcher
 function* requestWatcher() {
-  yield takeLatest(REQUEST_FAILURE, failureWorker);
-  yield takeLatest(LOGIN, login);
-  yield takeLatest(GET_AUTH, getAuthWorker);
-  yield takeLatest(LOGOUT, logoutWorker);
+  yield takeLatest(REQUEST_FAILURE, failureWorker)
+  yield takeLatest(LOGIN, login)
+  yield takeLatest(CHECK_AUTH, checkAuthentication)
+  yield takeLatest(LOGOUT, logoutWorker)
 }
 
-export default { requestWatcher };
+export default { requestWatcher }

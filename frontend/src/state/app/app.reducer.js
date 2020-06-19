@@ -8,7 +8,6 @@ import {
   MODAL_CLOSE,
   REQUEST_SUCCESS,
   CLEAR_SERVER_SUCCESS,
-  SET_MENU,
 } from './app.actionTypes';
 
 const initialState = Map().merge({
@@ -16,7 +15,6 @@ const initialState = Map().merge({
   serverErrors: null,
   statusError: null,
   serversuccess: null,
-  menu: [],
   modal: {
     open: false,
     description: '',
@@ -71,11 +69,6 @@ const appReducer = (state = initialState, { type, payload }) => {
           open: false,
           description: '',
         },
-      });
-
-    case SET_MENU:
-      return state.merge({
-        menu: payload,
       });
 
     default:

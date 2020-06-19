@@ -1,46 +1,19 @@
 // @vendors
-import { put, takeLatest, call } from 'redux-saga/effects';
-
-//Api
-import { fetchMenu } from './app.api';
-
-// @Utils
-import { buildErrorsObj } from '../../utils/config';
+import { put, takeLatest } from 'redux-saga/effects';
 
 // @ActionsTypes
 import {
-    REQUEST_FAILURE,
-    GET_MENU,
-    SET_MENU,
-    REQUEST_STARTED,
-    REQUEST_FINISHED,
+    REQUEST_FAILURE
 } from './app.actionTypes';
 
-/*
 function* failureWorker({ payload }) {
-    yield put({ type: REQUEST_FAILURE });
-} */
-
-function* getMenu() {
-    try {
-        yield put({ type: REQUEST_STARTED });
-
-        const payload = yield call(fetchMenu);
-        yield put({ type: SET_MENU, payload });
-
-        yield put({ type: REQUEST_FINISHED });
-    } catch (error) {
-        yield put({
-          type: REQUEST_FAILURE,
-          payload: buildErrorsObj(error)
-        });
-    }
+    yield put({ type: REQUEST_FAILURE, payload });
 }
+
 
 // Whatcher
 function* requestWatcher() {
-    // yield takeLatest(REQUEST_FAILURE, failureWorker);
-    yield takeLatest(GET_MENU, getMenu);
+    yield takeLatest(REQUEST_FAILURE, failureWorker);
 }
 
 export default { requestWatcher };

@@ -1,16 +1,20 @@
 // @Vendors
 import React from 'react'
+import {useSelector} from 'react-redux'
 import { Route, useLocation } from 'wouter'
 
 // @Components
 import AppFrame from 'components/AppFrame'
 
-function PrivateRoute({ component: Component, path, alias="Login"}) {
-    const user = { logged : false }
-    const [_, setLocation] = useLocation()
+// @Selectors
+import {selectIsAuthenticated} from 'state/auth/auth.selectors'
+import { getToken } from 'utils/helpers'
 
+function PrivateRoute({ component: Component, path, alias="Login"}) {
+    const isAuthenticated = useSelector(state => selectIsAuthenticated(state))
+    const [_, setLocation] = useLocation()
     return (
-    !user.logged ?  
+    !isAuthenticated || !getToken() ?
         <Route exact path={path}>
             {props => 
                 <AppFrame title={alias}>

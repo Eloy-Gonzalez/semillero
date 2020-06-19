@@ -6,8 +6,6 @@ const selectStatusError = state => state.appReducer.get('statusError');
 
 const selectServerSuccess = state => state.appReducer.get('serversuccess');
 
-const selectMenu = state => state.appReducer.get('menu');
-
 
 const selectModal = state => state.appReducer.get('modal');
 
@@ -16,6 +14,5 @@ export {
 	selectServerErrors,
 	selectStatusError,
 	selectModal,
-	selectMenu,
 	selectServerSuccess
 };

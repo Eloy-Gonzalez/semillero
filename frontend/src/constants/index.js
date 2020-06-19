@@ -1,0 +1,1 @@
+export const BASE_API = "http://crs.mppct.gob.ve:3500"

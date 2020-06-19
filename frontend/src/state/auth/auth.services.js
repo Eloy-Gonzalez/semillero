@@ -1,13 +1,8 @@
-import request from '../../utils/request';
+// @Vendors
+import axios from 'axios';
+import { BASE_API } from "constants/index";
+
 
 export function postLogin(data) {
-  const datos = {
-    identifier: data.identifier,
-    password: data.password,
-  };
-  return request.post('auth/local', datos);
-}
-
-export function getUser() {
-  return request.get('users/me');
+  return axios.post(`${BASE_API}/login`, { params: data })
 }
