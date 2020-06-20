@@ -1,41 +1,46 @@
 // @Vendors
-import React, { useEffect } from 'react'
-import { useLocation } from 'wouter'
+import React, {useEffect} from 'react'
+import {Switch, Route} from "wouter";
 
 // @Routes
 import PrivateRoute from './Routes/PrivateRoute'
 import LoginRoute from './Routes/LoginRoute'
-import { useDispatch, useSelector } from 'react-redux'
-
-// @Selectors
-import { selectIsAuthenticated } from 'state/auth/auth.selectors'
+import {useDispatch} from 'react-redux'
 
 // @Actions
 import {checkAutentication} from 'state/auth/auth.actions'
 
+// @Components
+import Backdrop from 'components/Backdrop'
+
 // @Pages 
 const Home = React.lazy(() => import('pages/Home'))
 const Login = React.lazy(() => import('pages/Login'))
+const Register = React.lazy(() => import('pages/Register'))
+const NotFoundPage = React.lazy(() => import('components/PagesResponses/NotFoundPage'))
 
 function App() {
     const dispatch = useDispatch()
-    const [_, setLocation] = useLocation()
-    const isAuth = useSelector(state => selectIsAuthenticated(state))
     
     useEffect(() => {
         dispatch(checkAutentication())
     }, [dispatch])
 
-    useEffect(() => {
-        if(isAuth){
-            setLocation("/")
-        }
-    },[isAuth, setLocation])
-    
     return (
-        <React.Suspense fallback={<div>Loading...</div>}>
-            <PrivateRoute path="/" alias="Inicio" component={Home} />
-            <LoginRoute path="/login" alias="Iniciar Sesión" component={Login} />
+        <React.Suspense 
+                fallback={
+                    <Backdrop show={true} bgColor="#fff">
+                        <center><h3>Cargando datos....</h3></center>
+                    </Backdrop>
+            }>
+            <Switch>
+                <PrivateRoute path="/" alias="Inicio" component={Home} />
+                <LoginRoute path="/register" alias="Cuenta nueva" component={Register} />
+                <LoginRoute path="/login" alias="Iniciar Sesión" component={Login} />
+                <Route path="/:rest*">
+                    <NotFoundPage title="¡Ruta no encontrada!" message="La ruta indicada no es correcta..."/>
+                </Route>
+            </Switch>
         </React.Suspense>
     )
 }

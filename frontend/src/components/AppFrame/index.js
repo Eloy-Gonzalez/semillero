@@ -10,7 +10,7 @@ import Footer from 'components/Footer'
 import Logo from 'statics/images/logos/juventud.png'
 import './index.scss'
 
-function index({ title = "Inicio", children, authenticated = false} = {}) {
+function index({ title = "Not title assigned", children, authenticated = false} = {}) {
     return (
         <div className="app--frame">
             <Helmet> 

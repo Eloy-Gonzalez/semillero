@@ -8,13 +8,13 @@ import AppFrame from 'components/AppFrame'
 
 // @Selectors
 import {selectIsAuthenticated} from 'state/auth/auth.selectors'
-import { getToken } from 'utils/helpers'
 
-function PrivateRoute({ component: Component, path, alias="Login"}) {
+function LoginRoute({ component: Component, path, alias="Not title assigned"}) {
     const isAuthenticated = useSelector(state => selectIsAuthenticated(state))
     const [_, setLocation] = useLocation()
+    
     return (
-    !isAuthenticated || !getToken() ?
+    !isAuthenticated ?
         <Route exact path={path}>
             {props => 
                 <AppFrame title={alias}>
@@ -22,8 +22,8 @@ function PrivateRoute({ component: Component, path, alias="Login"}) {
                 </AppFrame>
             }
         </Route>
-        : setLocation("/")
+    : setLocation("/")
     )
 }
 
-export default React.memo(PrivateRoute)
+export default React.memo(LoginRoute, (prevProps, nextProps) => (prevProps.path === nextProps.path))

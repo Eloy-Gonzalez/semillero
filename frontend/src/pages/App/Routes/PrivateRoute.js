@@ -8,14 +8,13 @@ import {selectIsAuthenticated} from 'state/auth/auth.selectors'
 
 // @Components
 import AppFrame from 'components/AppFrame'
-import { getToken } from 'utils/helpers'
 
 function PrivateRoute({ component: Component, path, alias}) {
     const isAuthenticated = useSelector(state => selectIsAuthenticated(state))
     const [_, setLocation] = useLocation()
 
     return (
-        isAuthenticated || getToken() ?  
+        isAuthenticated ?
             <Route exact path={path}>
                 {props => 
                     <AppFrame title={alias} authenticated={isAuthenticated}>

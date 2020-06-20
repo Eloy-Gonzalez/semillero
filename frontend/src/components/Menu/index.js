@@ -9,16 +9,16 @@ import './index.scss'
 
 const items = [
     { url: "/login", label:"Iniciar Sesión" },
-    { url: "/registro", label:"Registrarse" }
+    { url: "/register", label:"Crear cuenta" }
 ]
 
-function index({ authenticated = false, logout = () => console.log("First signup") } = {}) {
+function index({ authenticated = false, logout = () => console.log("First login") } = {}) {
     return (
         <div className="menu">
             <ul className="menu__list">
                 {
-                    !authenticated ? items.map(({url, label, onclick}) => (
-                        <ItemMenu key={url} url={url} label={label} onClick={onclick}/>
+                    !authenticated ? items.map(({url, label}) => (
+                        <ItemMenu key={url} url={url} label={label}/>
                     ))
                     : (<ItemMenu url="#" label="Cerrar sesión" onClick={logout}/>)
                 }
