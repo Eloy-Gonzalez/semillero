@@ -2,38 +2,35 @@
 import { put, takeLatest, call } from 'redux-saga/effects';
 import jsonwebtoken from 'jsonwebtoken'
 
+// @Helpers
+import { getToken, setToken, removeToken } from 'utils/helpers';
+
 // @services
 import { postLogin } from './auth.services';
 
 // @ActionsTypes
 import {
-  REQUEST_STARTED,
-  REQUEST_FINISHED,
-  REQUEST_FAILURE,
-  SET_USER,
   LOGIN,
   LOGOUT,
   CHECK_AUTH
 } from './auth.actionsTypes';
-
-// @Helpers
-import { getToken, setToken, removeToken } from 'utils/helpers';
-
-function* failureWorker({ payload }) {
-  yield put({ type: REQUEST_FAILURE, payload });
-}
+import {
+  REQUEST_STARTED,
+  REQUEST_FINISHED
+} from 'state/app/app.actionTypes'
+import { SET_ONE_USER } from 'state/users/users.actionsTypes'
 
 function* login({ payload }) {
   try {
     yield put({ type: REQUEST_STARTED });
-    const response = yield call(postLogin, payload);
     
-    if(response.data.token){
-
-      const payload = { isAuthenticated: true, username: "Prueba" }
-      const {token} = response.data
-      yield put({ type: SET_USER, payload })
-      yield call(setToken,token)
+    const response = yield call(postLogin, payload);
+    const _TOKEN_ = response.data.token
+    if(_TOKEN_){
+      const {username} = _TOKEN_
+      const payload = { isAuthenticated: true, username }
+      yield put({ type: SET_ONE_USER, payload });
+      yield call(setToken, _TOKEN_)
     }
 
     yield put({ type: REQUEST_FINISHED });
@@ -51,7 +48,7 @@ function* checkAuthentication() {
       yield put({ type: LOGOUT })
     } else {
       const payload = { isAuthenticated: true, username }
-      yield put({ type: SET_USER, payload });
+      yield put({ type: SET_ONE_USER, payload });
     }
   }
 }
@@ -60,12 +57,11 @@ function* logoutWorker() {
   yield call(removeToken)
 }
 
-// Whatcher
+// @Whatcher
 function* requestWatcher() {
-  yield takeLatest(REQUEST_FAILURE, failureWorker)
   yield takeLatest(LOGIN, login)
   yield takeLatest(CHECK_AUTH, checkAuthentication)
   yield takeLatest(LOGOUT, logoutWorker)
 }
 
-export default { requestWatcher }
+export default {requestWatcher}

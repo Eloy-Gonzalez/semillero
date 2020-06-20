@@ -4,7 +4,7 @@ import { Route, useLocation } from 'wouter'
 import {useSelector} from 'react-redux'
 
 // @Selectors
-import {selectIsAuthenticated} from 'state/auth/auth.selectors'
+import {selectIsAuthenticated} from 'state/users/users.selectors'
 
 // @Components
 import AppFrame from 'components/AppFrame'
@@ -16,13 +16,13 @@ function PrivateRoute({ component: Component, path, alias}) {
     return (
         isAuthenticated ?
             <Route exact path={path}>
-                {props => 
+                {props => (
                     <AppFrame title={alias} authenticated={isAuthenticated}>
                         <Component {...props}/>
                     </AppFrame>
-                }
+                )}
             </Route>
-        : setLocation("/login")
+        : setLocation("/acceder")
     )
 }
 

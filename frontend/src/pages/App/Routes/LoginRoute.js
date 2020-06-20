@@ -7,23 +7,23 @@ import { Route, useLocation } from 'wouter'
 import AppFrame from 'components/AppFrame'
 
 // @Selectors
-import {selectIsAuthenticated} from 'state/auth/auth.selectors'
+import {selectIsAuthenticated} from 'state/users/users.selectors'
 
 function LoginRoute({ component: Component, path, alias="Not title assigned"}) {
     const isAuthenticated = useSelector(state => selectIsAuthenticated(state))
     const [_, setLocation] = useLocation()
     
     return (
-    !isAuthenticated ?
-        <Route exact path={path}>
-            {props => 
+    isAuthenticated ?
+        setLocation("/")
+    : <Route exact path={path}>
+            {props => (
                 <AppFrame title={alias}>
                     <Component {...props}/>
                 </AppFrame>
-            }
+            )}
         </Route>
-    : setLocation("/")
     )
 }
 
-export default React.memo(LoginRoute, (prevProps, nextProps) => (prevProps.path === nextProps.path))
+export default React.memo(LoginRoute)

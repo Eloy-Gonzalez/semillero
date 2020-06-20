@@ -1,10 +1,6 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import * as Yup from 'yup'
-
-import {LOGIN} from 'state/auth/auth.actionsTypes'
-import {useDispatch} from 'react-redux';
-
 
 const initialValues = {
   email: '',
@@ -16,28 +12,17 @@ const SignupSchema = Yup.object().shape({
   .email('Introduzca un correo válido')
   .required('Campo requerido'),
   password: Yup.string()
-  .min(5, 'La contraseña debe contar con mínimo 10 carácteres!')
+  .min(5, 'La contraseña debe contar con mínimo 5 carácteres!')
   .required('Campo requerido')
 });
 
-function LoginForm() {
-  const dispatch = useDispatch()
-
-  const handleSubmit = useCallback((data, actions) => {
-    const payload = {
-        username: data.email,
-        password: data.password
-    }
-    
-    dispatch({ type: LOGIN, payload })
-    actions.setSubmitting(false);
-  }, [dispatch])
+function AuthForm( { onSubmit } ) {
 
   return (
         <div>        
         <Formik
           initialValues={initialValues}
-          onSubmit={ (values, actions) => handleSubmit(values, actions)}
+          onSubmit={ (values, actions) => onSubmit(values, actions)}
           validationSchema={SignupSchema}
         >
           {
@@ -65,4 +50,4 @@ function LoginForm() {
 }
 
 
-export default React.memo(LoginForm)
+export default React.memo(AuthForm)

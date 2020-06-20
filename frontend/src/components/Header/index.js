@@ -22,7 +22,7 @@ function Header({authenticated = false}) {
 
     const closeSession = useCallback(() => {
         dispatch(logout())
-        setLocation("/login")
+        setLocation("/acceder")
     }, [dispatch, setLocation])
     
     return (

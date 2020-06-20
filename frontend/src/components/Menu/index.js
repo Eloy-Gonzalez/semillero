@@ -8,8 +8,8 @@ import ItemMenu from './ItemMenu'
 import './index.scss'
 
 const items = [
-    { url: "/login", label:"Iniciar Sesión" },
-    { url: "/register", label:"Crear cuenta" }
+    { url: "/acceder", label:"Iniciar Sesión" },
+    { url: "/crear-cuenta", label:"Crear cuenta" }
 ]
 
 function index({ authenticated = false, logout = () => console.log("First login") } = {}) {

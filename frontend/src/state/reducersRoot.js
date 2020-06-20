@@ -1,9 +1,11 @@
-import { combineReducers } from 'redux';
+// @Vendors
+import { combineReducers } from 'redux'
 
-import appReducer from './app/app.reducer';
-import authReducer from './auth/auth.reducer';
+// @Reducers
+import appReducer from './app/app.reducer'
+import usersReducer from './users/users.reducer'
 
 export default combineReducers({
   appReducer,
-  authReducer  
+  usersReducer
 });

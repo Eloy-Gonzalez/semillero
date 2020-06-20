@@ -1,11 +1,11 @@
 // @Vendors
 import React, {useEffect} from 'react'
 import {Switch, Route} from "wouter";
+import {useDispatch} from 'react-redux'
 
 // @Routes
 import PrivateRoute from './Routes/PrivateRoute'
 import LoginRoute from './Routes/LoginRoute'
-import {useDispatch} from 'react-redux'
 
 // @Actions
 import {checkAutentication} from 'state/auth/auth.actions'
@@ -35,8 +35,8 @@ function App() {
             }>
             <Switch>
                 <PrivateRoute path="/" alias="Inicio" component={Home} />
-                <LoginRoute path="/register" alias="Cuenta nueva" component={Register} />
-                <LoginRoute path="/login" alias="Iniciar Sesión" component={Login} />
+                <LoginRoute path="/crear-cuenta" alias="Cuenta nueva" component={Register} />
+                <LoginRoute path="/acceder" alias="Iniciar Sesión" component={Login} />
                 <Route path="/:rest*">
                     <NotFoundPage title="¡Ruta no encontrada!" message="La ruta indicada no es correcta..."/>
                 </Route>
