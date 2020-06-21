@@ -3,8 +3,16 @@
 
 .container--row {
     display: grid;
-    grid-template-columns: 1280px;
     justify-content: center;
+    @media (min-width: $mobile) {
+        grid-template-columns: $mobile;
+    }
+    @media (min-width: $tabletport) {
+        grid-template-columns: $tabletport;
+    }
+    @media (min-width: $desktop) {
+        grid-template-columns: $desktop;
+    }
     
     .row {
         display: grid;

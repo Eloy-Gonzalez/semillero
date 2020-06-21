@@ -7,6 +7,7 @@ import AuthForm from 'pages/Login/AuthForm'
 
 // @ActionsTypes
 import {REGISTER} from 'state/users/users.actionsTypes'
+import 'pages/Login/index.scss'
 
 function Register() {
   const dispatch = useDispatch()
@@ -16,6 +17,8 @@ function Register() {
         username: data.email,
         password: data.password
     }
+
+    console.log(payload)
     
     dispatch({ type: REGISTER, payload })
     actions.setSubmitting(false);
@@ -23,10 +26,8 @@ function Register() {
 
     return (
         <div className="box--login">
-            <h3 className="app-title">Crear Cuenta Nueva</h3>
-        	<div>
-        		<AuthForm onSubmit={handleSubmit} />
-        	</div>
+            <h3 className="app--title" style={{textAlign:"center", color:"#777", fontSize:"1.3em"}}>Crear cuenta</h3>
+            <AuthForm onSubmit={handleSubmit} isNewRecord={false}/>
         </div>
     )
 }

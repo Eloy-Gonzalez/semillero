@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 
 // Components
 import AuthForm from './AuthForm'
+import avatar from 'statics/images/logos/avatar_2x.png'
 
 // @ActionsType
 import {LOGIN} from 'state/auth/auth.actionsTypes'
@@ -19,7 +20,6 @@ function Login() {
 	        username: data.email,
 	        password: data.password
 	    }
-    
     	dispatch({ type: LOGIN, payload })
     	actions.setSubmitting(false);
   	}, [dispatch])
@@ -27,8 +27,12 @@ function Login() {
     return (
     	<React.Fragment>
 	        <div className="box--login">
-	            <h3 className="app-title">Iniciar Sesión</h3>
+	        	<div className="avatar">
+	        		<img src={avatar} alt="avatar"/>
+	        	</div>      
 	            <AuthForm onSubmit={handleSubmit} />
+	            {/*
+	            <a href="#" style={{fontSize: "15px", textDecoration:"none", float: "right"}}>Recuperar contraseña</a>*/ }
 	        </div>
     	</React.Fragment>
     )

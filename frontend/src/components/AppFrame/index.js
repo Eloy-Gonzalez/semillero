@@ -19,7 +19,7 @@ function index({ title = "Not title assigned", children, authenticated = false} 
             </Helmet>
             <Header authenticated={authenticated}/>
             <main role="main" className="container--row">
-                <div className="main--content">
+                <div className="main--content row">
                     {children}
                 </div>
             </main>

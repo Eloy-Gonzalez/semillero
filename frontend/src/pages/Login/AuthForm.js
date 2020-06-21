@@ -1,6 +1,10 @@
 import React from 'react'
-import {Formik, Form, Field, ErrorMessage} from 'formik';
+import {Formik} from 'formik';
 import * as Yup from 'yup'
+
+import FormGroup from '@material-ui/core/FormGroup';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
 
 const initialValues = {
   email: '',
@@ -16,8 +20,7 @@ const SignupSchema = Yup.object().shape({
   .required('Campo requerido')
 });
 
-function AuthForm( { onSubmit } ) {
-
+function AuthForm( { onSubmit, isNewRecord = true } ) {
   return (
         <div>        
         <Formik
@@ -26,28 +29,58 @@ function AuthForm( { onSubmit } ) {
           validationSchema={SignupSchema}
         >
           {
-            formik => (
-              <Form>
-                <div className="form--group">
-                  <Field type="email" name="email" placeholder="Correo"/>
-                  <ErrorMessage name="email" />
-                </div>
+            ({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <FormGroup>
+                    <TextField
+                      id="email"
+                      name="email"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                      margin="dense"
+                      label="Email"
+                      variant="filled"
+                      color="primary"
+                      helperText={errors.email && touched.email && errors.email}
+                    />
+                </FormGroup>
 
-                <div className="form--group">
-                  <Field type="password" name="password" placeholder="Contraseña"/>
-                  <ErrorMessage name="password" />
-                </div>
+                <FormGroup>
+                    <TextField
+                      id="password"
+                      name="password"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.password}
+                      margin="dense"
+                      label="Contraseña"
+                      variant="filled"
+                      color="primary"
+                      type="password"
+                      helperText={errors.password && touched.password && errors.password}
+                    />
+                </FormGroup>
 
-                <div className="form--group">
-                  <button type="submit" disabled={!formik.isValid}>Aceptar</button>
-                </div>
-              </Form>
+                <FormGroup style={{display:'block', textAlign:'center'}}>
+                  <Button type="submit" variant="outlined" color="primary">
+                    {isNewRecord ? 'Ingresar' : 'Aceptar'}
+                  </Button>
+                </FormGroup>
+              </form>
             )
           }
         </Formik>
-      </div>
+        </div>
     )
 }
-
 
 export default React.memo(AuthForm)
