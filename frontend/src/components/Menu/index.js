@@ -4,23 +4,32 @@ import React from 'react'
 // @Components
 import ItemMenu from './ItemMenu'
 
-// @Statics > Styles
+// @Statics > Styless
 import './index.scss'
 
-const items = [
+const publicItems = [
     { url: "/acceder", label:"Iniciar Sesión" },
     { url: "/crear-cuenta", label:"Crear cuenta" }
 ]
 
-function index({ authenticated = false, logout = () => console.log("First login") } = {}) {
+function index({ user = {}, logout = () => console.log("First login") } = {}) {
     return (
         <div className="menu">
             <ul className="menu__list">
                 {
-                    !authenticated ? items.map(({url, label}) => (
+                    !user.isAuthenticated ? publicItems.map(({url, label}) => (
                         <ItemMenu key={url} url={url} label={label}/>
                     ))
-                    : (<ItemMenu url="#" label="Cerrar sesión" onClick={logout}/>)
+                    : (
+                        <div className="user--profiles">
+                            <div className="btnClose--session item--menu app--text">
+                                {user.username}
+                            </div>
+                            <button className="btnClose--session item--menu app--text" onClick={logout}>
+                                Cerrar sesión
+                            </button>
+                        </div>
+                    )
                 }
             </ul>
         </div>

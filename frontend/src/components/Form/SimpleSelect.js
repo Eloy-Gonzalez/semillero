@@ -1,0 +1,43 @@
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+
+function SimpleSelect(props) {
+	const useStyles = makeStyles((theme) => ({
+	  formControl: {
+	    margin: 0,
+	    minWidth: 120,
+	  },
+	  selectEmpty: {
+	    marginTop: theme.spacing(2),
+	  },
+	}));
+
+	const classes = useStyles()
+
+	return (
+		<FormControl variant="filled" className={classes.formControl}>
+	        <InputLabel id={props.id}>{props.label}</InputLabel>
+	        <Select
+	        	{...props}
+	        >
+	          <MenuItem value="">
+	            <em>Seleccionar</em>
+	          </MenuItem>
+	          {
+	          	props.items && props.items.map( ({ value, label}) => (
+	          		<MenuItem key={value} value={value}>{label}</MenuItem>
+	          	))
+	          }
+	        </Select>
+	        {props.helpertext && <FormHelperText> {props.helpertext} </FormHelperText>}
+		</FormControl>
+	)
+}
+
+export default React.memo(SimpleSelect)

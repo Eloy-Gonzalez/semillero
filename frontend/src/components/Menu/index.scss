@@ -30,3 +30,18 @@
         }
     }
 }
+
+.user--profiles {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 15px;
+}
+
+.btnClose--session {
+    cursor: pointer;
+    outline: none;
+    color: #86a513;
+    font-size: 1rem;
+    letter-spacing: -1px;
+    background: #fff;
+}

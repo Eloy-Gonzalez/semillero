@@ -1,29 +1,35 @@
 // @Vendors
-import React from 'react'
-import { Route, useLocation } from 'wouter'
-import {useSelector} from 'react-redux'
+import React, {useCallback} from 'react'
+import { Route, Redirect, withRouter} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+
+// @Actions
+import {logout} from 'state/auth/auth.actions'
 
 // @Selectors
-import {selectIsAuthenticated} from 'state/users/users.selectors'
+import {selectUser} from 'state/users/users.selectors'
 
 // @Components
 import AppFrame from 'components/AppFrame'
 
-function PrivateRoute({ component: Component, path, alias}) {
-    const isAuthenticated = useSelector(state => selectIsAuthenticated(state))
-    const [_, setLocation] = useLocation()
+function PrivateRoute({ history, component: Component, alias, ...rest }) {
+    const user = useSelector(state => selectUser(state))
+    const dispatch = useDispatch()
+
+    const doLogout = useCallback(() => {
+        dispatch(logout())
+    }, [dispatch])
 
     return (
-        isAuthenticated ?
-            <Route exact path={path}>
-                {props => (
-                    <AppFrame title={alias} authenticated={isAuthenticated}>
-                        <Component {...props}/>
-                    </AppFrame>
-                )}
-            </Route>
-        : setLocation("/acceder")
+        <Route {...rest} render={
+            props => 
+            user.isAuthenticated ? (
+                <AppFrame title={alias} user={user} onLogout={doLogout}>
+                    <Component {...props}/>
+                </AppFrame>
+            ) : <Redirect to="/acceder" />
+        } />
     )
 }
 
-export default React.memo(PrivateRoute)
+export default withRouter(React.memo(PrivateRoute))

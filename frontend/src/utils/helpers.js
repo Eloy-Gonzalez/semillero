@@ -1,19 +1,25 @@
 // @Vendors
 import { get } from 'lodash'
+import axios from 'axios'
+import {BASE_API} from 'constants/index'
 
 import {AUTH_TOKEN} from 'state/auth/auth.actionsTypes'
 
 // Operaciones para el Toke de Autenticación
-export function getToken() {
-  return JSON.parse(localStorage.getItem(AUTH_TOKEN)) || false
+export function getToken(key = AUTH_TOKEN) {
+  return JSON.parse(localStorage.getItem(key)) || false
 }
 
-export function setToken(jwt = "") {
-  localStorage.setItem(AUTH_TOKEN, JSON.stringify(jwt));
+export function setToken(jwt = "", key=AUTH_TOKEN) {
+  localStorage.setItem(key, JSON.stringify(jwt));
 }
 
-export function removeToken(){
-  localStorage.removeItem(AUTH_TOKEN)
+export function removeToken(key = AUTH_TOKEN) {
+  if(getToken(key)) {
+    localStorage.removeItem(key)
+    return true
+  }
+  return false
 }
 
 // Mapear mensajes de errores del servidor
@@ -28,4 +34,17 @@ export const buildErrorsObj = (err) => {
     serverErrors,
     statusError: err ? get(err, 'status', '') : 502
   }
+}
+
+// Obtener Estados, Municipios y Parroquias de Venezuela.
+export function getEstados(id_estado) {
+    return axios.post(`${BASE_API}/estados`, { params: {id_estado} })
+}
+
+export function getMunicipios(id_estado) {
+  return axios.post(`${BASE_API}/municipios`, { params: id_estado }) 
+}
+
+export function getParroquias(id_municipio) {
+  return axios.post(`${BASE_API}/parroquias`, { params: id_municipio }) 
 }

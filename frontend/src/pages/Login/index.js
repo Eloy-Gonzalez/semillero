@@ -17,7 +17,7 @@ function Login() {
 
 	const handleSubmit = useCallback((data, actions) => {
 	    const payload = {
-	        username: data.email,
+	        username: data.username,
 	        password: data.password
 	    }
     	dispatch({ type: LOGIN, payload })
@@ -26,11 +26,15 @@ function Login() {
 
     return (
     	<React.Fragment>
-	        <div className="box--login">
+	        <div className="box--login card--box">
 	        	<div className="avatar">
 	        		<img src={avatar} alt="avatar"/>
 	        	</div>      
-	            <AuthForm onSubmit={handleSubmit} />
+	            <AuthForm onSubmit={handleSubmit} ActionsButtons={
+	            	<button type="submit">
+	            		Ingresar
+	            	</button>
+	            }/>
 	            {/*
 	            <a href="#" style={{fontSize: "15px", textDecoration:"none", float: "right"}}>Recuperar contraseña</a>*/ }
 	        </div>

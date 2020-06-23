@@ -1,4 +1,9 @@
 const PREFIX = 'USERS'
 
-export const REGISTER = `${PREFIX}/REGISTER`
 export const SET_ONE_USER = `${PREFIX}/SET_ONE_USER`
+export const SET_PROFILES = `${PREFIX}/SET_PROFILES`
+export const SET_UBICATION = `${PREFIX}/SET_UBICATION`
+
+export const SEARCH_SAIME = `${PREFIX}/SEARCH_SAIME`
+export const SET_FORM_STEP = `${PREFIX}/SET_FORM_STEP`
+export const REGISTER_NEW_USER = `${PREFIX}/REGISTER_NEW_USER`

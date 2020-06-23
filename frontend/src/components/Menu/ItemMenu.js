@@ -2,12 +2,12 @@
 import React from 'react'
 import  {upperFirst} from 'lodash'
 
-import {Link} from 'wouter'
+import {Link} from 'react-router-dom'
 
-function ItemMenu({ url, label, onClick }) {
+function ItemMenu({ url, label }) {
     return (
         <li className="item--menu">
-            <Link href={url} className="app--text" onClick={onClick}>
+            <Link to={url} className="app--text">
                 {upperFirst(label)}
             </Link>
         </li>
