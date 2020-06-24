@@ -2,15 +2,21 @@ import {
   SEARCH_SAIME,
   SET_UBICATION,
   SET_ONE_USER,
+  SET_PROFILES,
   SET_FORM_STEP,
-  REGISTER_NEW_USER
+  REGISTER_NEW_USER,
+
+  // CLEANERS
+  CLEAR_PROFILES,
+  CLEAR_UBICATION,
+  CLEAR_REPRESENTANTE
 } from './users.actionsTypes'
 
-const consultarSaime = (cedula) => {
+const consultarSaime = (payload) => {
   return (dispatch) => {
     dispatch({
       type: SEARCH_SAIME,
-      keyword: cedula
+      payload
     })
   }
 }
@@ -33,15 +39,6 @@ const setNewUser = (payload) => {
   }
 }
 
-const registerNewUser = (payload) => {
-  return (dispatch) => {
-    dispatch({
-      type: REGISTER_NEW_USER,
-      payload
-    })
-  }
-}
-
 const setFormStep = (payload) => {
   return (dispatch) => {
     dispatch({
@@ -51,11 +48,60 @@ const setFormStep = (payload) => {
   }
 }
 
-// @Exports Functions
+const setProfiles = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_PROFILES,
+      payload
+    })
+  }
+}
+
+const registerNewUser = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: REGISTER_NEW_USER,
+      payload
+    })
+  }
+}
+
+// CLEANERS
+const cleanProfiles = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_PROFILES
+    })
+  }
+}
+
+const cleanUbication = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_UBICATION
+    })
+  }
+}
+
+const cleanRepresentante = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: CLEAR_REPRESENTANTE
+    })
+  }
+}
+
+// @Exports
 export {
-  consultarSaime,
+  // SETTERS
   setUbication,
   setNewUser,
   setFormStep,
-  registerNewUser
+  consultarSaime,
+  registerNewUser,
+  setProfiles,
+  // ClEANERS
+  cleanProfiles,
+  cleanUbication,
+  cleanRepresentante
 }

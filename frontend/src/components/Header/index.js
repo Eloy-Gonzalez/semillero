@@ -29,7 +29,7 @@ function Header({user={}, onLogout= () => console.log("Login first")}) {
             <div className="row">
                 <Menu user={user} logout={onLogout}/>
                 <div className="header__primary-logo">
-                    { user.isAuthenticated ? 
+                    { !user.isAuthenticated ? 
                         <img src={LogoSemilleros} alt="Semilleros de Jóvenes Científicos"/> :
                         <video ref={refVideo} style={{transition: 'all .3s cubic-bezier(0.83, 0.22, 0.35, 1.04)', float:'left', width:'100%', transform:'scale(1)'}}>
                             <source src={VideoSemilleros} type="video/mp4"/>

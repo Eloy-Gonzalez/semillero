@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import styled from 'styled-components'
 
 import {useSelector} from 'react-redux'
-import {selectProfiles} from 'state/users/users.selectors'
+import {selectProfiles, selectRepresentant} from 'state/users/users.selectors'
 
 const Table = styled.div`
 	display:grid;
@@ -23,10 +23,30 @@ const Text = styled.p`
 `
 function DetailUserProfile({ ActionsButtons, onSubmit }){
 	const profiles = useSelector(state => selectProfiles(state))
-	const nombres = `${profiles.primer_nombre} ${profiles.segundo_nombre}`
-	const apellidos = `${profiles.primer_apellido} ${profiles.segundo_apellido}`
+	const representant = useSelector(state => selectRepresentant(state))
+	
+	const [nombres, setNombres] = React.useState('')
+	const [apellidos, setApellidos] = React.useState('')
+	const [nacimiento, setNacimiento] = React.useState('')
+	const [sexo, setSexo] = React.useState('')
+
+	useEffect(() => {
+		if(profiles.cedula === '') {
+			setNombres(`${representant.primer_nombre_representante} ${representant.segundo_nombre_representante}`)
+			setApellidos(`${representant.primer_apellido_representante} ${representant.segundo_apellido_representante}`)
+			setNacimiento(representant.fecha_nacimiento_representante)
+			setSexo(representant.genero_representante)
+		} else {
+			setNombres(`${profiles.primer_nombre} ${profiles.segundo_nombre}`)
+			setApellidos(`${profiles.primer_apellido} ${profiles.segundo_apellido}`)
+			setNacimiento(profiles.fecha_nacimiento)
+			setSexo(profiles.genero)
+		}
+	}, [profiles, representant])
+
+
 	return (
-		<React.Fragment>
+		<>
 			<Table  className="anim_form-data">
 				<div>
 					<label>
@@ -49,7 +69,7 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 						<Title>Fecha de nacimiento</Title>
 					</label>
 					<span>
-						<Text>{profiles.fecha_nacimiento}</Text>
+						<Text>{nacimiento}</Text>
 					</span>
 				</div>
 				<div>
@@ -57,14 +77,14 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 						<Title>Género</Title>
 					</label>
 					<span>
-						<Text>{profiles.genero === "M" ? "Masculino" : "Femenino"}</Text>
+						<Text>{sexo === "M" ? "Masculino" : "Femenino"}</Text>
 					</span>
 				</div>
 			</Table>
-			<form onSubmit={onSubmit}>
+			<form onSubmit={(e) => onSubmit(e)}>
 				{ActionsButtons}
 			</form>
-		</React.Fragment>
+		</>
 	)
 }
-export default DetailUserProfile
+export default React.memo(DetailUserProfile)

@@ -7,7 +7,7 @@ import * as Yup from 'yup'
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
 
-function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=true, ActionsButtons=""}) {
+function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false, ActionsButtons="", nextForm}) {
 	
 	const initialValues = {
 		nacionalidad: 'V',
