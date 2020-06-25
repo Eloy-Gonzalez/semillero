@@ -369,10 +369,11 @@ exports.parroquias = (req, res) => {
 exports.saime = (req, res) => {
 	console.log('func -> Saime');
 	if (req.body.params != undefined) {
-		const { cedula } = req.body.params;
+		const { nacionalidad, cedula } = req.body.params;
 		if (cedula != undefined) {
 			Saime.findAll({
 				where : {
+					nacionalidad : nacionalidad,
 					cedula : cedula
 				}
 			}).then(persona => {

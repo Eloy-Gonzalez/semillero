@@ -77,7 +77,7 @@ exports.usuario = async (req, res) => {
 		// Proyecto
 		let proyecto = await Proyectos.create({
 			id_usuario : userDirection.dataValues.id_usuario,
-			id_periodo : faker.random.number({min: 1, max: 1}),
+			id_periodo : faker.random.number({min: 2, max: 2}),
 			nombre : faker.lorem.word(1),
 			descripcion : faker.lorem.words(4),
 			url_video : faker.internet.url()
