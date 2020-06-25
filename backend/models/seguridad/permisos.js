@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     nombre: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      set: function(val) {
+        this.setDataValue('nombre', val.toUpperCase());
+      }
     },
     tipo: {
       type: DataTypes.SMALLINT,

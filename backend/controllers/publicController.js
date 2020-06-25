@@ -32,15 +32,13 @@ const Parroquias = db.Parroquias;
 
 const Saime = db.Saime;
 
-/* API REGISTER
-	@params username string, email string, password string, nacionalidad string, cedula string
-	@return mixed
+/* API REGISTRO
+	@return JSON
 	@tested true
 */
-exports.register = (req, res) => {
+exports.registro = (req, res) => {
 	console.log('func -> Register');
 	if (req.body.params != undefined) {
-		// Añadir el resto de parametros emitidos por el cliente!!
 		const { 
 			username, 
 			password, 
@@ -71,25 +69,22 @@ exports.register = (req, res) => {
 			categorias
  		} = req.body.params;
 		
-		db.semillero.query("\
-			SELECT\
-				count(*)\
-				FROM seguridad.usuarios\
-				WHERE\
-					username = :username\
-			", { replacements : { username : username }, type: db.semillero.QueryTypes.SELECT }
-		).then(result => {
-			if (result[0].count == 0) {
+		Usuarios.count({ where : { username : username }}).then(async user => {
+			if (!user) {
 				var passwordHashed = bcrypt.hashSync(password, 8);
-				// Inicio de proceso transaccional
-				Usuarios.create({
-				  username : username,
-				  password : passwordHashed,
-				  id_pregunta : id_pregunta,
-				  respuesta_seguridad : respuesta_seguridad
-				}).then( async user => {
-					console.log('Step 1 -> success');
-					if (cedula == '') {
+				// BEGIN TRANSACTION ISOLATION LEVEL 1
+				const t = await ProyectosXCategorias.sequelize.transaction({ autocommit : false });
+				try {
+					// Usuarios
+					let user = await Usuarios.create({
+						username: username,
+						password: passwordHashed,
+						id_pregunta: id_pregunta,
+						respuesta_seguridad : respuesta_seguridad
+					}, { transaction : t });
+					console.log('Step 1 -> Success');
+					// ATENCION!!
+					if (cedula == '' || cedula != '') {
 						// Usuarios Representante
 						let representante = await UsuariosRepresentante.create({
 							id_usuario : user.dataValues.id,
@@ -100,12 +95,10 @@ exports.register = (req, res) => {
 						  segundo_apellido : segundo_apellido_representante,
 	  					genero : genero_representante,
 						  fecha_nacimiento : fecha_nacimiento_representante
-						});
-						console.log('Representante cargado exitosamente');
-						// Validar carga de representante
-					} 
+						}, { transaction : t });
+					}
 					// Usuarios Perfil
-					UsuariosPerfil.create({
+					let userProfile = await UsuariosPerfil.create({
 						id_usuario : user.dataValues.id,
 						cedula : cedula,
   					primer_nombre : primer_nombre,
@@ -114,59 +107,57 @@ exports.register = (req, res) => {
 					  segundo_apellido : segundo_apellido,
   					genero : genero,
 					  fecha_nacimiento : fecha_nacimiento,
-					}).then(user2 => {
-						console.log('Step 2 -> success');
-						// Usuarios Domicilio
-						UsuariosDomicilio.create({
-							id_usuario : user2.dataValues.id_usuario,
-  						telefono_habitacional : telefono_habitacional,
-  						telefono_personal : telefono_personal,
-  						id_parroquia : id_parroquia,
-  						direccion_habitacional : direccion_habitacional,
-						}).then(user3 => {
-							console.log('Step 3 -> success');
-							// Proyecto
-							Proyectos.create({
-								id_usuario : user3.dataValues.id_usuario,
-								id_periodo : id_periodo,
-								nombre : nombre,
-								descripcion : descripcion,
-								url_video : url_video
-							}).then(proyecto => {
-								console.log('Step 4 -> success');
-								// Proyectos_x_categorias
-								var data = [];
-								categorias.forEach((index, value) => {
-									data.push({
-										id_proyecto : proyecto.dataValues.id,
-										id_categoria : index
-									})
-								});
-								ProyectosXCategorias.bulkCreate(data)
-								.then(success => {
-									console.log('Step 5 -> success');
-									//console.log(success);
-									// Validar!
-									res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
-								}).catch(err => {
-									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
-								})
-							}).catch(err => {
-								res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
-							})
-						}).catch(err => {
-							res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
-						});
-					}).catch(err => {
-						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
+					}, { transaction : t });
+					console.log('Step 2 -> Success');
+					// Usuarios Domicilio
+					let userDirection = await	UsuariosDomicilio.create({
+						id_usuario : userProfile.dataValues.id_usuario,
+						telefono_habitacional : telefono_habitacional,
+						telefono_personal : telefono_personal,
+						id_parroquia : id_parroquia,
+						direccion_habitacional : direccion_habitacional,
+					}, { transaction : t });
+					console.log('Step 3 -> Success');
+					// Proyecto
+					let proyecto = await Proyectos.create({
+						id_usuario : userDirection.dataValues.id_usuario,
+						id_periodo : id_periodo,
+						nombre : nombre,
+						descripcion : descripcion,
+						url_video : url_video
+					}, { transaction : t });
+					console.log('Step 4 -> Success');
+					// Proyectos_x_categorias
+					var data = [];
+					categorias.forEach((index, value) => {
+						data.push({
+							id_proyecto : proyecto.dataValues.id,
+							id_categoria : index
+						})
 					});
-				}).catch(err => {
-					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err }});
-				});
+					let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
+					// PUSH
+					await t.commit();
+					console.log('Step 5 -> Success');
+					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+				} catch(err) {
+					// ROLLBACK TRANSACTION ISOLATION LEVEL 1
+					await t.rollback();
+					
+					// Validation before send query on database
+					if (err.name == 'SequelizeValidationError') {
+						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+					}
+					// Validation after send query on database
+					if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
+						const { severity, code, detail } = err.parent;
+						res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+					}
+				}
 			} else {
 				res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Usted ya posee un usuario en el sistema!'} });
 			}
-		});
+		})
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
@@ -190,27 +181,25 @@ exports.login = (req, res) => {
 			", { replacements: { username: username }, type: db.semillero.QueryTypes.SELECT }
 		).then(result => {
 			if (result.length > 0) {
-				const {
-					username,
-					version,
-				} = result[0];
-				bcrypt.compare(password, result[0].password).then(response => {
-					// Si coinciden las contraseñas
-					if (response) {
-						const payload = {
-							username : username,
-							version : version
-						}
+				const { username, borrado, version } = result[0];
+				if (borrado) {
+					res.status(200).json({ alert: { type: 'warning', title: 'Atención', message: 'Su cuenta ha sido bloqueada por un administrador, pongase en contacto con el equipo de soporte para mayor información!' }});
+				} else{
+					bcrypt.compare(password, result[0].password).then(response => {
+						// Si coinciden las contraseñas
+						if (response) {
+							const payload = {username : username,version : version};
 
-						// Se crea el token junto con los datos del usuario
-						const token = jwt.sign(payload, require('../config').key, {
-							expiresIn: '1h'
-						});
-						res.status(200).json({ token : token, alert : { type : 'success', title : 'Información', message : 'Inicio de sesión exitoso!'} });
-					} else {
-						res.status(200).json({ alert : { type : 'warning', title: 'Atención', message : 'Usuario o contraseña invalido!'} });
-					}
-				});
+							// Se crea el token junto con los datos del usuario
+							const token = jwt.sign(payload, require('../config').key, {
+								expiresIn: '1h'
+							});
+							res.status(200).json({ token : token, alert : { type : 'success', title : 'Información', message : 'Inicio de sesión exitoso!'} });
+						} else {
+							res.status(200).json({ alert : { type : 'warning', title: 'Atención', message : 'Usuario o contraseña invalido!'} });
+						}
+					});
+				}
 			} else {
 				res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Usuario invalido o no existente!'} });
 			}
@@ -246,7 +235,7 @@ exports.login = (req, res) => {
 // 					// var mailOptions = {
 // 					// 	from: 'Remitente',
 // 					// 	to: result[0].email,
-// 					// 	subject: 'Recuperación de acceso SAMINCYT',
+// 					// 	subject: 'Recuperación de acceso Sistema registro y concurso semilleros',
 // 					// 	html: `<h1>¡Hola, ${username}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click en el siguiente enlace: <a href="">Restablecer contraseña</a></p>`
 // 					// };
 // 					// transporter.sendMail(mailOptions, function(error, info){
@@ -372,17 +361,6 @@ exports.parroquias = (req, res) => {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
-
-/* API PROYECTOS
- @params nothing
- @return object
-*/
-exports.proyectos = (req, res) => {
-	console.log('func -> Proyectos');
-	Proyectos.findAll().then(proyectos => {
-		res.status(200).json(proyectos);
-	})
-}
 
 /* API SAIME
  @params string

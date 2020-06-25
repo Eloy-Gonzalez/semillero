@@ -2,14 +2,15 @@ module.exports = (app) => {
 
 	// Controllers
 	const publicController = require('../controllers/publicController');
-	const privateController = require('../controllers/privateController');
 	const categoriasController = require('../controllers/categoriasController');
 	const estatusController = require('../controllers/estatusController');
 	const preguntasController = require('../controllers/preguntasController');
 	const periodosController = require('../controllers/periodosController');
 	const fasesController = require('../controllers/fasesController');
 	const fasesdescripcionController = require('../controllers/fasesdescripcionController');
-	//const testController = require('../controllers/testController');
+	const proyectosController = require('../controllers/proyectosController');
+	const usuariosController = require('../controllers/usuariosController');
+	// const testController = require('../controllers/testController');
 
 	// Middleware
 	const rutasProtegidas = require('../middlewares/rutasProtegidas');
@@ -19,8 +20,8 @@ module.exports = (app) => {
 		res.status(200).json({title : 'Bienvenido al sistema'});
 	});
 
-	// Register
-	app.post('/registro', publicController.register);
+	// Registro
+	app.post('/registro', publicController.registro);
 
 	// Login
 	app.post('/login', publicController.login);
@@ -47,45 +48,62 @@ module.exports = (app) => {
 	app.post('/categorias', categoriasController.get);
 	app.post('/categorias/create', rutasProtegidas.verifyToken, categoriasController.create);
 	app.post('/categorias/update', rutasProtegidas.verifyToken, categoriasController.update);
-	app.post('/categorias/delete',rutasProtegidas.verifyToken, categoriasController.delete);
+	app.post('/categorias/delete', rutasProtegidas.verifyToken, categoriasController.delete);
+	app.post('/categorias/restore', rutasProtegidas.verifyToken, categoriasController.restore);
 
 	// Estatus
 	app.post('/estatus', estatusController.get);
 	app.post('/estatus/create', rutasProtegidas.verifyToken, estatusController.create);
 	app.post('/estatus/update', rutasProtegidas.verifyToken, estatusController.update);
 	app.post('/estatus/delete', rutasProtegidas.verifyToken, estatusController.delete);
+	app.post('/estatus/restore', rutasProtegidas.verifyToken, estatusController.restore);
 
 	// Preguntas Seguridad
 	app.post('/preguntas', preguntasController.get);
 	app.post('/preguntas/create', rutasProtegidas.verifyToken, preguntasController.create);
 	app.post('/preguntas/update', rutasProtegidas.verifyToken, preguntasController.update);
 	app.post('/preguntas/delete', rutasProtegidas.verifyToken, preguntasController.delete);
+	app.post('/preguntas/restore', rutasProtegidas.verifyToken, preguntasController.restore);
 
 	// Proyectos
-	app.post('/proyectos', publicController.proyectos);
+	app.post('/proyectos', proyectosController.get);
+	app.post('/proyectos/create', rutasProtegidas.verifyToken, proyectosController.create);
+	app.post('/proyectos/update', rutasProtegidas.verifyToken, proyectosController.update);
+	app.post('/proyectos/delete', rutasProtegidas.verifyToken, proyectosController.delete);
+	app.post('/proyectos/restore', rutasProtegidas.verifyToken, proyectosController.restore);
 
 	// Periodos
 	app.post('/periodos', periodosController.get);
 	app.post('/periodos/create', rutasProtegidas.verifyToken, periodosController.create);
 	app.post('/periodos/update', rutasProtegidas.verifyToken, periodosController.update);
 	app.post('/periodos/delete', rutasProtegidas.verifyToken, periodosController.delete);
+	app.post('/periodos/restore', rutasProtegidas.verifyToken, periodosController.restore);
 
 	// Fases
 	app.post('/fases', fasesController.get);
 	app.post('/fases/create', rutasProtegidas.verifyToken, fasesController.create);
 	app.post('/fases/update', rutasProtegidas.verifyToken, fasesController.update);
 	app.post('/fases/delete', rutasProtegidas.verifyToken, fasesController.delete);
+	app.post('/fases/restore', rutasProtegidas.verifyToken, fasesController.restore);
 
 	// Fases Descripcion
 	app.post('/fasesdescripcion', fasesdescripcionController.get);
 	app.post('/fasesdescripcion/create', rutasProtegidas.verifyToken, fasesdescripcionController.create);
 	app.post('/fasesdescripcion/update', rutasProtegidas.verifyToken, fasesdescripcionController.update);
 	app.post('/fasesdescripcion/delete', rutasProtegidas.verifyToken, fasesdescripcionController.delete);
+	app.post('/fasesdescripcion/restore', rutasProtegidas.verifyToken, fasesdescripcionController.restore);
+
+	// Usuarios
+	app.post('/usuarios', usuariosController.get);
+	app.post('/usuarios/create', rutasProtegidas.verifyToken, usuariosController.create);
+	app.post('/usuarios/update', rutasProtegidas.verifyToken, usuariosController.update);
+	app.post('/usuarios/delete', rutasProtegidas.verifyToken, usuariosController.delete);
+	app.post('/usuarios/restore', rutasProtegidas.verifyToken, usuariosController.restore);
 
 	// TEST ROUTES
 	// app.post('/test/gettoken', testController.getToken);
 	// app.post('/test/generatetoken', testController.generateToken);
 	// app.post('/test/generatepassword', testController.generatePassword);
 	// app.post('/test/registro/usuario', testController.usuario);
-	// app.post('/test/proyectosmasivo', testController.insertProyectosMasivo);
+	// app.post('/test/query', testController.query);
 }

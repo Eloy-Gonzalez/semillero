@@ -1,20 +1,21 @@
 let db = require('../config/databases.js');
 
 /* Model */
-const Categorias = db.Categorias;
+const Proyectos = db.Proyectos;
+const ProyectosXCategorias = db.ProyectosXCategorias;
 
-/* API GET BANCOS
+/* API GET PROYECTOS
 	@params columns from database
 	@return json
 */
 exports.get = (req, res) => {
-	console.log('func -> getCategorias');
+	console.log('func -> getProyectos');
 	if (req.body.params != undefined) {
 		const conditions = req.body.params;
-		Categorias.findAll({
+		Proyectos.findAll({
 			where : conditions
-		}).then(categorias => {
-			res.status(200).json(categorias);
+		}).then(proyectos => {
+			res.status(200).json(proyectos);
 		}).catch(err => {
 			const { severity, code, hint } = err.parent;
 			res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${hint}`}});
@@ -24,18 +25,37 @@ exports.get = (req, res) => {
 	}
 };
 
-/* API INSERT CATGORIAS
+/* API INSERT PROYECTOS
 	@params columns from database
 	@return json
 */
-exports.create = (req, res) => {
-	console.log('func -> insertCategorias');
+exports.create = async (req, res) => {
+	console.log('func -> insertProyectos');
 	if (req.body.params != undefined) {
 		const conditions = req.body.params;
-		Categorias.create(conditions)
-		.then(response => {
-			res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
-		}).catch(err => {
+		if (conditions.categorias.length > 0) {
+			const { categorias } = conditions;
+			const t = await ProyectosXCategorias.sequelize.transaction({ autocommit : false });
+			try {
+				// BEGIN TRANSACTION ISOLATION LEVEL 1
+				var proyecto = await Proyectos.create(conditions, { transaction : t });
+				// Proyectos_x_categorias
+				var data = [];
+				categorias.forEach((index, value) => {
+					data.push({
+						id_proyecto : proyecto.dataValues.id,
+						id_categoria : index
+					})
+				});
+
+				await ProyectosXCategorias.bulkCreate(data, { transaction : t });
+				res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
+				// PUSH
+				await t.commit();
+			} catch(err) {
+				// ROLLBACK TRANSACTION ISOLATION LEVEL 1
+				await t.rollback();
+				
 				// Validation before send query on database
 				if (err.name == 'SequelizeValidationError') {
 					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
@@ -45,56 +65,101 @@ exports.create = (req, res) => {
 					const { severity, code, detail } = err.parent;
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
-		})
+			}
+		} else {
+			res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Por favor, seleccione al menos 1 categoria'}});		
+		}
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});		
 	}
 };
 
-/* API UPDATE CATEGORIAS
+/* API UPDATE PROYECTOS
 	@params columns from database
 	@return json
 */
-exports.update = (req, res) => {
-	console.log('func -> updateCategorias');
+exports.update = async (req, res) => {
+	console.log('func -> updateProyectos');
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
-		const { id, version } = conditions;
+		const { id, version, categorias } = conditions;
 		if (conditions.id != undefined && conditions.actualizado_por != undefined && conditions.version != undefined) {
 			delete conditions.id; delete conditions.version;
 			conditions = {
 				...conditions,
 				version : version + 1
 			};
-			Categorias.update(conditions, {
-				where : {
-					id : id,
-					version : version
+			if (conditions.categorias != undefined) {
+				const t = await ProyectosXCategorias.sequelize.transaction({ autocommit : false });
+				try {
+					// BEGIN TRANSACTION ISOLATION LEVEL 1
+					const { categorias } = conditions;
+					// Proyectos_x_categorias
+					var data = [];
+					categorias.forEach((index, value) => {
+						data.push({
+							id_proyecto : id,
+							id_categoria : index
+						})
+					});
+					await Proyectos.update(conditions, {
+						where : {
+							id : id,
+							version : version
+						}
+					}, { transaction : t }).then(result => {
+						if (result[0] > 0) {
+							res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Actualización exitosa!'}});
+						} else {
+							res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Error al actualizar datos!'}});
+						}
+					})
+					await ProyectosXCategorias.destroy({ where : { id_proyecto : id } }, { transaction : t } );
+					await ProyectosXCategorias.bulkCreate(data, { transaction : t });
+					// PUSH
+					await t.commit();
+				}catch(err) {
+					// ROLLBACK TRANSACTION ISOLATION LEVEL 1
+					await t.rollback();
+					
+					// Validation before send query on database
+					if (err.name == 'SequelizeValidationError') {
+						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+					}
+					// Validation after send query on database
+					if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
+						const { severity, code, detail } = err.parent;
+						res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+					}
 				}
-			}).then(result => {
-				if (result[0] > 0) {
-					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Actualización exitosa!'}});
-				} else {
-					res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Error al actualizar datos!'}});
-				}
-			}).catch(err => {
-				const { severity, code, hint } = err.parent;
-				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${hint}`}});
-			})
+			} else {
+				Proyectos.update(conditions, {
+					where : {
+						id : id,
+						version : version
+					}
+				}).then(result => {
+					if (result[0] > 0) {
+						res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Actualización exitosa!'}});
+					} else {
+						res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Error al actualizar datos!'}});
+					}
+				})
+			}
 		} else {
-			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo \'id\', \'actualizado_por\' y \'version\' requerido!'}});
+			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo(s) \'id\', \'actualizado_por\' y \'version\' requerido!'}});
 		}
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
 
-/* API DELETE CATEGORIAS (SOFT DELETE)
+/* API DELETE PROYECTOS (SOFT DELETE)
 	@params columns from database
 	@return json
 */
 exports.delete = (req, res) => {
-	console.log('func -> deleteCategorias');
+	console.log('func -> deleteProyectos');
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
 		const { id, version } = conditions;
@@ -102,7 +167,7 @@ exports.delete = (req, res) => {
 			delete conditions.id; delete conditions.version;
 			var set = {...conditions,	borrado : true,	version : version + 1};
 			conditions = {id : id, version : version};
-			Categorias.update(set, {
+			Proyectos.update(set, {
 				where : conditions
 			}).then(result => {
 				if (result[0] > 0) {
@@ -121,12 +186,12 @@ exports.delete = (req, res) => {
 	}
 };
 
-/* API RESTORE CATEGORIAS (SOFT RESTORE)
+/* API RESTORE PROYECTOS (SOFT RESTORE)
 	@params columns from database
 	@return json
 */
 exports.restore = (req, res) => {
-	console.log('func -> restoreCategorias');
+	console.log('func -> restoreProyectos');
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
 		const { id, version } = conditions;
@@ -134,7 +199,7 @@ exports.restore = (req, res) => {
 			delete conditions.id; delete conditions.version;
 			var set = {...conditions,	borrado : false,	version : version + 1};
 			conditions = {id : id, version : version};
-			Categorias.update(set, {
+			Proyectos.update(set, {
 				where : conditions
 			}).then(result => {
 				if (result[0] > 0) {

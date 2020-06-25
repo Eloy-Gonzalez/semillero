@@ -3,7 +3,11 @@ module.exports = (sequelize, DataTypes) => {
     id_usuario: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      references: {
+        model: 'usuarios',
+        key: 'id'
+      }
     },
     telefono_habitacional: {
     	type: DataTypes.STRING,
@@ -19,7 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     direccion_habitacional: {
     	type: DataTypes.TEXT,
-    	allowNull: false
+    	allowNull: false,
+      set: function(val) {
+        this.setDataValue('direccion_habitacional', val.toUpperCase());
+      }
     },
     creado_por: {
       type: DataTypes.INTEGER,

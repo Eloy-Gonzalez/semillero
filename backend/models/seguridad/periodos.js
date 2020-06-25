@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     nombre: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      set: function(val) {
+        this.setDataValue('nombre', val.toUpperCase());
+      }
     },
     fecha_desde: {
     	type: DataTypes.DATEONLY,
@@ -28,7 +31,10 @@ module.exports = (sequelize, DataTypes) => {
     	defaultValue: 1
     },
     observaciones: {
-    	type: DataTypes.TEXT
+    	type: DataTypes.TEXT,
+      set: function(val) {
+        this.setDataValue('observaciones', val.toUpperCase());
+      }
     },
     estado: {
     	type: DataTypes.BOOLEAN,
@@ -43,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
     actualizado_por: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    borrado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     },
     version: {
       type: DataTypes.INTEGER,

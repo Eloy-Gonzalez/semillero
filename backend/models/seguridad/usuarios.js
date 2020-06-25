@@ -1,5 +1,6 @@
+'use strict';
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('usuarios', {
+  var Usuarios = sequelize.define('Usuarios', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -8,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     username: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     password: {
       type: DataTypes.STRING,
@@ -16,7 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_pregunta: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'preguntas_seguridad',
+        key: 'id'
+      }
     },
     respuesta_seguridad: {
       type: DataTypes.TEXT,
@@ -31,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    borrado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     version: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -44,4 +55,5 @@ module.exports = (sequelize, DataTypes) => {
     createdAt: false,
     updatedAt: false,
   });
+  return Usuarios;
 };

@@ -1,38 +1,72 @@
 let db = require('../config/databases.js');
+let bcrypt = require('bcryptjs');
 
 /* Model */
-const Categorias = db.Categorias;
+const Usuarios = db.Usuarios;
+const UsuariosPerfil = db.UsuariosPerfil;
+const UsuariosDomicilio = db.UsuariosDomicilio;
+const UsuariosRepresentante = db.UsuariosRepresentante;
+const Estados = db.Estados;
+const Municipios = db.Municipios;
+const Parroquias = db.Parroquias;
+const Proyectos = db.Proyectos;
+const Estatus = db.Estatus;
 
-/* API GET BANCOS
+/* API GET USUARIOS
 	@params columns from database
 	@return json
 */
 exports.get = (req, res) => {
-	console.log('func -> getCategorias');
+	console.log('func -> getUsuarios');
 	if (req.body.params != undefined) {
 		const conditions = req.body.params;
-		Categorias.findAll({
-			where : conditions
-		}).then(categorias => {
-			res.status(200).json(categorias);
+		Usuarios.findAll({
+			where: conditions,
+			include: [
+				{ model : UsuariosPerfil },
+				{ model : UsuariosRepresentante },
+				{ 
+					model: UsuariosDomicilio, include: [{ 
+						model: Parroquias, required: true, attributes: ['id_parroquia', 'nombre'], include: [{
+							model: Municipios, required: true,  attributes: ['id_municipio', 'nombre'], include: [{
+								model: Estados, required: true, attributes: ['id_estado', 'nombre'] 
+							}]
+						}]
+					}] 
+				},
+				{ model: Proyectos, required: true, include: [ { model : Estatus, required: true } ]}
+			]
+			}).then(usuarios => {
+		  	res.status(200).json(usuarios)
 		}).catch(err => {
-			const { severity, code, hint } = err.parent;
-			res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${hint}`}});
+			console.log(err);
+			if (err.name == 'SequelizeEagerLoadingError') {
+				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message: 'Error EagerLoading Relations Models'}});
+			} else {
+				const { severity, code, hint } = err.parent;
+				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${hint}`}});
+			}
 		})
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
 
-/* API INSERT CATGORIAS
+/* API INSERT USUARIOS
 	@params columns from database
 	@return json
 */
 exports.create = (req, res) => {
-	console.log('func -> insertCategorias');
+	console.log('func -> insertUsuarios');
 	if (req.body.params != undefined) {
-		const conditions = req.body.params;
-		Categorias.create(conditions)
+		const { password } = req.body.params;
+		var passwordHashed = bcrypt.hashSync(password, 8);
+		var conditions = {
+			...req.body.params,
+			password : passwordHashed
+		};
+
+		Usuarios.create(conditions)
 		.then(response => {
 			res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
 		}).catch(err => {
@@ -51,14 +85,22 @@ exports.create = (req, res) => {
 	}
 };
 
-/* API UPDATE CATEGORIAS
+/* API UPDATE USUARIOS
 	@params columns from database
 	@return json
 */
 exports.update = (req, res) => {
-	console.log('func -> updateCategorias');
+	console.log('func -> updateUsuarios');
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
+		const { password } = req.body.params;
+		if (password != undefined) {
+			var passwordHashed = bcrypt.hashSync(password, 8);
+			conditions= { 
+				...conditions, 
+				password : passwordHashed 
+			};
+		}
 		const { id, version } = conditions;
 		if (conditions.id != undefined && conditions.actualizado_por != undefined && conditions.version != undefined) {
 			delete conditions.id; delete conditions.version;
@@ -66,7 +108,7 @@ exports.update = (req, res) => {
 				...conditions,
 				version : version + 1
 			};
-			Categorias.update(conditions, {
+			Usuarios.update(conditions, {
 				where : {
 					id : id,
 					version : version
@@ -89,12 +131,12 @@ exports.update = (req, res) => {
 	}
 };
 
-/* API DELETE CATEGORIAS (SOFT DELETE)
+/* API DELETE USUARIOS (SOFT DELETE)
 	@params columns from database
 	@return json
 */
 exports.delete = (req, res) => {
-	console.log('func -> deleteCategorias');
+	console.log('func -> deleteUsuarios');
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
 		const { id, version } = conditions;
@@ -102,7 +144,7 @@ exports.delete = (req, res) => {
 			delete conditions.id; delete conditions.version;
 			var set = {...conditions,	borrado : true,	version : version + 1};
 			conditions = {id : id, version : version};
-			Categorias.update(set, {
+			Usuarios.update(set, {
 				where : conditions
 			}).then(result => {
 				if (result[0] > 0) {
@@ -121,12 +163,12 @@ exports.delete = (req, res) => {
 	}
 };
 
-/* API RESTORE CATEGORIAS (SOFT RESTORE)
+/* API RESTORE USUARIOS (SOFT RESTORE)
 	@params columns from database
 	@return json
 */
 exports.restore = (req, res) => {
-	console.log('func -> restoreCategorias');
+	console.log('func -> restoreUsuarios');
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
 		const { id, version } = conditions;
@@ -134,7 +176,7 @@ exports.restore = (req, res) => {
 			delete conditions.id; delete conditions.version;
 			var set = {...conditions,	borrado : false,	version : version + 1};
 			conditions = {id : id, version : version};
-			Categorias.update(set, {
+			Usuarios.update(set, {
 				where : conditions
 			}).then(result => {
 				if (result[0] > 0) {
@@ -151,4 +193,4 @@ exports.restore = (req, res) => {
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
-}
+};

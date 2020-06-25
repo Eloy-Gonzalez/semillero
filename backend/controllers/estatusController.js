@@ -51,6 +51,7 @@ exports.create = (req, res) => {
 	}
 };
 
+
 /* API UPDATE ESTATUS
 	@params columns from database
 	@return json
@@ -60,7 +61,7 @@ exports.update = (req, res) => {
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
 		const { id, version } = conditions;
-		if (conditions.id != undefined && conditions.version != undefined) {
+		if (conditions.id != undefined && conditions.actualizado_por != undefined && conditions.version != undefined) {
 			delete conditions.id; delete conditions.version;
 			conditions = {
 				...conditions,
@@ -82,26 +83,30 @@ exports.update = (req, res) => {
 				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${hint}`}});
 			})
 		} else {
-			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo \'id\' y \'version\' requerido!'}});
+			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo \'id\', \'actualizado_por\' y \'version\' requerido!'}});
 		}
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
 
-/* API DELETE ESTATUS
+/* API DELETE ESTATUS (SOFT DELETE)
 	@params columns from database
 	@return json
 */
 exports.delete = (req, res) => {
 	console.log('func -> deleteEstatus');
 	if (req.body.params != undefined) {
-		const conditions = req.body.params;
-		if (conditions.id != undefined && conditions.version != undefined) {
-			Estatus.destroy({
+		var conditions = req.body.params;
+		const { id, version } = conditions;
+		if (conditions.id != undefined && conditions.version != undefined && conditions.actualizado_por != undefined) {
+			delete conditions.id; delete conditions.version;
+			var set = {...conditions,	borrado : true,	version : version + 1};
+			conditions = {id : id, version : version};
+			Estatus.update(set, {
 				where : conditions
 			}).then(result => {
-				if (result) {
+				if (result[0] > 0) {
 					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'El registro ha sido eliminado exitosamente!'}});
 				} else {
 					res.status(200).json({ alert : { type : 'danger', title : 'Información', message : 'El registro a eliminar no existe o ya fue eliminado!'}});					
@@ -110,9 +115,41 @@ exports.delete = (req, res) => {
 				res.status(200).json(err);
 			})
 		} else {
-			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo \'id\' y \'version\' requerido!'}});			
+			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo(s) \'id\',  \'actualizado_por\' y \'version\' requerido!'}});			
 		}
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
+
+/* API RESTORE ESTATUS (SOFT RESTORE)
+	@params columns from database
+	@return json
+*/
+exports.restore = (req, res) => {
+	console.log('func -> restoreEstatus');
+	if (req.body.params != undefined) {
+		var conditions = req.body.params;
+		const { id, version } = conditions;
+		if (conditions.id != undefined && conditions.version != undefined && conditions.actualizado_por != undefined) {
+			delete conditions.id; delete conditions.version;
+			var set = {...conditions,	borrado : false,	version : version + 1};
+			conditions = {id : id, version : version};
+			Estatus.update(set, {
+				where : conditions
+			}).then(result => {
+				if (result[0] > 0) {
+					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'El registro ha sido restaurado exitosamente!'}});
+				} else {
+					res.status(200).json({ alert : { type : 'danger', title : 'Información', message : 'El registro a restaurar no existe o ya fue restaurado!'}});					
+				}
+			}).catch(err => {
+				res.status(200).json(err);
+			})
+		} else {
+			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo(s) \'id\',  \'actualizado_por\' y \'version\' requerido!'}});			
+		}
+	} else {
+		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
+}

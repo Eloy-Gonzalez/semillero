@@ -1,0 +1,6 @@
+Proceso de populacion para las tablas del sistema CRS
+
+- Tabla Periodos
+- Tabla Categorias
+- Tabla Preguntas de Seguridad
+- Tabla Estatus

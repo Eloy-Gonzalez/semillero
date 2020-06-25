@@ -8,11 +8,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     id_periodo: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'periodos',
+        key: 'id'
+      }
     },
     id_fase_descripcion: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+       references: {
+        model: 'fases_descripcion',
+        key: 'id'
+      }
     },
     fecha_desde: {
       type: DataTypes.DATEONLY,
@@ -36,6 +44,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: true
     },
+    borrado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     version: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -48,5 +61,12 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false,
     createdAt: false,
     updatedAt: false,
+    indexes: [
+      // Create a unique index on email
+      {
+        unique: true,
+        fields: ['id_periodo', 'id_fase_descripcion']
+      }
+    ]
   });
 };
