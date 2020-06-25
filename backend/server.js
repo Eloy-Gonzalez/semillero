@@ -13,10 +13,10 @@ let bodyParser 	= require('body-parser');
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({extended: true}));
-// app.use(require('cors')({
-// 	credentials : true,
-// 	origin : 'http://localhost:3000'
-// }));
+app.use(require('cors')({
+	credentials : true,
+	origin : '*'
+}));
 
 // Configuraciones Adicionales
 app.set('appName', 'Backend_Semillero');

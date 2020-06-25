@@ -379,6 +379,22 @@ exports.saime = (req, res) => {
 			}).then(persona => {
 				console.log(persona);
 				res.status(200).json(persona);
+			}).catch(err => {
+				if (err.name == 'SequelizeDatabaseError') {
+					console.log(err);
+					const { severity, code, error } = err.parent;
+					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : `${severity}: ${code} ${error}`}});
+				}
+
+				// Validation before send query on database
+				if (err.name == 'SequelizeValidationError') {
+					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
+					const { severity, code, detail } = err.parent;
+					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+				}
 			})
 		} else {
 			res.status(200).json({ alert : { type: 'warning', title : 'Atención', message: 'Parametros \'nacionalidad\' y \'cedula\' requeridos!'}})
