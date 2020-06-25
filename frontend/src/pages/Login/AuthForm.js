@@ -39,7 +39,7 @@ function AuthForm( { onSubmit, ActionsButtons=""} ) {
                     onBlur={handleBlur}
                     value={values.username}
                     margin="dense"
-                    label="username"
+                    label="Correo electrónico"
                     color="primary"
                     helperText={<ErrorMessage name="username"/>}
                  />

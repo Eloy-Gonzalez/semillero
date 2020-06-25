@@ -2,7 +2,7 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 
 function ActionsButtons({ actualVisible, totalForms, nextPrev, disabledButton=false }) {
-	return (
+    return (
         <div className="formStep--actions">
             { actualVisible !== 0 &&
                 <Button type="button" className="btn--prev" variant="outlined" color="primary" onClick={() => nextPrev(actualVisible - 1)}>

@@ -40,8 +40,29 @@
 .btnClose--session {
     cursor: pointer;
     outline: none;
-    color: #86a513;
     font-size: 1rem;
     letter-spacing: -1px;
-    background: #fff;
+    transition: all .3s ease;
+    background:transparent;
+    color: #fff;
+    &:hover {
+        color: #86a513;
+        background: #fff;
+    }
+}
+
+.btn--perfil {
+    display: grid;
+    grid-template-columns: 30px auto;
+    gap: 10px;
+    align-items:center;
+}
+
+#app--avatar {
+    overflow: hidden;
+    border-radius:50%;
+    img {
+        float: left;
+        width: 100%;
+    }
 }

@@ -6,7 +6,7 @@ import jsonwebtoken from 'jsonwebtoken'
 import { getToken, setToken, removeToken } from 'utils/helpers';
 
 // @services
-import { postLogin } from './auth.services';
+import { postLoginService } from './auth.services';
 
 // @ActionsTypes
 import {
@@ -26,9 +26,9 @@ import {buildErrorsObj} from 'utils/helpers'
 
 function* loginWorker({ payload }) {
   try {
-    yield put({ type: REQUEST_STARTED });
+    yield put({ type: REQUEST_STARTED })
     
-    const response = yield call(postLogin, payload);
+    const response = yield call(postLoginService, payload);
     const _TOKEN_ = response.data.token
     
     if(_TOKEN_) {

@@ -3,6 +3,7 @@ import React from 'react'
 
 // @Components
 import ItemMenu from './ItemMenu'
+import avatar from 'statics/images/logos/avatar_2x.png'
 
 // @Statics > Styless
 import './index.scss'
@@ -22,8 +23,11 @@ function index({ user = {}, logout = () => console.log("First login") } = {}) {
                     ))
                     : (
                         <div className="user--profiles">
-                            <div className="btnClose--session item--menu app--text">
-                                {user.username}
+                            <div className="btnClose--session btn--perfil item--menu app--text">
+                                <span>
+                                    <div id="app--avatar"><img src={avatar} alt={avatar} /></div>
+                                </span>
+                                <span>{user.username}</span>
                             </div>
                             <button className="btnClose--session item--menu app--text" onClick={logout}>
                                 Cerrar sesión

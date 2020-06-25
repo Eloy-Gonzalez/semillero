@@ -1,11 +1,12 @@
 import React from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
+import './index'
 
 function LoaderFormData( { messagge = "Cargando"} ){
     return (
 	    <div className="loader_form-data">
-	        <center style={{margin: '60px 0 0'}}>
-	            <h3 className="app--title">{messagge}</h3>
-	        </center>
+            <div style={{textAlign:"center"}}><CircularProgress /></div>
 	    </div>    	
     )
 }

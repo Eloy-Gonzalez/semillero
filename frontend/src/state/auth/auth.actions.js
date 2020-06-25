@@ -1,28 +1,28 @@
-import { LOGIN, LOGOUT, CHECK_AUTH } from './auth.actionsTypes';
+import { LOGIN, LOGOUT, CHECK_AUTH } from './auth.actionsTypes'
 
-const login = (params = {}) => {
+const login = (payload) => {
   return (dispatch) => {
     dispatch({
       type: LOGIN,
-      payload: params,
-    });
-  };
-};
+      payload
+    })
+  }
+}
 
 const checkAutentication = () => {
   return (dispatch) => {
     dispatch({
       type: CHECK_AUTH,
-    });
-  };
-};
+    })
+  }
+}
 
 const logout = () => {
   return (dispatch) => {
     dispatch({
       type: LOGOUT,
-    });
-  };
-};
+    })
+  }
+}
 
-export { login, logout, checkAutentication };
+export { login, logout, checkAutentication }

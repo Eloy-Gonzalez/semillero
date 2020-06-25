@@ -20,8 +20,9 @@ import Snackbars from 'components/Snackbars';
 import SnackbarsSuccess from 'components/SnackbarsSuccess';
 
 // @Pages 
-const Home = React.lazy(() => import('pages/Home'))
-const Login = React.lazy(() => import('pages/Login'))
+import Login  from 'pages/Login'
+import Home from 'pages/Home'
+
 const Register = React.lazy(() => import('pages/Register'))
 
 function App() {

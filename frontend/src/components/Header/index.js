@@ -1,5 +1,5 @@
 // @Vendors
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 // @Styles
 import 'statics/styles/grid.scss'
@@ -14,24 +14,21 @@ import Menu from 'components/Menu'
 
 function Header({user={}, onLogout= () => console.log("Login first")}) {
     const refVideo = React.useRef()
-    
-    const stopVideo = useCallback(() => {
-        setTimeout( () => refVideo.current.pause() , 12500)
-    }, [])
 
     useEffect(() => {
-        //refVideo.current.play()
-        //stopVideo()
-    }, [stopVideo])
+        if(!user.isAuthenticated){
+          refVideo.current.play()
+        }
+    }, [ user.isAuthenticated])
 
     return (
         <header className="header__primary container--row">
             <div className="row">
                 <Menu user={user} logout={onLogout}/>
                 <div className="header__primary-logo">
-                    { !user.isAuthenticated ? 
+                    { user.isAuthenticated ? 
                         <img src={LogoSemilleros} alt="Semilleros de Jóvenes Científicos"/> :
-                        <video ref={refVideo} style={{transition: 'all .3s cubic-bezier(0.83, 0.22, 0.35, 1.04)', float:'left', width:'100%', transform:'scale(1)'}}>
+                        <video ref={refVideo} style={{float:'left', width:'100%'}}>
                             <source src={VideoSemilleros} type="video/mp4"/>
                         </video>
                     }
