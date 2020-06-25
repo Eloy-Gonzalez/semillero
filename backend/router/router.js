@@ -10,7 +10,7 @@ module.exports = (app) => {
 	const fasesdescripcionController = require('../controllers/fasesdescripcionController');
 	const proyectosController = require('../controllers/proyectosController');
 	const usuariosController = require('../controllers/usuariosController');
-	// const testController = require('../controllers/testController');
+	//const testController = require('../controllers/testController');
 
 	// Middleware
 	const rutasProtegidas = require('../middlewares/rutasProtegidas');
