@@ -73,7 +73,7 @@ exports.registro = (req, res) => {
 			if (!user) {
 				var passwordHashed = bcrypt.hashSync(password, 8);
 				// BEGIN TRANSACTION ISOLATION LEVEL 1
-				const t = await ProyectosXCategorias.sequelize.transaction({ autocommit : false });
+				const t = await UsuariosDomicilio.sequelize.transaction({ autocommit : false });
 				try {
 					// Usuarios
 					let user = await Usuarios.create({
@@ -119,26 +119,26 @@ exports.registro = (req, res) => {
 					}, { transaction : t });
 					console.log('Step 3 -> Success');
 					// Proyecto
-					let proyecto = await Proyectos.create({
-						id_usuario : userDirection.dataValues.id_usuario,
-						id_periodo : id_periodo,
-						nombre : nombre,
-						descripcion : descripcion,
-						url_video : url_video
-					}, { transaction : t });
-					console.log('Step 4 -> Success');
-					// Proyectos_x_categorias
-					var data = [];
-					categorias.forEach((index, value) => {
-						data.push({
-							id_proyecto : proyecto.dataValues.id,
-							id_categoria : index
-						})
-					});
-					let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
+					// let proyecto = await Proyectos.create({
+					// 	id_usuario : userDirection.dataValues.id_usuario,
+					// 	id_periodo : id_periodo,
+					// 	nombre : nombre,
+					// 	descripcion : descripcion,
+					// 	url_video : url_video
+					// }, { transaction : t });
+					// console.log('Step 4 -> Success');
+					// // Proyectos_x_categorias
+					// var data = [];
+					// categorias.forEach((index, value) => {
+					// 	data.push({
+					// 		id_proyecto : proyecto.dataValues.id,
+					// 		id_categoria : index
+					// 	})
+					// });
+					// let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
 					// PUSH
 					await t.commit();
-					console.log('Step 5 -> Success');
+					//console.log('Step 5 -> Success');
 					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 				} catch(err) {
 					// ROLLBACK TRANSACTION ISOLATION LEVEL 1
@@ -370,20 +370,18 @@ exports.saime = (req, res) => {
 	console.log('func -> Saime');
 	if (req.body.params != undefined) {
 		const { nacionalidad, cedula } = req.body.params;
-		if (cedula != undefined) {
+		if (nacionalidad != undefined && cedula != undefined) {
 			Saime.findAll({
 				where : {
-					nacionalidad : nacionalidad,
+					origen : nacionalidad,
 					cedula : cedula
 				}
 			}).then(persona => {
+				console.log(persona);
 				res.status(200).json(persona);
 			})
 		} else {
-			Saime.findAll()
-			.then(personas => {
-				res.status(200).json(personas);
-			});
+			res.status(200).json({ alert : { type: 'warning', title : 'Atención', message: 'Parametros \'nacionalidad\' y \'cedula\' requeridos!'}})
 		}
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
