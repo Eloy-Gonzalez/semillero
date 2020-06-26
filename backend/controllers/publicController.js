@@ -157,9 +157,10 @@ exports.registro = (req, res) => {
 						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
 					}
 					if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
-						const { severity, code, detail } = err.parent;
+						var { severity, code, detail } = err.parent;
 						if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
 						if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
+						if (code == '42703') {detail = 'Columna indefinida';}
 						res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 					}
 				}
@@ -394,9 +395,10 @@ exports.saime = (req, res) => {
 				}
 				// Validation after send query on database
 				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
-					const { severity, code, detail } = err.parent;
+					var { severity, code, detail } = err.parent;
 					if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
 					if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
+					if (code == '42703') {detail = 'Columna indefinida';}
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
 			})
