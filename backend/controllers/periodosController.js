@@ -16,8 +16,17 @@ exports.get = (req, res) => {
 		}).then(periodos => {
 			res.status(200).json(periodos);
 		}).catch(err => {
-			const { severity, code, hint } = err.parent;
-			res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${hint}`}});
+			// Validation before send query on database
+			if (err.name == 'SequelizeValidationError') {
+				res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+			}
+			// Validation after send query on database
+			if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+				const { severity, code, detail } = err.parent;
+				if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+				if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
+				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+			}
 		})
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
@@ -36,15 +45,17 @@ exports.create = (req, res) => {
 		.then(response => {
 			res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
 		}).catch(err => {
-				// Validation before send query on database
-				if (err.name == 'SequelizeValidationError') {
-					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
-				}
-				// Validation after send query on database
-				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
-					const { severity, code, detail } = err.parent;
-					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
-				}
+			// Validation before send query on database
+			if (err.name == 'SequelizeValidationError') {
+				res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+			}
+			// Validation after send query on database
+			if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+				const { severity, code, detail } = err.parent;
+				if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+				if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
+				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+			}
 		})
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});		
@@ -78,8 +89,17 @@ exports.update = (req, res) => {
 					res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Error al actualizar datos!'}});
 				}
 			}).catch(err => {
-				const { severity, code, hint } = err.parent;
-				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${hint}`}});
+				// Validation before send query on database
+				if (err.name == 'SequelizeValidationError') {
+					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+					const { severity, code, detail } = err.parent;
+					if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+					if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
+					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+				}
 			})
 		} else {
 			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo \'id\', \'actualizado_por\' y \'version\' requerido!'}});
@@ -111,7 +131,17 @@ exports.delete = (req, res) => {
 					res.status(200).json({ alert : { type : 'danger', title : 'Información', message : 'El registro a eliminar no existe o ya fue eliminado!'}});					
 				}
 			}).catch(err => {
-				res.status(200).json(err);
+				// Validation before send query on database
+				if (err.name == 'SequelizeValidationError') {
+					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+					const { severity, code, detail } = err.parent;
+					if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+					if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
+					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+				}
 			})
 		} else {
 			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo(s) \'id\',  \'actualizado_por\' y \'version\' requerido!'}});			
@@ -143,7 +173,17 @@ exports.restore = (req, res) => {
 					res.status(200).json({ alert : { type : 'danger', title : 'Información', message : 'El registro a restaurar no existe o ya fue restaurado!'}});					
 				}
 			}).catch(err => {
-				res.status(200).json(err);
+				// Validation before send query on database
+				if (err.name == 'SequelizeValidationError') {
+					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+					const { severity, code, detail } = err.parent;
+					if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+					if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
+					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+				}
 			})
 		} else {
 			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo(s) \'id\',  \'actualizado_por\' y \'version\' requerido!'}});			

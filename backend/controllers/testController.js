@@ -29,7 +29,7 @@ exports.usuario = async (req, res) => {
 
 	password = bcrypt.hashSync(password, 8);
 	// BEGIN TRANSACTION ISOLATION LEVEL 1
-	const t = await ProyectosXCategorias.sequelize.transaction({ autocommit : false });
+	const t = await UsuariosDomicilio.sequelize.transaction({ autocommit : false });
 	try {
 		// Usuarios
 		let user = await Usuarios.create({
@@ -75,26 +75,26 @@ exports.usuario = async (req, res) => {
 		}, { transaction : t });
 		console.log('Step 3 -> Success');
 		// Proyecto
-		let proyecto = await Proyectos.create({
-			id_usuario : userDirection.dataValues.id_usuario,
-			id_periodo : faker.random.number({min: 2, max: 2}),
-			nombre : faker.lorem.word(1),
-			descripcion : faker.lorem.words(4),
-			url_video : faker.internet.url()
-		}, { transaction : t });
-		console.log('Step 4 -> Success');
-		// Proyectos_x_categorias
-		var data = [];
-		categorias.forEach((index, value) => {
-			data.push({
-				id_proyecto : proyecto.dataValues.id,
-				id_categoria : index
-			})
-		});
-		let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
+		// let proyecto = await Proyectos.create({
+		// 	id_usuario : userDirection.dataValues.id_usuario,
+		// 	id_periodo : faker.random.number({min: 2, max: 2}),
+		// 	nombre : faker.lorem.word(1),
+		// 	descripcion : faker.lorem.words(4),
+		// 	url_video : faker.internet.url()
+		// }, { transaction : t });
+		// console.log('Step 4 -> Success');
+		// // Proyectos_x_categorias
+		// var data = [];
+		// categorias.forEach((index, value) => {
+		// 	data.push({
+		// 		id_proyecto : proyecto.dataValues.id,
+		// 		id_categoria : index
+		// 	})
+		// });
+		// let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
 		// PUSH
 		await t.commit();
-		console.log('Step 5 -> Success');
+		// console.log('Step 5 -> Success');
 		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 	} catch(err) {
 		// ROLLBACK TRANSACTION ISOLATION LEVEL 1

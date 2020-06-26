@@ -148,10 +148,11 @@ exports.registro = (req, res) => {
 					if (err.name == 'SequelizeValidationError') {
 						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
 					}
-					// Validation after send query on database
-					if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
+					if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 						const { severity, code, detail } = err.parent;
-						res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+						if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+						if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
+						res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 					}
 				}
 			} else {
@@ -377,22 +378,17 @@ exports.saime = (req, res) => {
 					cedula : cedula
 				}
 			}).then(persona => {
-				console.log(persona);
 				res.status(200).json(persona);
 			}).catch(err => {
-				if (err.name == 'SequelizeDatabaseError') {
-					console.log(err);
-					const { severity, code, error } = err.parent;
-					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : `${severity}: ${code} ${error}`}});
-				}
-
-				// Validation before send query on database
-				if (err.name == 'SequelizeValidationError') {
-					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
-				}
 				// Validation after send query on database
 				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
 					const { severity, code, detail } = err.parent;
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+					const { severity, code, detail } = err.parent;
+					if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+					if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
 			})
