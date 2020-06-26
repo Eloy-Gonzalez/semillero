@@ -38,7 +38,7 @@ const Saime = db.Saime;
 	@return JSON
 	@tested true
 */
-exports.registro = (req, res) => {
+exports.registro = (req, res, next) => {
 	console.log('func -> Register');
 	if (req.body.params != undefined) {
 		const { 
@@ -74,60 +74,108 @@ exports.registro = (req, res) => {
 		Usuarios.count({ where : { username : username }}).then(async user => {
 			if (!user) {
 				var passwordHashed = bcrypt.hashSync(password, 8);
-				// BEGIN TRANSACTION ISOLATION LEVEL 1
-				//const t = await UsuariosDomicilio.sequelize.transaction({ autocommit : false });
-				try {
 					// Usuarios
-					let user = await Usuarios.create({
+					Usuarios.create({
 						username: username,
 						password: passwordHashed,
 						id_pregunta: id_pregunta,
 						respuesta_seguridad : respuesta_seguridad
-					});
-					console.log('Step 1 -> Success');
-
-					if (cedula_representante !== undefined || cedula_representante !== '') {
-						// Usuarios Representante
-						let representante = await UsuariosRepresentante.create({
+					}).then(user => {
+						// Usuarios Domicilio
+						UsuariosDomicilio.create({
 							id_usuario : user.dataValues.id,
-							cedula : cedula_representante,
-	  					primer_nombre : primer_nombre_representante,
-	  					segundo_nombre : segundo_nombre_representante,
-						  primer_apellido : primer_apellido_representante,
-						  segundo_apellido : segundo_apellido_representante,
-	  					genero : genero_representante,
-						  fecha_nacimiento : fecha_nacimiento_representante
-						});
-					}
-					// Usuarios Perfil
-					var counHijos = await UsuariosRepresentante.count({ where : {
-						cedula : cedula_representante
-					}});
+							telefono_habitacional : telefono_habitacional,
+							telefono_personal : telefono_personal,
+							id_parroquia : id_parroquia,
+							direccion_habitacional : direccion_habitacional,
+						}).then( async user2 => {
+							if (cedula == undefined || cedula == '' || cedula == null) {
+								// Usuarios Representante
+								console.log('Entrando en el if')
+								await UsuariosRepresentante.create({
+									id_usuario : user.dataValues.id,
+									cedula : cedula_representante,
+			  					primer_nombre : primer_nombre_representante,
+			  					segundo_nombre : segundo_nombre_representante,
+								  primer_apellido : primer_apellido_representante,
+								  segundo_apellido : segundo_apellido_representante,
+			  					genero : genero_representante,
+								  fecha_nacimiento : fecha_nacimiento_representante
+								}).catch(err => {
+									// Validation before send query on database
+									if (err.name == 'SequelizeValidationError') {
+										res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+									}
+									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+										var { severity, code, detail } = err.parent;
+										if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+										if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
+										if (code == '42703') {detail = 'Columna indefinida';}
+										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+									}
+								})
+							}
+							
+							// Usuarios Perfil
+							UsuariosRepresentante.count({ where : {
+								cedula : cedula_representante
+							}}).then(count => {
+								var cedulaHijo = (cedula == undefined || cedula == '' || cedula == null) 
+								? `${cedula_representante}-${count + 1}` 
+								: cedula;
 
-					var cedulaHijo = (cedula_representante != '') 
-					? `${cedula_representante}-${counHijos + 1}` 
-					: cedula;
-					// Usuarios Perfil
-					let userProfile = await UsuariosPerfil.create({
-						id_usuario : user.dataValues.id,
-						cedula : cedulaHijo,
-  					primer_nombre : primer_nombre,
-  					segundo_nombre : segundo_nombre,
-					  primer_apellido : primer_apellido,
-					  segundo_apellido : segundo_apellido,
-  					genero : genero,
-					  fecha_nacimiento : fecha_nacimiento,
-					});
-					console.log('Step 2 -> Success');
-					// Usuarios Domicilio
-					let userDirection = await	UsuariosDomicilio.create({
-						id_usuario : userProfile.dataValues.id_usuario,
-						telefono_habitacional : telefono_habitacional,
-						telefono_personal : telefono_personal,
-						id_parroquia : id_parroquia,
-						direccion_habitacional : direccion_habitacional,
-					});
-					console.log('Step 3 -> Success');
+								// Usuarios Perfil
+								UsuariosPerfil.create({
+									id_usuario : user.dataValues.id,
+									cedula : cedulaHijo,
+			  					primer_nombre : primer_nombre,
+			  					segundo_nombre : segundo_nombre,
+								  primer_apellido : primer_apellido,
+								  segundo_apellido : segundo_apellido,
+			  					genero : genero,
+								  fecha_nacimiento : fecha_nacimiento,
+								}).then(usuario => {
+									res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+								}).catch(err => {
+									// Validation before send query on database
+									if (err.name == 'SequelizeValidationError') {
+										res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+									}
+									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+										var { severity, code, detail } = err.parent;
+										if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+										if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
+										if (code == '42703') {detail = 'Columna indefinida';}
+										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+									}
+								})
+							}).catch(err => {
+								// Validation before send query on database
+								if (err.name == 'SequelizeValidationError') {
+									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+								}
+								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+									var { severity, code, detail } = err.parent;
+									if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+									if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
+									if (code == '42703') {detail = 'Columna indefinida';}
+									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+								}
+							})
+						})
+					}).catch(err => {
+						// Validation before send query on database
+						if (err.name == 'SequelizeValidationError') {
+							res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+						}
+						if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+							var { severity, code, detail } = err.parent;
+							if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
+							if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
+							if (code == '42703') {detail = 'Columna indefinida';}
+							res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+						}
+					})
 					// Proyecto
 					// let proyecto = await Proyectos.create({
 					// 	id_usuario : userDirection.dataValues.id_usuario,
@@ -146,26 +194,7 @@ exports.registro = (req, res) => {
 					// 	})
 					// });
 					// let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
-					// PUSH
-					//await t.commit();
-					//console.log('Step 5 -> Success');
-					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
-				} catch(err) {
-					// ROLLBACK TRANSACTION ISOLATION LEVEL 1
-					// await t.rollback();
-					
-					// Validation before send query on database
-					if (err.name == 'SequelizeValidationError') {
-						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
-					}
-					if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
-						var { severity, code, detail } = err.parent;
-						if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
-						if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
-						if (code == '42703') {detail = 'Columna indefinida';}
-						res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
-					}
-				}
+					//console.log('Step 5 -> Success');	
 			} else {
 				res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Usted ya posee un usuario en el sistema!'} });
 			}
