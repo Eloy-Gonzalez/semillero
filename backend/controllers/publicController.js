@@ -3,20 +3,22 @@ let jwt = require('jsonwebtoken');
 let bcrypt = require('bcryptjs');
 let nodemailer = require('nodemailer');
 
-// Transporter without auth
-// var transporter = nodemailer.createTransport({
-//   host: 'smtp.mycompany.com',
-//   port: 25,
-//   secure: false, // true for 465
-// });
+let userEmail = 'autogestion@mppct.gob.ve'; // sistemasmppct@gmail.com
+let userPassword = '$1g3f1rrHH2020'; // sistemas12345
 
-// Transporter well know service
+// Transporter without auth
 var transporter = nodemailer.createTransport({
-	service: 'Gmail',
+  host: '172.17.190.39',
+  port: 25,
+  secure: false,
 	auth: {
-		user: 'example@gmail.com',
-		pass: 'password'
-	}
+    user: userEmail,
+    pass: userPassword,
+  },
+  tls: {
+   // do not fail on invalid certs
+   rejectUnauthorized: false
+  },
 });
 
 /* Model */
@@ -150,7 +152,7 @@ exports.registro = (req, res) => {
 					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 				} catch(err) {
 					// ROLLBACK TRANSACTION ISOLATION LEVEL 1
-					await t.rollback();
+					// await t.rollback();
 					
 					// Validation before send query on database
 					if (err.name == 'SequelizeValidationError') {
@@ -224,72 +226,71 @@ exports.login = (req, res) => {
  @return mixed
  @tested false
 */
-// exports.recoverpassword = (req, res) => {
-// 	console.log('func -> Recover Password');
-// 	if (req.body.params != undefined) {
-// 		const { username } = req.body.params;
-// 		db.bus.query("\
-// 			SELECT\
-// 				username, email\
-// 			FROM seguridad.usuarios\
-// 			WHERE\
-// 				username = :username\
-// 				OR email = :username\
-// 			", { replacements: { username: username }, type: db.bus.QueryTypes.SELECT }
-// 		).then(result => {
-// 			if(result.length > 0){
-// 					const token = jwt.sign({username : username}, require('../config').key, {
-// 						expiresIn: '1h'
-// 					});
-// 					res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje a su correo electronico '}, token : token });
-// 					// var mailOptions = {
-// 					// 	from: 'Remitente',
-// 					// 	to: result[0].email,
-// 					// 	subject: 'Recuperación de acceso Sistema registro y concurso semilleros',
-// 					// 	html: `<h1>¡Hola, ${username}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click en el siguiente enlace: <a href="">Restablecer contraseña</a></p>`
-// 					// };
-// 					// transporter.sendMail(mailOptions, function(error, info){
-// 					// 	if (!error){
-// 					// 		res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje a su correo electronico '}, token : token });
-// 					// 	} else {
-// 					// 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor no responde!'}})
-// 					// 	}
-// 					// });
-// 			// } else {
-// 			// 	res.status(200).json({ alert: { type: 'warning', title : 'Atención', message : 'Usuario invalido o no existe!'}});
-// 			}
-// 		});
-// 	} else {
-// 		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
-// 	}
-// };
+exports.recoverpassword = (req, res) => {
+	console.log('func -> Recover Password');
+	if (req.body.params != undefined) {
+		const { username } = req.body.params;
+		db.bus.query("\
+			SELECT\
+				u.username, p.primer_nombre, p.primer_apellido\
+			FROM seguridad.usuarios as u\
+			LEFT JOIN seguridad.usuarios_perfil as p on p.id_usuario = u.id\
+			WHERE\
+				u.username = :username\
+			", { replacements: { username: username }, type: db.bus.QueryTypes.SELECT }
+		).then(result => {
+			if(result.length > 0){
+				const token = jwt.sign({username : username}, require('../config').key, {
+					expiresIn: '1h'
+				});
+
+				var { primer_nombre, primer_apellido } = result[0];
+				var mailOptions = {
+					from: userEmail,
+					to: result[0].username,
+					subject: 'Recuperación de acceso Sistema semillero',
+					html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click aquí`,
+				};
+				transporter.sendMail(mailOptions, function(error, info){
+					if (!error){
+						res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje al correo registrado' }});
+					} else {
+						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor no responde' }})
+					}
+				});
+			}
+		});
+	} else {
+		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
+};
 
 /* API UPDATE PASSWORD
 	@params username string, password string
 	@return mixed
 */
-// exports.updatepassword = (req, res) => {
-// 	console.log('func -> Update Password');
-// 	if (req.body.params != undefined) {
-// 		const { username, password } = req.body.params;
-// 		var passwordHashed = bcrypt.hashSync(password, 8);
-// 		Usuarios.update({
-// 		  password: passwordHashed,
-// 		}, {
-// 		  where: {
-// 		    username: username
-// 		  }
-// 		}).then(result => {
-// 			if (result.length > 0) {
-// 				res.status(200).json({ alert: { type: 'successs', title: 'Información', message: 'Su contraseña ha sido actualizada exitosamente!'}});
-// 			} else {
-// 				res.status(200).json({ alert: { type: 'warning', title: 'Atención', message : 'Error al actualizar su contraseña!'}});
-// 			}
-// 		});
-// 	} else {
-// 		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
-// 	}
-// };
+exports.updatepassword = (req, res) => {
+	console.log('func -> Update Password');
+	if (req.body.params != undefined) {
+		const { username, password } = req.body.params;
+		var passwordHashed = bcrypt.hashSync(password, 8);
+		Usuarios.update({
+		  password: passwordHashed,
+		}, {
+		  where: {
+		    username: username
+		  }
+		}).then(result => {
+			if (result.length > 0) {
+				res.status(200).json({ alert: { type: 'successs', title: 'Información', message: 'Su contraseña ha sido actualizada exitosamente!'}});
+			} else {
+				res.status(200).json({ alert: { type: 'warning', title: 'Atención', message : 'Error al actualizar su contraseña!'}});
+			}
+		});
+	} else {
+		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
+};
 
 /* API ESTADOS
 	@params nothing or string
