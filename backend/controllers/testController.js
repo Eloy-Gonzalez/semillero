@@ -24,11 +24,13 @@ faker.locale = "es";
 
 exports.usuario = async (req, res) => {
 	var password = '123456';
-	var cedula = faker.random.arrayElement(['', faker.random.number(99999999)]);
+	var cedula_representante = faker.random.arrayElement(['', '24322160', faker.random.number(99999999)]);
+	console.log(cedula_representante);
 	var categorias = [1];
 
 	password = bcrypt.hashSync(password, 8);
 	// BEGIN TRANSACTION ISOLATION LEVEL 1
+	console.clear();
 	const t = await UsuariosDomicilio.sequelize.transaction({ autocommit : false });
 	try {
 		// Usuarios
@@ -40,11 +42,11 @@ exports.usuario = async (req, res) => {
 		}, { transaction : t });
 		console.log('Step 1 -> Success');
 		// ATENCION!!
-		if (cedula == '' || cedula != '') {
+		if (cedula_representante !== undefined || cedula_representante !== null || cedula_representante !== '') {
 			// Usuarios Representante
 			let representante = await UsuariosRepresentante.create({
 				id_usuario : user.dataValues.id,
-				cedula : faker.random.number(99999999),
+				cedula : cedula_representante,
 				primer_nombre : faker.name.firstName(),
 				segundo_nombre : faker.name.firstName(),
 			  primer_apellido : faker.name.lastName(),
@@ -54,9 +56,17 @@ exports.usuario = async (req, res) => {
 			}, { transaction : t });
 		}
 		// Usuarios Perfil
+		var counHijos = await UsuariosRepresentante.count({ where : {
+			cedula : cedula_representante
+		}});
+		console.log(counHijos);
+		var cedula = (cedula_representante != '') 
+		? `${cedula_representante}-${counHijos + 1}` 
+		: faker.random.number(99999999);
+		console.log(cedula);
 		let userProfile = await UsuariosPerfil.create({
 			id_usuario : user.dataValues.id,
-			cedula : faker.random.number(99999999),
+			cedula : cedula,
 			primer_nombre : faker.name.firstName(),
 			segundo_nombre : faker.name.firstName(),
 		  primer_apellido : faker.name.lastName(),
