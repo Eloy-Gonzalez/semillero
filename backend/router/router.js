@@ -27,10 +27,10 @@ module.exports = (app) => {
 	app.post('/login', publicController.login);
 
 	// LostPassword
-	//app.post('/recoverpassword', publicController.recoverpassword);
+	app.post('/recoverpassword', publicController.recoverpassword);
 
 	// UpdatePassword
-	//app.post('/updatepassword', rutasProtegidas.verifyToken, publicController.updatepassword);
+	app.post('/updatepassword', rutasProtegidas.verifyToken, publicController.updatepassword);
 
 	// Estados
 	app.post('/estados', publicController.estados);
