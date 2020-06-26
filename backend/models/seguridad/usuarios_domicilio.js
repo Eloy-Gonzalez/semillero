@@ -24,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     direccion_habitacional: {
     	type: DataTypes.TEXT,
     	allowNull: false,
-      set: function(val) {
-        this.setDataValue('direccion_habitacional', val.toUpperCase());
-      }
+      // set: function(val) {
+      //   this.setDataValue('direccion_habitacional', val.toUpperCase());
+      // }
     },
     creado_por: {
       type: DataTypes.INTEGER,
