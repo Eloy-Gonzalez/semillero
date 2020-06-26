@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     cedula: {
     	type: DataTypes.STRING,
-    	allowNull: false
     },
     primer_nombre: {
     	type: DataTypes.STRING,

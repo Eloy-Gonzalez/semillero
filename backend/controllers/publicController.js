@@ -73,7 +73,7 @@ exports.registro = (req, res) => {
 			if (!user) {
 				var passwordHashed = bcrypt.hashSync(password, 8);
 				// BEGIN TRANSACTION ISOLATION LEVEL 1
-				const t = await UsuariosDomicilio.sequelize.transaction({ autocommit : false });
+				//const t = await UsuariosDomicilio.sequelize.transaction({ autocommit : false });
 				try {
 					// Usuarios
 					let user = await Usuarios.create({
@@ -81,10 +81,10 @@ exports.registro = (req, res) => {
 						password: passwordHashed,
 						id_pregunta: id_pregunta,
 						respuesta_seguridad : respuesta_seguridad
-					}, { transaction : t });
+					});
 					console.log('Step 1 -> Success');
-					// ATENCION!!
-					if (cedula == '' || cedula != '') {
+
+					if (cedula_representante !== undefined || cedula_representante !== '') {
 						// Usuarios Representante
 						let representante = await UsuariosRepresentante.create({
 							id_usuario : user.dataValues.id,
@@ -95,19 +95,27 @@ exports.registro = (req, res) => {
 						  segundo_apellido : segundo_apellido_representante,
 	  					genero : genero_representante,
 						  fecha_nacimiento : fecha_nacimiento_representante
-						}, { transaction : t });
+						});
 					}
+					// Usuarios Perfil
+					var counHijos = await UsuariosRepresentante.count({ where : {
+						cedula : cedula_representante
+					}});
+
+					var cedulaHijo = (cedula_representante != '') 
+					? `${cedula_representante}-${counHijos + 1}` 
+					: cedula;
 					// Usuarios Perfil
 					let userProfile = await UsuariosPerfil.create({
 						id_usuario : user.dataValues.id,
-						cedula : cedula,
+						cedula : cedulaHijo,
   					primer_nombre : primer_nombre,
   					segundo_nombre : segundo_nombre,
 					  primer_apellido : primer_apellido,
 					  segundo_apellido : segundo_apellido,
   					genero : genero,
 					  fecha_nacimiento : fecha_nacimiento,
-					}, { transaction : t });
+					});
 					console.log('Step 2 -> Success');
 					// Usuarios Domicilio
 					let userDirection = await	UsuariosDomicilio.create({
@@ -116,7 +124,7 @@ exports.registro = (req, res) => {
 						telefono_personal : telefono_personal,
 						id_parroquia : id_parroquia,
 						direccion_habitacional : direccion_habitacional,
-					}, { transaction : t });
+					});
 					console.log('Step 3 -> Success');
 					// Proyecto
 					// let proyecto = await Proyectos.create({
@@ -137,7 +145,7 @@ exports.registro = (req, res) => {
 					// });
 					// let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
 					// PUSH
-					await t.commit();
+					//await t.commit();
 					//console.log('Step 5 -> Success');
 					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 				} catch(err) {
