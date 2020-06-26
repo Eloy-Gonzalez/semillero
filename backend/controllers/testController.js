@@ -116,7 +116,7 @@ exports.usuario = async (req, res) => {
 		}
 		// Validation after send query on database
 		if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
-			const { severity, code, detail } = err.parent;
+			var { severity, code, detail } = err.parent;
 			res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 		}
 	}
