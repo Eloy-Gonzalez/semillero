@@ -28,6 +28,7 @@ module.exports = (app) => {
 
 	// LostPassword
 	app.post('/recoverpassword', publicController.recoverpassword);
+	app.post('/recoverpassword2', publicController.recoverpassword2);
 
 	// UpdatePassword
 	app.post('/updatepassword', rutasProtegidas.verifyToken, publicController.updatepassword);
