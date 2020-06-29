@@ -1,4 +1,5 @@
 let db = require('../config/databases.js');
+let errDb = require('../helpers/errorsDb.js');
 let jwt = require('jsonwebtoken');
 let bcrypt = require('bcryptjs');
 let nodemailer = require('nodemailer');
@@ -29,6 +30,7 @@ const UsuariosPerfil = db.UsuariosPerfil;
 const UsuariosDomicilio = db.UsuariosDomicilio;
 const UsuariosRepresentante = db.UsuariosRepresentante;
 const Estados = db.Estados;
+const PreguntasSeguridad = db.PreguntasSeguridad;
 const Municipios = db.Municipios;
 const Parroquias = db.Parroquias;
 
@@ -108,9 +110,7 @@ exports.registro = (req, res, next) => {
 									}
 									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 										var { severity, code, detail } = err.parent;
-										if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
-										if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
-										if (code == '42703') {detail = 'Columna indefinida';}
+										detail = errDb.errorsDb(code)
 										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 									}
 								})
@@ -143,9 +143,7 @@ exports.registro = (req, res, next) => {
 									}
 									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 										var { severity, code, detail } = err.parent;
-										if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
-										if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
-										if (code == '42703') {detail = 'Columna indefinida';}
+										detail = errDb.errorsDb(code)
 										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 									}
 								})
@@ -156,9 +154,7 @@ exports.registro = (req, res, next) => {
 								}
 								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 									var { severity, code, detail } = err.parent;
-									if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
-									if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
-									if (code == '42703') {detail = 'Columna indefinida';}
+									detail = errDb.errorsDb(code)
 									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 								}
 							})
@@ -170,9 +166,7 @@ exports.registro = (req, res, next) => {
 						}
 						if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 							var { severity, code, detail } = err.parent;
-							if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
-							if (code == '22P02') {detail = 'Sintaxis de entrada no vÃ¡lida para integer';}
-							if (code == '42703') {detail = 'Columna indefinida';}
+							detail = errDb.errorsDb(code)
 							res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 						}
 					})
@@ -259,40 +253,64 @@ exports.recoverpassword = (req, res) => {
 	console.log('func -> Recover Password');
 	if (req.body.params != undefined) {
 		const { username } = req.body.params;
-		db.bus.query("\
-			SELECT\
-				u.username, p.primer_nombre, p.primer_apellido\
-			FROM seguridad.usuarios as u\
-			LEFT JOIN seguridad.usuarios_perfil as p on p.id_usuario = u.id\
-			WHERE\
-				u.username = :username\
-			", { replacements: { username: username }, type: db.bus.QueryTypes.SELECT }
-		).then(result => {
-			if(result.length > 0){
-				const token = jwt.sign({username : username}, require('../config').key, {
-					expiresIn: '1h'
-				});
-
-				var { primer_nombre, primer_apellido } = result[0];
-				var mailOptions = {
-					from: userEmail,
-					to: result[0].username,
-					subject: 'Recuperación de acceso Sistema semillero',
-					html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click aquí`,
-				};
-				transporter.sendMail(mailOptions, function(error, info){
-					if (!error){
-						res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje al correo registrado' }});
-					} else {
-						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor no responde' }})
-					}
-				});
+		Usuarios.findOne({
+			attributes : ['username'],
+			where : { username : username },
+			include: [
+				{ model : PreguntasSeguridad, as : 'pregunta_seguridad', attributes : ['nombre'] }
+			]
+		}).then(user => {
+			if (!user) {
+				res.status(200).json({ alert : { type: 'warning', title : 'Atención', message : 'Usuario incorrecto o no existente'}});
+			} else {
+				res.status(200).json(user);
 			}
-		});
+		})
 	} else {
 		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
+
+/* API RECOVER PASSWORD 2 */
+exports.recoverpassword2 = (req, res) => {
+	console.log('func -> Recover Password 2');
+		if (req.body.params != undefined) {
+		const { username, respuesta } = req.body.params;
+		if (username != undefined && respuesta != undefined) {
+			Usuarios.findOne({
+				attributes : ['username', 'respuesta_seguridad'],
+				where : { username : username },
+				include : [ {model : UsuariosPerfil, attributes : ['primer_nombre', 'primer_apellido' ]}]
+			}).then(resp => {
+				if (resp.dataValues.respuesta_seguridad === respuesta) {
+					const token = jwt.sign({username : resp.dataValues.username}, require('../config').key, {
+						expiresIn: '1h'
+					});
+					var { primer_nombre, primer_apellido } = resp.dataValues.usuarios_perfil;
+					var mailOptions = {
+						from: userEmail,
+						to: resp.dataValues.username,
+						subject: 'Recuperación de acceso Sistema semillero',
+						html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click aquí`,
+					};
+					transporter.sendMail(mailOptions, function(error, info){
+						if (!error){
+							res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje al correo registrado' }});
+						} else {
+							res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+						}
+					});
+				} else {
+					res.status(200).json({ alert : { type : 'warning', title: 'Atención', message : 'Su respuesta es incorrecta'}});
+				}
+			})
+		} else {
+			res.status(200).json({ alert : { type: 'warning', title : 'Atención', message : 'Parametros \'username\' y \'respuesta\' requeridos'}})
+		}
+	} else {
+		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
+}
 
 /* API UPDATE PASSWORD
 	@params username string, password string
@@ -302,20 +320,24 @@ exports.updatepassword = (req, res) => {
 	console.log('func -> Update Password');
 	if (req.body.params != undefined) {
 		const { username, password } = req.body.params;
-		var passwordHashed = bcrypt.hashSync(password, 8);
-		Usuarios.update({
-		  password: passwordHashed,
-		}, {
-		  where: {
-		    username: username
-		  }
-		}).then(result => {
-			if (result.length > 0) {
-				res.status(200).json({ alert: { type: 'successs', title: 'Información', message: 'Su contraseña ha sido actualizada exitosamente!'}});
-			} else {
-				res.status(200).json({ alert: { type: 'warning', title: 'Atención', message : 'Error al actualizar su contraseña!'}});
-			}
-		});
+		if (username != undefined && password != undefined) {
+			var passwordHashed = bcrypt.hashSync(password, 8);
+			Usuarios.update({
+			  password: passwordHashed,
+			}, {
+			  where: {
+			    username: username
+			  }
+			}).then(result => {
+				if (result.length > 0) {
+					res.status(200).json({ alert: { type: 'successs', title: 'Información', message: 'Su contraseña ha sido actualizada exitosamente!'}});
+				} else {
+					res.status(200).json({ alert: { type: 'warning', title: 'Atención', message : 'Error al actualizar su contraseña!'}});
+				}
+			});
+		} else {
+			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Parametros \'username\' y \'password\' requeridos'}})
+		}
 	} else {
 		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
@@ -426,9 +448,7 @@ exports.saime = (req, res) => {
 				// Validation after send query on database
 				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 					var { severity, code, detail } = err.parent;
-					if (code == '22003') {detail = 'Valor numerico fuera del rango permitido';}
-					if (code == '22P02') {detail = 'Sintaxis de entrada no válida para integer';}
-					if (code == '42703') {detail = 'Columna indefinida';}
+					detail = errDb.errorsDb(code)
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
 			})

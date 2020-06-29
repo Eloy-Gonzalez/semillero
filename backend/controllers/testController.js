@@ -1,8 +1,7 @@
+let db = require('../config/databases.js');
+let errDb = require('../helpers/errorsDb.js');
 let jwt  = require('jsonwebtoken');
 let bcrypt = require('bcryptjs');
-
-/* Databases */
-const db = require('../config/databases.js');
 
 /* Model */
 const Usuarios = db.Usuarios;
@@ -35,7 +34,7 @@ exports.usuario = async (req, res) => {
 	try {
 		// Usuarios
 		let user = await Usuarios.create({
-			username: faker.internet.userName(),
+			username: faker.internet.email(),
 			password: password,
 			id_pregunta: faker.random.number({min : 1, max: 1}),
 			respuesta_seguridad : faker.lorem.word(1)

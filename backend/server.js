@@ -8,7 +8,6 @@ let bodyParser 	= require('body-parser');
 /******************************************************************************
 								[CONFIGURACIÓN]
 ******************************************************************************/
-
 // Configuración de middlewares
 app.use(bodyParser.json());
 

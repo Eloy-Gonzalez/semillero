@@ -60,6 +60,9 @@ db.UsuariosDomicilio.belongsTo(db.Usuarios, { foreignKey: 'id_usuario', targetKe
 db.Usuarios.hasOne(db.UsuariosRepresentante, { foreignKey: 'id_usuario', targetKey: 'id_usuario', sourceKey: 'id' });
 db.UsuariosRepresentante.belongsTo(db.Usuarios, { foreignKey: 'id_usuario', targetKey: 'id', sourceKey: 'id_usuario' });
 
+db.Usuarios.hasOne(db.PreguntasSeguridad, { foreignKey: 'id', targetKey: 'id', sourceKey: 'id_pregunta', as : 'pregunta_seguridad' });
+db.PreguntasSeguridad.belongsTo(db.Usuarios, { foreignKey: 'id', targetKey: 'id', sourceKey: 'id' });
+
 db.UsuariosDomicilio.hasOne(db.Parroquias, { foreignKey: 'id_parroquia', targetKey: 'id_parroquia', sourceKey: 'id_parroquia' });
 db.Parroquias.belongsTo(db.UsuariosDomicilio, { foreignKey: 'id_parroquia', targetKey: 'id_parroquia', sourceKey: 'id_parroquia' });
 
