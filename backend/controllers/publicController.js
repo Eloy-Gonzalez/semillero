@@ -282,26 +282,30 @@ exports.recoverpassword2 = (req, res) => {
 				where : { username : username },
 				include : [ {model : UsuariosPerfil, attributes : ['primer_nombre', 'primer_apellido' ]}]
 			}).then(resp => {
-				if (resp.dataValues.respuesta_seguridad === respuesta) {
-					const token = jwt.sign({username : resp.dataValues.username}, require('../config').key, {
-						expiresIn: '1h'
-					});
-					var { primer_nombre, primer_apellido } = resp.dataValues.usuarios_perfil;
-					var mailOptions = {
-						from: userEmail,
-						to: resp.dataValues.username,
-						subject: 'Recuperación de acceso Sistema semillero',
-						html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click aquí`,
-					};
-					transporter.sendMail(mailOptions, function(error, info){
-						if (!error){
-							res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje al correo registrado' }});
-						} else {
-							res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
-						}
-					});
+				if (resp == null) {
+					res.status(200).json({ alert: { type: 'warning', title : 'Atención', message : 'El email que has introducido es incorrecto' }});
 				} else {
-					res.status(200).json({ alert : { type : 'warning', title: 'Atención', message : 'Su respuesta es incorrecta'}});
+					if (resp.dataValues.respuesta_seguridad === respuesta) {
+						const token = jwt.sign({username : resp.dataValues.username}, require('../config').key, {
+							expiresIn: '1h'
+						});
+						var { primer_nombre, primer_apellido } = resp.dataValues.usuarios_perfil;
+						var mailOptions = {
+							from: userEmail,
+							to: resp.dataValues.username,
+							subject: 'Recuperación de acceso Sistema semillero',
+							html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/updatepassword">Restablecer contraseña</a>`,
+						};
+						transporter.sendMail(mailOptions, function(error, info){
+							if (!error){
+								res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje al correo registrado' }});
+							} else {
+								res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+							}
+						});
+					} else {
+						res.status(200).json({ alert : { type : 'warning', title: 'Atención', message : 'Su respuesta es incorrecta'}});
+					}
 				}
 			})
 		} else {
