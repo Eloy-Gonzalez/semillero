@@ -28,7 +28,7 @@ function Header({user={}, onLogout= () => console.log("Login first")}) {
                 <div className="header__primary-logo">
                     { user.isAuthenticated ? 
                         <img src={LogoSemilleros} alt="Semilleros de Jóvenes Científicos"/> :
-                        <video ref={refVideo} style={{float:'left', width:'100%'}}>
+                        <video ref={refVideo} style={{float:'left', width:'100%'}} loop={true}>
                             <source src={VideoSemilleros} type="video/mp4"/>
                         </video>
                     }

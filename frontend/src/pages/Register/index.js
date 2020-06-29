@@ -19,7 +19,7 @@ import './index.scss'
 
 // @Components
 import LoaderFormData from './LoaderFormData'
-import ActionsButtons from './ActionsButtons'
+import ActionsButtons from 'components/ActionsButtons'
 
 // @Components > Views Formularios
 const Ceduled = React.lazy( () => import("./Ceduled"))

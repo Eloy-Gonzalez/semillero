@@ -20,8 +20,8 @@ function Ceduled({actualVisible, nextPrev, listFormiks, loading, ActionsButtons,
 	
 	const listSubmit = React.useMemo( () => [
 		function(values, actions) {
-			const {cedula} = values
-			dispatch(consultarSaime({cedula}))
+			const {nacionalidad, cedula} = values
+			dispatch(consultarSaime({nacionalidad,cedula}))
 		},
 		function(e, nextForm) {
 			e.preventDefault()
