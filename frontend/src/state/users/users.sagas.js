@@ -24,10 +24,9 @@ import {
 function* searchSaimeWorker({payload}){
   try {
     yield put({ type: REQUEST_STARTED })
-    const {cedula} = payload
 
     // Consultar datos de Api - Saime
-    const res = yield call(searchSaimeService, cedula)
+    const res = yield call(searchSaimeService, payload)
     const {data} = res
 
     if(data.length) {
@@ -78,18 +77,24 @@ function* searchSaimeWorker({payload}){
 function* registerNewUserWorker({ payload }){
   try {
     yield put({ type: REQUEST_STARTED })
-    
-    // ## Consultar datos de Api - Saime
-    const res = yield call(registerNewUserService, payload)
-    const {message} = res.data.alert
-    const {errors} = message
 
-    if(errors !== undefined && errors.length) {
+    const res = yield call(registerNewUserService, payload)
+    console.log(res)
+    //console.log("Desde sagas "+ res)
+
+    //alert(JSON.stringify(payload))
+    // ## Consultar datos de Api - Saime
+    //console.log(res)
+      
+      //yield put({ type: REQUEST_SUCCESS, payload: "¡Datos registrados!"})
+      //setTimeout(() => {window.location ="/acceder"}, 3000)
+
+    
+    /*
+    if(errors !== undefined && errors.length && typeof message === "string") {
       const {path} = errors[0] 
       console.log(path)
       if(path === 'id_periodo' || path === 'cedula'){
-        yield put({ type: REQUEST_SUCCESS, payload: "¡Datos registrados!"})
-        setTimeout(() => {window.location ="/acceder"}, 3000)
       } else {
         errors.map((err) => {
           const {message} = err  
@@ -99,6 +104,7 @@ function* registerNewUserWorker({ payload }){
     } else {
       yield put({ type: REQUEST_FAILURE, payload: { serverErrors: message} })
     }
+    */
 
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {

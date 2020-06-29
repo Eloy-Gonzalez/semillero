@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 // Components
 import AuthForm from './AuthForm'
 import avatar from 'statics/images/logos/avatar_2x.png'
-import ActionsButtons from 'pages/Register/ActionsButtons'
+import ActionsButtons from 'components/ActionsButtons'
 
 // @Actions
 import {login} from 'state/auth/auth.actions'

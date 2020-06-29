@@ -23,7 +23,7 @@ class Request {
     const newConfig = config;
     const token = getToken();
     if (token)
-      newConfig.headers['x-crs-mppct-token'] = getToken();
+      newConfig.headers['x-mppct-token'] = getToken();
   
     return newConfig;
   }

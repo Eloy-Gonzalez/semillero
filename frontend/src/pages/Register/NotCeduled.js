@@ -21,8 +21,8 @@ function NotCeduled({actualVisible, nextPrev, listFormiks, loading, ActionsButto
 
 	const listSubmit = React.useMemo( () => [
 		function(values, actions) {
-			const {cedula} = values
-			dispatch(consultarSaime({cedula, isRepre:true}))
+			const {nacionalidad, cedula} = values
+			dispatch(consultarSaime({nacionalidad, cedula, isRepre:true}))
 		},
 		function(e) {
 			e.preventDefault()

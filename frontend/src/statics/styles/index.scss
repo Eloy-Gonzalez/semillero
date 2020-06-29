@@ -21,7 +21,7 @@ body {
   background: #fff;
   }
 
-  h1, h2, h3, h4, h5, h6, p, i {
+  h1, h2, h3, h4, h5, h6, p, i, th, td {
     color:#777;
   }
 
@@ -86,5 +86,36 @@ body {
       opacity: 1;
       transform: scale(1);
       clip-path: circle(100%);
+    }
+  }
+
+  .MuiTableCell-root {
+    color: #777 !important;
+    font-family: var(--font-text) !important;
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .MuiTableCell-head{
+    color: #2C395E !important;
+    font-weight: bold !important;
+    font-size: 1.4rem !important;
+    font-family: var(--font-text) !important;
+  }
+
+  .anim_form-data {
+    animation: anim_form-data .7s cubic-bezier(0.680, -0.550, 0.265, 1.550);
+    animation-fill-mode:forwards;
+    transform: translateX(10%);
+    opacity: 0;
+  }
+  @keyframes anim_form-data {
+    from {
+      opacity: 0;
+      transform: translateX(10%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }

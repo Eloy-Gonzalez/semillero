@@ -10,7 +10,9 @@ function ActionsButtons({ actualVisible, totalForms, nextPrev, disabledButton=fa
                 </Button>
             }
             <Button type="submit" className="btn--next" variant="outlined" color="primary" disabled={disabledButton}>
-                { actualVisible === totalForms ? 'Enviar' : 'Continuar' }
+                { disabledButton ? 'Cargando...' :
+                    actualVisible === totalForms ? 
+                    'Enviar' : 'Continuar' }
             </Button>
         </div>
 	)

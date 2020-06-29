@@ -30,7 +30,7 @@ function SimpleSelect(props) {
 	            <em>Seleccionar</em>
 	          </MenuItem>
 	          {
-	          	props.items && props.items.map( ({ value, label}) => (
+	          	props.items.length && props.items.map( ({ value, label}) => (
 	          		<MenuItem key={value} value={value}>{label}</MenuItem>
 	          	))
 	          }

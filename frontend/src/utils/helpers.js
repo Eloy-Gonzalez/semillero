@@ -42,11 +42,11 @@ export function getEstados(id_estado) {
 }
 
 export function getMunicipios(id_estado) {
-  return axios.post(`${BASE_API}/municipios`, { params: id_estado }) 
+  return axios.post(`${BASE_API}/municipios`, { params: {id_estado} }) 
 }
 
 export function getParroquias(id_municipio) {
-  return axios.post(`${BASE_API}/parroquias`, { params: id_municipio }) 
+  return axios.post(`${BASE_API}/parroquias`, { params: {id_municipio} }) 
 }
 
 export function getCategories() {
