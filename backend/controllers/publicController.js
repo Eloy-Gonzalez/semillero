@@ -115,38 +115,28 @@ exports.registro = (req, res, next) => {
 									}
 								})
 							}
-							
-							// Usuarios Perfil
-							UsuariosRepresentante.count({ where : {
-								cedula : cedula_representante
-							}}).then(count => {
-								var cedulaHijo = (cedula == undefined || cedula == '' || cedula == null) 
-								? `${cedula_representante}-${count + 1}` 
-								: cedula;
 
+							var cedulaHijo;
+
+							if (cedula == undefined || cedula == '' || cedula == null) {
 								// Usuarios Perfil
-								UsuariosPerfil.create({
-									id_usuario : user.dataValues.id,
-									cedula : cedulaHijo,
-			  					primer_nombre : primer_nombre,
-			  					segundo_nombre : segundo_nombre,
-								  primer_apellido : primer_apellido,
-								  segundo_apellido : segundo_apellido,
-			  					genero : genero,
-								  fecha_nacimiento : fecha_nacimiento,
-								}).then(usuario => {
-									res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
-								}).catch(err => {
-									// Validation before send query on database
-									if (err.name == 'SequelizeValidationError') {
-										res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
-									}
-									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
-										var { severity, code, detail } = err.parent;
-										detail = errDb.errorsDb(code)
-										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
-									}
-								})
+								UsuariosRepresentante.count({ where : {
+									cedula : cedula_representante
+								}}).then(count => {
+									cedulaHijo = `${cedula_representante}-${count + 1}`;
+
+																// Usuarios Perfil
+							UsuariosPerfil.create({
+								id_usuario : user.dataValues.id,
+								cedula : cedulaHijo,
+		  					primer_nombre : primer_nombre,
+		  					segundo_nombre : segundo_nombre,
+							  primer_apellido : primer_apellido,
+							  segundo_apellido : segundo_apellido,
+		  					genero : genero,
+							  fecha_nacimiento : fecha_nacimiento,
+							}).then(usuario => {
+								res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 							}).catch(err => {
 								// Validation before send query on database
 								if (err.name == 'SequelizeValidationError') {
@@ -158,6 +148,44 @@ exports.registro = (req, res, next) => {
 									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 								}
 							})
+								}).catch(err => {
+									// Validation before send query on database
+									if (err.name == 'SequelizeValidationError') {
+										res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+									}
+									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+										var { severity, code, detail } = err.parent;
+										detail = errDb.errorsDb(code)
+										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+									}
+								})
+							} else {
+								cedulaHijo = cedula;
+
+															// Usuarios Perfil
+							UsuariosPerfil.create({
+								id_usuario : user.dataValues.id,
+								cedula : cedulaHijo,
+		  					primer_nombre : primer_nombre,
+		  					segundo_nombre : segundo_nombre,
+							  primer_apellido : primer_apellido,
+							  segundo_apellido : segundo_apellido,
+		  					genero : genero,
+							  fecha_nacimiento : fecha_nacimiento,
+							}).then(usuario => {
+								res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+							}).catch(err => {
+								// Validation before send query on database
+								if (err.name == 'SequelizeValidationError') {
+									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+								}
+								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+									var { severity, code, detail } = err.parent;
+									detail = errDb.errorsDb(code)
+									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+								}
+							})
+							}
 						})
 					}).catch(err => {
 						// Validation before send query on database
