@@ -10,6 +10,10 @@ module.exports = (app) => {
 	const fasesdescripcionController = require('../controllers/fasesdescripcionController');
 	const proyectosController = require('../controllers/proyectosController');
 	const usuariosController = require('../controllers/usuariosController');
+	const usuariosPerfilController = require('../controllers/usuariosPerfilController');
+	const usuariosDomicilioController = require('../controllers/usuariosDomicilioController');
+	const usuariosRepresentanteController = require('../controllers/usuariosRepresentanteController');
+	const permisosController = require('../controllers/permisosController');
 	const testController = require('../controllers/testController');
 
 	// Middleware
@@ -101,10 +105,26 @@ module.exports = (app) => {
 	app.post('/usuarios/delete', rutasProtegidas.verifyToken, usuariosController.delete);
 	app.post('/usuarios/restore', rutasProtegidas.verifyToken, usuariosController.restore);
 
+	// Usuarios Perfil
+	app.post('/usuariosperfil', rutasProtegidas.verifyToken, usuariosPerfilController.get);
+	app.post('/usuariosperfil/update', rutasProtegidas.verifyToken, usuariosPerfilController.update);
+
+	// Usuarios Domicilio
+	app.post('/usuariosdomicilio', rutasProtegidas.verifyToken, usuariosDomicilioController.get);
+	app.post('/usuariosdomicilio/update', rutasProtegidas.verifyToken, usuariosDomicilioController.update);
+
+	// Usuarios Representante
+	app.post('/usuariosrepresnetante', rutasProtegidas.verifyToken, usuariosRepresentanteController.get);
+
+	// Permisos
+	app.post('/permisos', rutasProtegidas.verifyToken, permisosController.get);
+	app.post('/permisos/create', rutasProtegidas.verifyToken, permisosController.create);
+	app.post('/permisos/update', rutasProtegidas.verifyToken, permisosController.update);
+
 	// TEST ROUTES
 	// app.post('/test/gettoken', testController.getToken);
 	// app.post('/test/generatetoken', testController.generateToken);
 	// app.post('/test/generatepassword', testController.generatePassword);
-	app.post('/test/registro/usuario', testController.usuario);
+	// app.post('/test/registro/usuario', testController.usuario);
 	// app.post('/test/query', testController.query);
 }
