@@ -1,5 +1,5 @@
 // @Vendors
-import React, { useEffect } from 'react'
+import React from 'react'
 
 // @Styles
 import 'statics/styles/grid.scss'
@@ -15,18 +15,18 @@ import Menu from 'components/Menu'
 function Header({user={}, onLogout= () => console.log("Login first")}) {
     const refVideo = React.useRef()
 
-    useEffect(() => {
+    /* useEffect(() => {
         if(!user.isAuthenticated){
           refVideo.current.play()
         }
-    }, [ user.isAuthenticated])
+    }, [ user.isAuthenticated]) */
 
     return (
         <header className="header__primary container--row">
             <div className="row">
                 <Menu user={user} logout={onLogout}/>
-                <div className="header__primary-logo">
-                    { user.isAuthenticated ? 
+                <div className="header__primary-logo" style={{margin:"40px 0 0"}}>
+                    { true ? 
                         <img src={LogoSemilleros} alt="Semilleros de Jóvenes Científicos"/> :
                         <video ref={refVideo} style={{float:'left', width:'100%'}} loop={true}>
                             <source src={VideoSemilleros} type="video/mp4"/>

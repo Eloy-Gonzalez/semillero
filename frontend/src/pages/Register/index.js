@@ -20,6 +20,7 @@ import './index.scss'
 // @Components
 import LoaderFormData from './LoaderFormData'
 import ActionsButtons from 'components/ActionsButtons'
+import PreviusStep from './PreviusStep'
 
 // @Components > Views Formularios
 const Ceduled = React.lazy( () => import("./Ceduled"))
@@ -61,14 +62,7 @@ function Register() {
   return (
     <div className="container card--box">
         <h2 className="app--title" style={{textAlign:"center"}}>Crear Cuenta Nueva</h2>
-        <p className="app--text-secod" style={{fontWeight: "bold", fonSize:"18px"}}>
-          {isCeduled ? "Usuario no cedulado " : "Usuario cedulado "} 
-          <span 
-            style={{cursor:"pointer", color:"blue"}}
-            onClick={() => setIsCeduled(prev => !prev)}>
-            ingrese aqui
-          </span>
-        </p>
+        <PreviusStep items={["Consultar cédula", "Verificar datos","Datos Domicilio", "Finalizar"]} actualVisible={actualVisible}/>
         <Suspense fallback={<LoaderFormData />}>
             {(
               isCeduled ?
@@ -96,4 +90,4 @@ function Register() {
   )
 }
 
-export default Register
+export default React.memo(Register)

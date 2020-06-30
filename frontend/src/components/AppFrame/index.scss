@@ -4,6 +4,7 @@
     grid-template-rows: auto 1fr auto;
 
     .main--content {
+    	align-self:flex-start;
     	min-height: 300px;
     }
 }

@@ -42,6 +42,7 @@ function Ceduled({actualVisible, nextPrev, listFormiks, loading, ActionsButtons,
 	return (
         <div className="target">
           <VisualizedForm
+            title={actualVisible === 0 ? "Ingresar cédula del participante" : actualVisible === 2 && "Datos del participante"}
             onSubmit={listSubmit[actualVisible]}
             ActionsButtons={
               <ActionsButtons 

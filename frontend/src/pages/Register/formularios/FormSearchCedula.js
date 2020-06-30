@@ -10,7 +10,7 @@ import SimpleSelect from 'components/Form/SimpleSelect'
 function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false, ActionsButtons="", nextForm}) {
 	
 	const initialValues = {
-		nacionalidad: 'V',
+		nacionalidad: '',
 		cedula: ''
 	}
 	
@@ -32,6 +32,7 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 	            {({ values, handleChange, handleBlur, handleSubmit}) => (
 	              	<form onSubmit={handleSubmit} className="anim_form-data" style={{display: "grid", gridTemplateColumns:"auto 1fr", gridColumnGap:"15px"}}>
 	                	<SimpleSelect 
+	                		style={{minWidth: "160px"}}
 	                		id="nacionalidad"
 	                		name="nacionalidad"
 	                		value={values.nacionalidad}
