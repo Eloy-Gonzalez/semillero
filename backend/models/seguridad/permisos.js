@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     tipo: {
       type: DataTypes.SMALLINT,
-      allowNull: false
+      allowNull: false,
+      validates: {
+        isIn: [['1', '2']],
+      }
     },
     creado_por: {
       type: DataTypes.INTEGER,
