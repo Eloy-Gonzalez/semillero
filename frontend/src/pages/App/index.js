@@ -18,6 +18,7 @@ import {selectServerErrors, selectServerSuccess} from 'state/app/app.selectors'
 import Backdrop from 'components/Backdrop'
 import Snackbars from 'components/Snackbars';
 import SnackbarsSuccess from 'components/SnackbarsSuccess';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 // @Pages 
 import Login  from 'pages/Login'
@@ -36,11 +37,9 @@ function App() {
 
     return (
         <React.Suspense 
-                fallback={
-                    <Backdrop show={true} bgColor="#fff">
-                        <center style={{margin: '60px 0 0'}}><h3 className="app--title">Cargando datos....</h3></center>
-                    </Backdrop>
-            }>
+                fallback={<Backdrop show={true} bgColor="#fff" style={{textAlign:"center"}}>
+                    <CircularProgress />
+                </Backdrop>}>
             <Snackbars onClose={() => dispatch(clearServerErrors())} message={serverErrors} open={!!serverErrors} />
             <SnackbarsSuccess  onClose={() => dispatch(clearServerSuccess())} message={serverSuccess} open={!!serverSuccess} />
             

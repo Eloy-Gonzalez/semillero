@@ -7,6 +7,9 @@ import * as Yup from 'yup'
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
 
+// @ReCACPTCHA
+// import ReCAPTCHA from "react-google-recaptcha";
+
 function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false, ActionsButtons="", nextForm}) {
 	
 	const initialValues = {
@@ -21,7 +24,7 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 
 	return (
 		<React.Fragment>
-			<p className="app--text-second">
+			<p className="app--text-second" style={{color:"rgb(148, 169, 71)"}}>
 				{title}
 			</p>
 	          <Formik
@@ -29,7 +32,7 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 	            onSubmit={onSubmit}
 	            validationSchema={SignupSchema}
 	          >
-	            {({ values, handleChange, handleBlur, handleSubmit}) => (
+	            {({errors, touched, values, handleChange, handleBlur, handleSubmit}) => (
 	              	<form onSubmit={handleSubmit} className="anim_form-data" style={{display: "grid", gridTemplateColumns:"auto 1fr", gridColumnGap:"15px"}}>
 	                	<SimpleSelect 
 	                		style={{minWidth: "160px"}}
@@ -41,6 +44,7 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 	                		label="Nacionalidad (*)"
 		                    items={[{label:"V", value:"V"}, {label:"E", value:"E"}]}
 	                		helpertext={<ErrorMessage name="nacionalidad"/>}
+	                		error={errors.nacionalidad && touched.nacionalidad}
 	                		/>
 		                <CrsField
 		                    name="cedula"
@@ -51,8 +55,13 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 		                    color="primary"
 		                    autoFocus={autofocus}
 		                    helperText={<ErrorMessage name='cedula' />}
+		                    error={errors.nacionalidad && touched.nacionalidad}
 		            	/>
 		            	{ActionsButtons}
+		            	{/*<ReCAPTCHA
+		            		size="invisible"
+		            		sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
+						/>*/}
 		         	</form>
 		         )}
 	          </Formik>

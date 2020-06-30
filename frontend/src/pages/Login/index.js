@@ -5,7 +5,6 @@ import {useDispatch, useSelector} from 'react-redux';
 // Components
 import AuthForm from './AuthForm'
 import avatar from 'statics/images/logos/avatar_2x.png'
-import ActionsButtons from 'components/ActionsButtons'
 
 // @Actions
 import {login} from 'state/auth/auth.actions'
@@ -26,7 +25,7 @@ function Login() {
 	        password: data.password
 	    }
     	dispatch(login(payload))
-    	actions.setSubmitting(false);
+    	actions.setSubmitting(false)
   	}, [dispatch])
 
     return (
@@ -36,16 +35,7 @@ function Login() {
 	        		<img src={avatar} alt="avatar"/>
 	        	</div>    
 	        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>  
-	            <AuthForm 
-	            	onSubmit={handleSubmit}
-	            	ActionsButtons={
-	            		<ActionsButtons
-	            			actualVisible={0}
-	            			totalForms={0}
-	            			disabledButton={loading}
-	            		/>
-	            	}
-	            />
+	            <AuthForm onSubmit={handleSubmit} disableButton={loading}/>
 	        </div>
     	</React.Fragment>
     )

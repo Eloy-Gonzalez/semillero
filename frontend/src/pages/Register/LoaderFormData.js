@@ -7,7 +7,7 @@ function LoaderFormData( { messagge = "Cargando"} ){
     return (
 	    <div className="loader_form-data">
             <div style={{textAlign:"center"}}><CircularProgress /></div>
-	    </div>    	
+	    </div>
     )
 }
 

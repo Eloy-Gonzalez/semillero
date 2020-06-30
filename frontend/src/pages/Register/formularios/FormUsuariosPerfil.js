@@ -10,7 +10,7 @@ import SimpleSelect from 'components/Form/SimpleSelect'
 
 import './index.scss'
 
-function FormUsuariosPerfil ({ title = "Datos del participante", onSubmit, autofocus=false, ActionsButtons="", valuesInitials}) {
+function FormUsuariosPerfil ({ title = "Datos Personales", onSubmit, autofocus=false, ActionsButtons="", valuesInitials}) {
 	
 	const initialValues = {
 		primer_nombre: '',
@@ -30,7 +30,7 @@ function FormUsuariosPerfil ({ title = "Datos del participante", onSubmit, autof
 
 	return (
 		<React.Fragment>
-			<p className="app-text-second">{title}</p>
+			<p className="app--text-second" style={{color:"rgb(148, 169, 71)"}}>{title}</p>
 	          <Formik
 	            initialValues={initialValues}
 	            onSubmit={ (values, actions) => onSubmit(values, actions)}
@@ -44,40 +44,40 @@ function FormUsuariosPerfil ({ title = "Datos del participante", onSubmit, autof
 		                    onChange={handleChange}
 		                    onBlur={handleBlur}
 		                    value={values.primer_nombre}
-		                    margin="dense"
 		                    label="Primer Nombre (*)"
 		                    color="primary"
 		                    helperText={<ErrorMessage name="primer_nombre"/>}
 		                    autoFocus={autofocus}
+		                    error={errors.primer_nombre && touched.primer_nombre}
 		                 />
 		              	<CrsField
 		                    name="segundo_nombre"
 		                    onChange={handleChange}
 		                    onBlur={handleBlur}
-		                    value={values.segundo_nombre}
-		                    margin="dense"
+		                    value={values.segundo_nombre && touched.segundo_nombre}
 		                    label="Segundo Nombre"
 		                    color="primary"
 		                    helperText={<ErrorMessage name="segundo_nombre"/>}
+		                    error={errors.segundo_nombre && touched.segundo_nombre}
 		                 />
 		                 <CrsField
 		                    name="primer_apellido"
 		                    onChange={handleChange}
 		                    onBlur={handleBlur}
 		                    value={values.primer_apellido}
-		                    margin="dense"
 		                    label="Primer Apellido (*)"
 		                    color="primary"
 		                    helperText={<ErrorMessage name="primer_apellido"/>}
+		                    error={errors.primer_apellido && touched.primer_apellido}
 		                 />
 		                 <CrsField
 		                    name="segundo_apellido"
 		                    onChange={handleChange}
 		                    onBlur={handleBlur}
 		                    value={values.segundo_apellido}
-		                    margin="dense"
 		                    label="Segundo Apellido"
 		                    color="primary"
+		                    error={errors.segundo_apellido && touched.segundo_apellido}
 		                    helperText={<ErrorMessage name="segundo_apellido"/>}
 		                 />
 		                 <CrsField
@@ -85,10 +85,10 @@ function FormUsuariosPerfil ({ title = "Datos del participante", onSubmit, autof
 		                    onChange={handleChange}
 		                    onBlur={handleBlur}
 		                    value={values.fecha_nacimiento}
-		                    margin="dense"
 		                    label="Fecha de nacimiento (*)"
 		                    color="primary"
 		                    helperText={<ErrorMessage name="fecha_nacimiento"/>}
+		                    error={errors.fecha_nacimiento && touched.fecha_nacimiento}
 		                 />
 	                	<SimpleSelect 
 	                		id="genero"
@@ -96,6 +96,7 @@ function FormUsuariosPerfil ({ title = "Datos del participante", onSubmit, autof
 	                		value={values.genero}
 	                		onChange={handleChange}
 	                		onBlur={handleBlur}
+	                		error={errors.genero && touched.genero}
 	                		label="Género (*)"
 		                    items={[{label:'Masculino', value:'M'}, {label:'Femenino', value:'F'}]}
 	                		helpertext={<ErrorMessage name="genero"/>}

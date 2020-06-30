@@ -8,7 +8,7 @@ import {consultarSaime, setUbication, registerNewUser, setProfiles} from 'state/
 // @Selectors
 import {selectProfiles, selectUbication, selectRepresentant} from 'state/users/users.selectors'
 
-function NotCeduled({actualVisible, nextPrev, listFormiks, loading, ActionsButtons, dispatch, resetFormData}){
+function NotCeduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loading, ActionsButtons, dispatch, resetFormData}){
 	
 	useEffect(() => {
 		nextPrev(0)
@@ -48,16 +48,17 @@ function NotCeduled({actualVisible, nextPrev, listFormiks, loading, ActionsButto
 
 	return (
         <div className="target">
-          <VisualizedForm
-          	title={actualVisible === 0 ? "Consultar cedula representante" : actualVisible === 2 && "Datos del participante"}
-            onSubmit={listSubmit[actualVisible]}
-            ActionsButtons={
-              <ActionsButtons 
-                actualVisible={actualVisible}
-                totalForms={(listFormiks.length -1)}
-                nextPrev={nextPrev}
-                disabledButton={loading}
-              />}
+        	{PreviusStep}
+        	<VisualizedForm
+          		title={actualVisible === 0 ? "Cédula de su representante" : actualVisible === 2 && "Datos Personales"}
+            	onSubmit={listSubmit[actualVisible]}
+	            ActionsButtons={
+	              <ActionsButtons 
+	                actualVisible={actualVisible}
+	                totalForms={(listFormiks.length -1)}
+	                nextPrev={nextPrev}
+	                disabledButton={loading}
+	            />}
           />
         </div>
 	)

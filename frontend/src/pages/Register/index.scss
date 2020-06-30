@@ -50,6 +50,8 @@
 .target {
 	min-height: 180px;
 	position: relative;
+	display:grid;
+	gap:30px;
 
 	.loader_form-data {
 		position: absolute;

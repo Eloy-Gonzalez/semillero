@@ -8,7 +8,7 @@ import {consultarSaime, setUbication, registerNewUser} from 'state/users/users.a
 // @Selectors
 import {selectProfiles, selectUbication} from 'state/users/users.selectors'
 
-function Ceduled({actualVisible, nextPrev, listFormiks, loading, ActionsButtons, dispatch, resetFormData	}){
+function Ceduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loading, ActionsButtons, dispatch, resetFormData	}){
 	
 	useEffect(() => {
 		nextPrev(0)
@@ -41,16 +41,17 @@ function Ceduled({actualVisible, nextPrev, listFormiks, loading, ActionsButtons,
 
 	return (
         <div className="target">
-          <VisualizedForm
-            title={actualVisible === 0 ? "Ingresar cédula del participante" : actualVisible === 2 && "Datos del participante"}
-            onSubmit={listSubmit[actualVisible]}
-            ActionsButtons={
-              <ActionsButtons 
-                actualVisible={actualVisible}
-                totalForms={(listFormiks.length -1)}
-                nextPrev={nextPrev}
-                disabledButton={loading}
-              />}
+        	{PreviusStep}
+        	<VisualizedForm
+            	title={actualVisible === 0 ? "Ingresar cédula del participante" : actualVisible === 2 && "Datos Personales"}
+            	onSubmit={listSubmit[actualVisible]}
+            	ActionsButtons={
+              		<ActionsButtons 
+                	actualVisible={actualVisible}
+                	totalForms={(listFormiks.length -1)}
+                	nextPrev={nextPrev}
+                	disabledButton={loading}
+              	/>}
           />
         </div>
 	)

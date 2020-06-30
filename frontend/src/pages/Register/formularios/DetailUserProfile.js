@@ -47,6 +47,7 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 
 	return (
 		<>
+		<p className="app--text-second" style={{color: "rgb(148, 169, 71)"}}>Detalles</p>
 			<Table  className="anim_form-data">
 				<div>
 					<label>

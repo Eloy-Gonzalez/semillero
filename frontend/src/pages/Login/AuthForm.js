@@ -5,8 +5,9 @@ import * as Yup from 'yup'
 
 // @Components
 import CrsField from 'components/Form/CrsField'
+import Button from '@material-ui/core/Button'
 
-function AuthForm( { onSubmit, ActionsButtons=""} ) {
+function AuthForm({onSubmit, disabledButton=false}) {
   const initialValues = {
     username: '',
     password: ''
@@ -30,7 +31,7 @@ function AuthForm( { onSubmit, ActionsButtons=""} ) {
             validationSchema={SignupSchema}
           >
             {
-              ({values, handleChange, handleBlur, handleSubmit}) => (
+              ({errors, touched, values, handleChange, handleBlur, handleSubmit}) => (
                 <form onSubmit={handleSubmit}>
                  <CrsField
                     id="username"
@@ -38,10 +39,10 @@ function AuthForm( { onSubmit, ActionsButtons=""} ) {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.username}
-                    margin="dense"
                     label="Correo electrónico"
                     color="primary"
                     helperText={<ErrorMessage name="username"/>}
+                    error={errors.username && touched.username}
                  />
                  <CrsField 
                     id="password"
@@ -49,14 +50,15 @@ function AuthForm( { onSubmit, ActionsButtons=""} ) {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.password}
-                    margin="dense"
                     label="Contraseña"
-                    variant="filled"
                     color="primary"
                     type="password"
                     helperText={<ErrorMessage name="password"/>}
+                    error={errors.password && touched.password}
                  />
-                 {ActionsButtons}
+                  <Button type="submit" variant="outlined" color="primary" disabled={disabledButton}>
+                      { disabledButton ? 'Cargando...' : 'Ingresar'}
+                  </Button>
                 </form>
               )
             }

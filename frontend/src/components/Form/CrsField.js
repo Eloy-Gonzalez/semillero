@@ -2,7 +2,7 @@ import React from 'react'
 import FormGroup from '@material-ui/core/FormGroup'
 import TextField from '@material-ui/core/TextField'
 
-function CrsField({ id, type="text", name, value, onChange, onBlur, variant="filled", label, ...rest }) {
+function CrsField({ id, type="text", name, value, onChange, onBlur, variant="outlined", label, ...rest }) {
 	return (
 		<FormGroup>
 			<TextField
@@ -13,8 +13,6 @@ function CrsField({ id, type="text", name, value, onChange, onBlur, variant="fil
 				onBlur={onBlur}
 				value={value}
 				label={label}
-				variant={variant}
-				color="primary"
 				{ ...rest }
 			/>
 		</FormGroup>

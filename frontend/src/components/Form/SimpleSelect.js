@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 
-function SimpleSelect(props) {
+function SimpleSelect({variant="outlined", ...props}) {
 	const useStyles = makeStyles((theme) => ({
 	  formControl: {
 	    margin: 0,
@@ -21,7 +21,7 @@ function SimpleSelect(props) {
 	const classes = useStyles()
 
 	return (
-		<FormControl variant="filled" className={classes.formControl}>
+		<FormControl className={classes.formControl}>
 	        <InputLabel id={props.id}>{props.label}</InputLabel>
 	        <Select
 	        	{...props}

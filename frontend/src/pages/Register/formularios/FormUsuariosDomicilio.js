@@ -1,11 +1,7 @@
 import React, {useEffect, useState, useCallback} from 'react'
 
 // @Material UI
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import SimpleSelect from 'components/Form/SimpleSelect'
 
 import {Formik, ErrorMessage} from 'formik'
 import * as Yup from 'yup'
@@ -24,7 +20,11 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 	const obtenerEstados = useCallback( async () => {
 		try {
 			const estados = await getEstados()
-			const payload = estados.data
+			const {data} = estados
+			let payload = []
+			for(let i=0; i < estados.data.length; i++) {
+				payload.push({ label: data[i].nombre, value: data[i].id_estado })
+			}
 			setEdos(payload)
 		} catch(err) {
 			console.log(err)
@@ -36,7 +36,12 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 		const {value} = e.target
 		try {
 			const municipios = await getMunicipios(value)
-			const payload = municipios.data
+			const {data} = municipios
+			console.log(data)
+			let payload = []
+			for(let i=0; i < data.length; i++) {
+				payload.push({ label: data[i].nombre, value: data[i].id_municipio })
+			}
 			setMuns(payload)
 		} catch(err) {
 			console.log(err)
@@ -48,7 +53,11 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 		const {value} = e.target
 		try {
 			const parroquias = await getParroquias(value)
-			const payload = parroquias.data
+			const {data} = parroquias
+			let payload = []
+			for(let i=0; i < data.length; i++) {
+				payload.push({ label: data[i].nombre, value: data[i].id_parroquia })
+			}
 			setPaqs(payload)
 		} catch(err) {
 			console.log(err)
@@ -85,7 +94,9 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 
 	return (
 		<React.Fragment>
-			<p className="app--text-sencod">Datos domiciliarios</p>
+			<p className="app--text-second" style={{color:"rgb(148, 169, 71)"}}>
+				Datos Domiciliarios
+			</p>
 			<Formik
 			initialValues={initialValues}
 			onSubmit={onSubmit}
@@ -95,93 +106,76 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 				({ values,errors,touched,handleChange,handleBlur,handleSubmit}) => (
 					<form onSubmit={handleSubmit} className="grid--form-data anim_form-data">
 					<CrsField  
-					name="telefono_habitacional"
-					value={values.telefono_habitacional}
-					onChange={handleChange}
-					onBlur={handleBlur}
-					label="Nro. Teléfono (Local)"
-					helperText={<ErrorMessage name="telefono_habitacional"/>}
-					autoFocus={autofocus}
+						name="telefono_habitacional"
+						value={values.telefono_habitacional}
+						onChange={handleChange}
+						onBlur={handleBlur}
+						label="Nro. Teléfono (Local)"
+						helperText={<ErrorMessage name="telefono_habitacional"/>}
+						autoFocus={autofocus}
+						error={errors.telefono_habitacional && touched.telefono_habitacional}
 					/>
 					<CrsField  
-					name="telefono_personal"
-					value={values.telefono_personal}
-					onChange={handleChange}
-					onBlur={handleBlur}
-					label="Nro. Teléfono (Personal) (*)"
-					helperText={<ErrorMessage name="telefono_personal"/>}
+						name="telefono_personal"
+						value={values.telefono_personal}
+						onChange={handleChange}
+						onBlur={handleBlur}
+						label="Nro. Teléfono (Personal) (*)"
+						helperText={<ErrorMessage name="telefono_personal"/>}
+						error={errors.telefono_personal && touched.telefono_personal}
 					/>
-					<CrsField  
-					name="direccion_habitacional"
-					value={values.direccion_habitacional}
-					onChange={handleChange}
-					onBlur={handleBlur}
-					label="Dirección de Habitación (*)"
-					helperText={<ErrorMessage name="direccion_habitacional"/>}
-					/>
-
-					<FormControl variant="filled">
-					<InputLabel id="edo">Estado (*)</InputLabel>
-					<Select
-					id="edo"
-					name="edo"
-					value={values.edo}
-					onChange={(e) => obtenerMunicipios(e,handleChange)}
-					onBlur={handleBlur}
-					>
-					<MenuItem value="">
-					<em>Seleccionar</em>
-					</MenuItem>
-					{ edos !== [] && edos.map( ({ id_estado, nombre}) => (
-						<MenuItem key={id_estado} value={id_estado}>{nombre}</MenuItem> ))}
-					</Select>
-					<FormHelperText>
-					<ErrorMessage name="edo"/>
-					</FormHelperText>
-					</FormControl>
-
-					<FormControl variant="filled">
-					<InputLabel id="mun">Municipio (*)</InputLabel>
-					<Select
-					id="mun"
-					name="mun"
-					value={values.mun}
-					onChange={(e) => obtenerParroquias(e,handleChange)}
-					onBlur={handleBlur}
-					>
-					<MenuItem value="">
-					<em>Seleccionar</em>
-					</MenuItem>
-					{ muns !== [] && muns.map( ({ id_municipio, nombre}) => (
-						<MenuItem key={id_municipio} value={id_municipio}>{nombre}</MenuItem> ))}
-					</Select>
-					<FormHelperText>
-					<ErrorMessage name="mun"/>
-					</FormHelperText>
-					</FormControl>
-
-					<FormControl variant="filled">
-						<InputLabel id="id_parroquia">Parroquia (*)</InputLabel>
-						<Select
-							id="id_parroquia"
-							name="id_parroquia"
-							value={values.id_parroquia}
+                	<SimpleSelect 
+                		style={{minWidth: "160px"}}
+                		id="edo"
+                		name="edo"
+                		value={values.edo}
+						onChange={(e) => obtenerMunicipios(e,handleChange)}
+						onBlur={handleBlur}
+                		label="Estado (*)"
+	                    items={edos}
+                		helpertext={<ErrorMessage name="edo"/>}
+                		error={errors.edo && touched.edo}
+                	/>
+                	<SimpleSelect 
+                		style={{minWidth: "160px"}}
+                		id="mun"
+                		name="mun"
+                		value={values.mun}
+						onChange={(e) => obtenerParroquias(e,handleChange)}
+						onBlur={handleBlur}
+                		label="Municipio (*)"
+	                    items={muns}
+                		helpertext={<ErrorMessage name="mun"/>}
+                		error={errors.mun && touched.mun}
+                	/>
+                	<SimpleSelect 
+                		style={{minWidth: "160px"}}
+                		id="id_parroquia"
+                		name="id_parroquia"
+                		value={values.id_parroquia}
+						onChange={handleChange}
+						onBlur={handleBlur}
+                		label="Parroquia (*)"
+	                    items={paqs}
+                		helpertext={<ErrorMessage name="id_parroquia"/>}
+                		error={errors.id_parroquia && touched.id_parroquia}
+                	/>
+                	<div style={{gridColumn:"1 / -1"}}>
+						<CrsField  
+							name="direccion_habitacional"
+							value={values.direccion_habitacional}
 							onChange={handleChange}
 							onBlur={handleBlur}
-						>
-						<MenuItem value="">
-							<em>Seleccionar</em>
-						</MenuItem>
-						{ paqs !== [] && paqs.map( ({ id_parroquia, nombre}) => (
-							<MenuItem key={id_parroquia} value={id_parroquia}>{nombre}</MenuItem> ))}
-						</Select>
-						<FormHelperText>
-							<ErrorMessage name="id_parroquia"/>
-						</FormHelperText>
-					</FormControl>
+							label="Dirección de Habitación (*)"
+							rows={3}
+							placeholder="Ingrese una dirección detallada"
+							helperText={<ErrorMessage name="direccion_habitacional"/>}
+							error={errors.direccion_habitacional && touched.direccion_habitacional}
+						/>
+					</div>
 					{ActionsButtons}
 					</form>
-					)
+				)
 			}
 			</Formik>
 		</React.Fragment>
