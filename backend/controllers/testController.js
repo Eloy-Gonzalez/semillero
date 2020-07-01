@@ -21,104 +21,168 @@ const Estatus = db.Estatus;
 let faker = require('faker');
 faker.locale = "es";
 
-exports.usuario = async (req, res) => {
-	var password = '123456';
-	var cedula_representante = faker.random.arrayElement(['', '24322160', faker.random.number(99999999)]);
-	console.log(cedula_representante);
-	var categorias = [1];
+exports.usuario = async (req, res, next) => {
+	// USUARIO
+	const username = faker.internet.email();
+	const password = '123456';
+	const id_pregunta = 1;
+	const respuesta_seguridad = 'MUÑECA';
 
-	password = bcrypt.hashSync(password, 8);
-	// BEGIN TRANSACTION ISOLATION LEVEL 1
-	console.clear();
-	const t = await UsuariosDomicilio.sequelize.transaction({ autocommit : false });
-	try {
-		// Usuarios
-		let user = await Usuarios.create({
-			username: faker.internet.email(),
-			password: password,
-			id_pregunta: faker.random.number({min : 1, max: 1}),
-			respuesta_seguridad : faker.lorem.word(1)
-		}, { transaction : t });
-		console.log('Step 1 -> Success');
-		// ATENCION!!
-		if (cedula_representante !== undefined || cedula_representante !== null || cedula_representante !== '') {
-			// Usuarios Representante
-			let representante = await UsuariosRepresentante.create({
-				id_usuario : user.dataValues.id,
-				cedula : cedula_representante,
-				primer_nombre : faker.name.firstName(),
-				segundo_nombre : faker.name.firstName(),
-			  primer_apellido : faker.name.lastName(),
-			  segundo_apellido : faker.name.lastName(),
-				genero : faker.random.arrayElement(['M', 'F']),
-			  fecha_nacimiento : '1999-01-01'
-			}, { transaction : t });
+	// USUARIO DOMICILIO
+	const telefono_habitacional = faker.random.number(9999999999999);
+	const telefono_personal = faker.random.number(9999999999999);
+	const id_parroquia = faker.random.number(1137);
+	const direccion_habitacional = faker.address.streetAddress();
+
+	// USUARIO PERFIL
+	const cedula = faker.random.arrayElement(['', faker.random.number(99999999)]);
+	console.log(cedula);
+
+	const primer_nombre = faker.name.firstName();
+	const segundo_nombre = faker.name.firstName();
+	const primer_apellido = faker.name.lastName();
+	const segundo_apellido = faker.name.lastName();
+	const genero = faker.random.arrayElement(['M', 'F']);
+	const fecha_nacimiento = '2000-01-01';
+
+	// USUARIO REPRESENTANTE
+	const cedula_representante = faker.random.number(99999999);
+	const primer_nombre_representante = faker.name.firstName();
+	const segundo_nombre_representante = faker.name.firstName();
+	const primer_apellido_representante = faker.name.lastName();
+	const segundo_apellido_representante = faker.name.lastName();
+	const genero_representante = faker.random.arrayElement(['M', 'F']);
+	const fecha_nacimiento_representante = '2000-01-01';
+
+	Usuarios.count({ where : { username : username }}).then(async user => {
+		if (!user) {
+			var passwordHashed = bcrypt.hashSync(password, 8);
+				// Usuarios
+				Usuarios.create({
+					username: username,
+					password: passwordHashed,
+					id_pregunta: id_pregunta,
+					respuesta_seguridad : respuesta_seguridad
+				}).then(user => {
+					// Usuarios Domicilio
+					UsuariosDomicilio.create({
+						id_usuario : user.dataValues.id,
+						telefono_habitacional : telefono_habitacional,
+						telefono_personal : telefono_personal,
+						id_parroquia : id_parroquia,
+						direccion_habitacional : direccion_habitacional,
+					}).then( async user2 => {
+						if (cedula == undefined || cedula == '' || cedula == null) {
+							// Usuarios Representante
+							await UsuariosRepresentante.create({
+								id_usuario : user.dataValues.id,
+								cedula : cedula_representante,
+		  					primer_nombre : primer_nombre_representante,
+		  					segundo_nombre : segundo_nombre_representante,
+							  primer_apellido : primer_apellido_representante,
+							  segundo_apellido : segundo_apellido_representante,
+		  					genero : genero_representante,
+							  fecha_nacimiento : fecha_nacimiento_representante
+							}).catch(err => {
+								// Validation before send query on database
+								if (err.name == 'SequelizeValidationError') {
+									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+								}
+								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+									var { severity, code, detail } = err.parent;
+									detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+								}
+							})
+						}
+
+						var cedulaHijo;
+
+						if (cedula == undefined || cedula == '' || cedula == null) {
+							// Usuarios Perfil
+							UsuariosRepresentante.count({ where : {
+								cedula : cedula_representante
+							}}).then(count => {
+								cedulaHijo = `${cedula_representante}-${count}`;
+								console.log(cedulaHijo);
+								console.log(count);
+								// Usuarios Perfil
+								UsuariosPerfil.create({
+									id_usuario : user.dataValues.id,
+									cedula : cedulaHijo,
+			  					primer_nombre : primer_nombre,
+			  					segundo_nombre : segundo_nombre,
+								  primer_apellido : primer_apellido,
+								  segundo_apellido : segundo_apellido,
+			  					genero : genero,
+								  fecha_nacimiento : fecha_nacimiento,
+								}).then(usuario => {
+									res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+								}).catch(err => {
+									// Validation before send query on database
+									if (err.name == 'SequelizeValidationError') {
+										res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+									}
+									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+										var { severity, code, detail } = err.parent;
+										detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+									}
+								})
+							}).catch(err => {
+								// Validation before send query on database
+								if (err.name == 'SequelizeValidationError') {
+									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+								}
+								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+									var { severity, code, detail } = err.parent;
+									detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+								}
+							})
+						} else {
+							cedulaHijo = cedula;
+
+														// Usuarios Perfil
+						UsuariosPerfil.create({
+							id_usuario : user.dataValues.id,
+							cedula : cedulaHijo,
+	  					primer_nombre : primer_nombre,
+	  					segundo_nombre : segundo_nombre,
+						  primer_apellido : primer_apellido,
+						  segundo_apellido : segundo_apellido,
+	  					genero : genero,
+						  fecha_nacimiento : fecha_nacimiento,
+						}).then(usuario => {
+							res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+						}).catch(err => {
+							// Validation before send query on database
+							if (err.name == 'SequelizeValidationError') {
+								res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+							}
+							if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+								var { severity, code, detail } = err.parent;
+								detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+								res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+							}
+						})
+						}
+					})
+				}).catch(err => {
+					// Validation before send query on database
+					if (err.name == 'SequelizeValidationError') {
+						res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+					}
+					if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+						var { severity, code, detail } = err.parent;
+						detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+						res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+					}
+				})
+		} else {
+			res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Usted ya posee un usuario en el sistema!'} });
 		}
-		// Usuarios Perfil
-		var counHijos = await UsuariosRepresentante.count({ where : {
-			cedula : cedula_representante
-		}});
-		console.log(counHijos);
-		var cedula = (cedula_representante != '') 
-		? `${cedula_representante}-${counHijos + 1}` 
-		: faker.random.number(99999999);
-		console.log(cedula);
-		let userProfile = await UsuariosPerfil.create({
-			id_usuario : user.dataValues.id,
-			cedula : cedula,
-			primer_nombre : faker.name.firstName(),
-			segundo_nombre : faker.name.firstName(),
-		  primer_apellido : faker.name.lastName(),
-		  segundo_apellido : faker.name.lastName(),
-			genero : faker.random.arrayElement(['M', 'F']),
-		  fecha_nacimiento : '2000-01-01',
-		}, { transaction : t });
-		console.log('Step 2 -> Success');
-		// Usuarios Domicilio
-		let userDirection = await	UsuariosDomicilio.create({
-			id_usuario : userProfile.dataValues.id_usuario,
-			telefono_habitacional : faker.random.number(99999999999),
-			telefono_personal : faker.random.number(99999999999),
-			id_parroquia : faker.random.number(1137),
-			direccion_habitacional : faker.address.streetAddress(),
-		}, { transaction : t });
-		console.log('Step 3 -> Success');
-		// Proyecto
-		// let proyecto = await Proyectos.create({
-		// 	id_usuario : userDirection.dataValues.id_usuario,
-		// 	id_periodo : faker.random.number({min: 2, max: 2}),
-		// 	nombre : faker.lorem.word(1),
-		// 	descripcion : faker.lorem.words(4),
-		// 	url_video : faker.internet.url()
-		// }, { transaction : t });
-		// console.log('Step 4 -> Success');
-		// // Proyectos_x_categorias
-		// var data = [];
-		// categorias.forEach((index, value) => {
-		// 	data.push({
-		// 		id_proyecto : proyecto.dataValues.id,
-		// 		id_categoria : index
-		// 	})
-		// });
-		// let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
-		// PUSH
-		await t.commit();
-		// console.log('Step 5 -> Success');
-		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
-	} catch(err) {
-		// ROLLBACK TRANSACTION ISOLATION LEVEL 1
-		await t.rollback();
-		
-		// Validation before send query on database
-		if (err.name == 'SequelizeValidationError') {
-			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
-		}
-		// Validation after send query on database
-		if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
-			var { severity, code, detail } = err.parent;
-			res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
-		}
-	}
+	});
 }
 
 exports.getToken = (req, res) => {

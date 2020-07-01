@@ -66,11 +66,6 @@ exports.registro = (req, res, next) => {
 			telefono_personal,
 			id_parroquia,
 			direccion_habitacional,
-			id_periodo,
-			nombre,
-			descripcion,
-			url_video,
-			categorias
  		} = req.body.params;
 		
 		Usuarios.count({ where : { username : username }}).then(async user => {
@@ -93,7 +88,6 @@ exports.registro = (req, res, next) => {
 						}).then( async user2 => {
 							if (cedula == undefined || cedula == '' || cedula == null) {
 								// Usuarios Representante
-								console.log('Entrando en el if')
 								await UsuariosRepresentante.create({
 									id_usuario : user.dataValues.id,
 									cedula : cedula_representante,
@@ -123,31 +117,31 @@ exports.registro = (req, res, next) => {
 								UsuariosRepresentante.count({ where : {
 									cedula : cedula_representante
 								}}).then(count => {
-									cedulaHijo = `${cedula_representante}-${count + 1}`;
-
-																// Usuarios Perfil
-							UsuariosPerfil.create({
-								id_usuario : user.dataValues.id,
-								cedula : cedulaHijo,
-		  					primer_nombre : primer_nombre,
-		  					segundo_nombre : segundo_nombre,
-							  primer_apellido : primer_apellido,
-							  segundo_apellido : segundo_apellido,
-		  					genero : genero,
-							  fecha_nacimiento : fecha_nacimiento,
-							}).then(usuario => {
-								res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
-							}).catch(err => {
-								// Validation before send query on database
-								if (err.name == 'SequelizeValidationError') {
-									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
-								}
-								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
-									var { severity, code, detail } = err.parent;
-									detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
-									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
-								}
-							})
+									cedulaHijo = `${cedula_representante}-${count}`;
+									console.log(count);
+									// Usuarios Perfil
+									UsuariosPerfil.create({
+										id_usuario : user.dataValues.id,
+										cedula : cedulaHijo,
+				  					primer_nombre : primer_nombre,
+				  					segundo_nombre : segundo_nombre,
+									  primer_apellido : primer_apellido,
+									  segundo_apellido : segundo_apellido,
+				  					genero : genero,
+									  fecha_nacimiento : fecha_nacimiento,
+									}).then(usuario => {
+										res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+									}).catch(err => {
+										// Validation before send query on database
+										if (err.name == 'SequelizeValidationError') {
+											res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+										}
+										if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+											var { severity, code, detail } = err.parent;
+											detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+											res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
+										}
+									})
 								}).catch(err => {
 									// Validation before send query on database
 									if (err.name == 'SequelizeValidationError') {
@@ -162,7 +156,7 @@ exports.registro = (req, res, next) => {
 							} else {
 								cedulaHijo = cedula;
 
-															// Usuarios Perfil
+							// Usuarios Perfil
 							UsuariosPerfil.create({
 								id_usuario : user.dataValues.id,
 								cedula : cedulaHijo,
@@ -198,29 +192,10 @@ exports.registro = (req, res, next) => {
 							res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 						}
 					})
-					// Proyecto
-					// let proyecto = await Proyectos.create({
-					// 	id_usuario : userDirection.dataValues.id_usuario,
-					// 	id_periodo : id_periodo,
-					// 	nombre : nombre,
-					// 	descripcion : descripcion,
-					// 	url_video : url_video
-					// }, { transaction : t });
-					// console.log('Step 4 -> Success');
-					// // Proyectos_x_categorias
-					// var data = [];
-					// categorias.forEach((index, value) => {
-					// 	data.push({
-					// 		id_proyecto : proyecto.dataValues.id,
-					// 		id_categoria : index
-					// 	})
-					// });
-					// let proyecto2 = await ProyectosXCategorias.bulkCreate(data, { transaction : t });
-					//console.log('Step 5 -> Success');	
 			} else {
 				res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Usted ya posee un usuario en el sistema!'} });
 			}
-		})
+		});
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
@@ -244,14 +219,14 @@ exports.login = (req, res) => {
 			", { replacements: { username: username }, type: db.semillero.QueryTypes.SELECT }
 		).then(result => {
 			if (result.length > 0) {
-				const { username, borrado, version } = result[0];
+				const { id, username, borrado, version } = result[0];
 				if (borrado) {
 					res.status(200).json({ alert: { type: 'warning', title: 'Atención', message: 'Su cuenta ha sido bloqueada por un administrador, pongase en contacto con el equipo de soporte para mayor información!' }});
 				} else{
 					bcrypt.compare(password, result[0].password).then(response => {
 						// Si coinciden las contraseñas
 						if (response) {
-							const payload = {username : username,version : version};
+							const payload = { id : btoa(id), username : username, version : version };
 
 							// Se crea el token junto con los datos del usuario
 							const token = jwt.sign(payload, require('../config').key, {
