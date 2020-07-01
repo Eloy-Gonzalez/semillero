@@ -110,7 +110,7 @@ exports.registro = (req, res, next) => {
 									}
 									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 										var { severity, code, detail } = err.parent;
-										detail = errDb.errorsDb(code)
+										detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 									}
 								})
@@ -144,7 +144,7 @@ exports.registro = (req, res, next) => {
 								}
 								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 									var { severity, code, detail } = err.parent;
-									detail = errDb.errorsDb(code)
+									detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 								}
 							})
@@ -155,7 +155,7 @@ exports.registro = (req, res, next) => {
 									}
 									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 										var { severity, code, detail } = err.parent;
-										detail = errDb.errorsDb(code)
+										detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 									}
 								})
@@ -181,7 +181,7 @@ exports.registro = (req, res, next) => {
 								}
 								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 									var { severity, code, detail } = err.parent;
-									detail = errDb.errorsDb(code)
+									detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 								}
 							})
@@ -194,7 +194,7 @@ exports.registro = (req, res, next) => {
 						}
 						if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 							var { severity, code, detail } = err.parent;
-							detail = errDb.errorsDb(code)
+							detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 							res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 						}
 					})
@@ -480,7 +480,7 @@ exports.saime = (req, res) => {
 				// Validation after send query on database
 				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 					var { severity, code, detail } = err.parent;
-					detail = errDb.errorsDb(code)
+					detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
 			})

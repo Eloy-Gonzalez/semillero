@@ -14,6 +14,7 @@ module.exports = (app) => {
 	const usuariosDomicilioController = require('../controllers/usuariosDomicilioController');
 	const usuariosRepresentanteController = require('../controllers/usuariosRepresentanteController');
 	const permisosController = require('../controllers/permisosController');
+	const usuariosPermisosController = require('../controllers/usuariosPermisosController');
 	const testController = require('../controllers/testController');
 
 	// Middleware
@@ -114,12 +115,20 @@ module.exports = (app) => {
 	app.post('/usuariosdomicilio/update', rutasProtegidas.verifyToken, usuariosDomicilioController.update);
 
 	// Usuarios Representante
-	app.post('/usuariosrepresnetante', rutasProtegidas.verifyToken, usuariosRepresentanteController.get);
+	app.post('/usuariosrepresentante', rutasProtegidas.verifyToken, usuariosRepresentanteController.get);
+	app.post('/usuariosrepresentante/update', rutasProtegidas.verifyToken, usuariosRepresentanteController.update);
+
+	// Usuarios Permisos
+	app.post('/usuariospermisos/create', rutasProtegidas.verifyToken, usuariosPermisosController.create);
+	app.post('/usuariospermisos/update', rutasProtegidas.verifyToken, usuariosPermisosController.update);
+	app.post('/usuariospermisos/delete', rutasProtegidas.verifyToken, usuariosPermisosController.delete);
 
 	// Permisos
 	app.post('/permisos', rutasProtegidas.verifyToken, permisosController.get);
 	app.post('/permisos/create', rutasProtegidas.verifyToken, permisosController.create);
 	app.post('/permisos/update', rutasProtegidas.verifyToken, permisosController.update);
+	app.post('/permisos/delete', rutasProtegidas.verifyToken, permisosController.delete);
+	app.post('/permisos/restore', rutasProtegidas.verifyToken, permisosController.restore);
 
 	// TEST ROUTES
 	// app.post('/test/gettoken', testController.getToken);

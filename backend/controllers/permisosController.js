@@ -24,7 +24,7 @@ exports.get = (req, res) => {
 			// Validation after send query on database
 			if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 				var { severity, code, detail } = err.parent;
-				detail = errDb.errorsDb(code)
+				detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 			}
 		})
@@ -52,7 +52,7 @@ exports.create = (req, res) => {
 				// Validation after send query on database
 				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 					var { severity, code, detail } = err.parent;
-					detail = errDb.errorsDb(code)
+					detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
 		})
@@ -95,7 +95,7 @@ exports.update = (req, res) => {
 				// Validation after send query on database
 				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 					var { severity, code, detail } = err.parent;
-					detail = errDb.errorsDb(code)
+					detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
 			})
@@ -107,12 +107,12 @@ exports.update = (req, res) => {
 	}
 };
 
-/* API DELETE CATEGORIAS
+/* API DELETE PERMISOS (SOFT DELETE)
 	@params columns from database
 	@return json
 */
 exports.delete = (req, res) => {
-	console.log('func -> deleteCategorias');
+	console.log('func -> deletePermisos');
 	if (req.body.params != undefined) {
 		var conditions = req.body.params;
 		const { id, version } = conditions;
@@ -120,7 +120,7 @@ exports.delete = (req, res) => {
 			delete conditions.id; delete conditions.version;
 			var set = {...conditions,	borrado : true,	version : version + 1};
 			conditions = {id : id, version : version};
-			Categorias.update(set, {
+			Permisos.update(set, {
 				where : conditions
 			}).then(result => {
 				if (result[0] > 0) {
@@ -136,7 +136,7 @@ exports.delete = (req, res) => {
 				// Validation after send query on database
 				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 					var { severity, code, detail } = err.parent;
-					detail = errDb.errorsDb(code)
+					detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 				}
 			})
@@ -147,3 +147,45 @@ exports.delete = (req, res) => {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
 };
+
+
+/* API RESTORE PERMISOS (SOFT RESTORE)
+	@params columns from database
+	@return json
+*/
+exports.restore = (req, res) => {
+	console.log('func -> restorePermisos');
+	if (req.body.params != undefined) {
+		var conditions = req.body.params;
+		const { id, version } = conditions;
+		if (conditions.id != undefined && conditions.version != undefined && conditions.actualizado_por != undefined) {
+			delete conditions.id; delete conditions.version;
+			var set = {...conditions,	borrado : false,	version : version + 1};
+			conditions = {id : id, version : version};
+			Permisos.update(set, {
+				where : conditions
+			}).then(result => {
+				if (result[0] > 0) {
+					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'El registro ha sido restaurado exitosamente!'}});
+				} else {
+					res.status(200).json({ alert : { type : 'danger', title : 'Información', message : 'El registro a restaurar no existe o ya fue restaurado!'}});					
+				}
+			}).catch(err => {
+				// Validation before send query on database
+				if (err.name == 'SequelizeValidationError') {
+					res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+					var { severity, code, detail } = err.parent;
+					detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+				}
+			})
+		} else {
+			res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Atributo(s) \'id\',  \'actualizado_por\' y \'version\' requerido!'}});			
+		}
+	} else {
+		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
+}
