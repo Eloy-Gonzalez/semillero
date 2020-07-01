@@ -52,3 +52,7 @@ export function getParroquias(id_municipio) {
 export function getCategories() {
   return axios.post(`${BASE_API}/categorias`, { params: {} }) 
 }
+
+export function getQuestions() {
+  return axios.post(`${BASE_API}/preguntas`, { params: {} }) 
+}

@@ -52,10 +52,9 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 		                    onBlur={handleBlur}
 		                    value={values.cedula}
 		                    label="Ingresar Cédula (*)"
-		                    color="primary"
 		                    autoFocus={autofocus}
 		                    helperText={<ErrorMessage name='cedula' />}
-		                    error={errors.nacionalidad && touched.nacionalidad}
+		                    error={errors.cedula && touched.cedula}
 		            	/>
 		            	{ActionsButtons}
 		            	{/*<ReCAPTCHA

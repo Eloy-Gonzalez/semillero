@@ -24,7 +24,7 @@ function FormUsuariosPerfil ({ title = "Datos Personales", onSubmit, autofocus=f
 	const PerfilSchema = Yup.object().shape({
 	  primer_nombre: Yup.string().required("¡Campo obligatorio!"),
 	  primer_apellido: Yup.string().required("¡Campo obligatorio!"),
-	  fecha_nacimiento: Yup.date().required("¡Campo obligatorio!"),
+	  fecha_nacimiento: Yup.date().required("¡Debes ingrsar tu fecha de nacimiento!"),
 	  genero: Yup.string().min(1, '¡Valores incorrectos!').max(1, '¡Valores incorrectos!').required("¡Campo obligatorio!")
 	})
 
@@ -82,16 +82,15 @@ function FormUsuariosPerfil ({ title = "Datos Personales", onSubmit, autofocus=f
 		                 />
 		                 <CrsField
 		                    name="fecha_nacimiento"
+		                    type="date"
 		                    onChange={handleChange}
 		                    onBlur={handleBlur}
 		                    value={values.fecha_nacimiento}
-		                    label="Fecha de nacimiento (*)"
-		                    color="primary"
+		                    label="  "
 		                    helperText={<ErrorMessage name="fecha_nacimiento"/>}
 		                    error={errors.fecha_nacimiento && touched.fecha_nacimiento}
 		                 />
 	                	<SimpleSelect 
-	                		id="genero"
 	                		name="genero"
 	                		value={values.genero}
 	                		onChange={handleChange}

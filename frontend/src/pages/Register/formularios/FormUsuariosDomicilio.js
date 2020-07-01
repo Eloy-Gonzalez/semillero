@@ -37,7 +37,6 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 		try {
 			const municipios = await getMunicipios(value)
 			const {data} = municipios
-			console.log(data)
 			let payload = []
 			for(let i=0; i < data.length; i++) {
 				payload.push({ label: data[i].nombre, value: data[i].id_municipio })
@@ -80,8 +79,7 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 	const DomicilioSchema = Yup.object().shape({
 		telefono_habitacional: Yup.string()
 		.min(7, '¡Ingrese un valor entre 7 y 11 dígitos!')
-		.max(11, '¡Ingrese un valor entre 7 y 11 dígitos!')
-		.required("¡Campo requerido!"),
+		.max(11, '¡Ingrese un valor entre 7 y 11 dígitos!'),
 		telefono_personal: Yup.string()
 		.min(7, '¡Ingrese un valor entre 7 y 11 dígitos!')
 		.max(11, '¡Ingrese un valor entre 7 y 11 dígitos!')
@@ -106,23 +104,23 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 				({ values,errors,touched,handleChange,handleBlur,handleSubmit}) => (
 					<form onSubmit={handleSubmit} className="grid--form-data anim_form-data">
 					<CrsField  
-						name="telefono_habitacional"
-						value={values.telefono_habitacional}
-						onChange={handleChange}
-						onBlur={handleBlur}
-						label="Nro. Teléfono (Local)"
-						helperText={<ErrorMessage name="telefono_habitacional"/>}
-						autoFocus={autofocus}
-						error={errors.telefono_habitacional && touched.telefono_habitacional}
-					/>
-					<CrsField  
 						name="telefono_personal"
 						value={values.telefono_personal}
 						onChange={handleChange}
 						onBlur={handleBlur}
-						label="Nro. Teléfono (Personal) (*)"
+						label="Teléfono Personal(*)"
 						helperText={<ErrorMessage name="telefono_personal"/>}
 						error={errors.telefono_personal && touched.telefono_personal}
+					/>
+					<CrsField  
+						name="telefono_habitacional"
+						value={values.telefono_habitacional}
+						onChange={handleChange}
+						onBlur={handleBlur}
+						label="Teléfono Habitación"
+						helperText={<ErrorMessage name="telefono_habitacional"/>}
+						autoFocus={autofocus}
+						error={errors.telefono_habitacional && touched.telefono_habitacional}
 					/>
                 	<SimpleSelect 
                 		style={{minWidth: "160px"}}

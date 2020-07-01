@@ -14,7 +14,7 @@ import './index.scss'
 function index({ title = "Not title assigned", children, user = {}, onLogout} = {}) {
     return (
         <div className="app--frame">
-            <Cintillo />
+            { !user.isAuthenticated && <Cintillo /> }
             <Helmet> 
                 <link rel="icon" href={Logo} type="image/gif" sizes="16x16" />
                 <title>{title} - CRS</title> 

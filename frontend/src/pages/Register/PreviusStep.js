@@ -49,7 +49,7 @@ const Separe = styled.div`
 	    top: -2.5px;
 	    right: -9px;
 
-	    ${props => props.color && `
+	    ${props => props.textColor && `
 	    	border-color: #c1dd56;
 	    `}
 	}
@@ -76,7 +76,7 @@ function PreviusStep({ actualVisible = 0, items }) {
 							transform: actualVisible===index && "scale(1.2) translateX(5px)",
 							opacity: actualVisible===index && "1",
 							borderColor: actualVisible === index && "#c1dd56",
-							color: actualVisible === index && "#89a031"
+							textColor: actualVisible === index && "#89a031"
 						}}
 						text={item}
 						separe={
@@ -85,7 +85,7 @@ function PreviusStep({ actualVisible = 0, items }) {
 								style={{ 
 									background: actualVisible === index && "#c1dd56",
 									opacity: actualVisible === index && "1" }}
-								color={actualVisible === index}/>
+								textColor={actualVisible === index}/>
 						}
 						disabled={index !== actualVisible}
 					/>

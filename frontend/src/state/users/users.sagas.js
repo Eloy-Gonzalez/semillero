@@ -78,33 +78,15 @@ function* registerNewUserWorker({ payload }){
   try {
     yield put({ type: REQUEST_STARTED })
 
-    const res = yield call(registerNewUserService, payload)
-    console.log(res)
-    //console.log("Desde sagas "+ res)
+    const response = yield call(registerNewUserService, payload)
+    const {alert} = response.data
 
-    //alert(JSON.stringify(payload))
-    // ## Consultar datos de Api - Saime
-    //console.log(res)
-      
-      //yield put({ type: REQUEST_SUCCESS, payload: "¡Datos registrados!"})
-      //setTimeout(() => {window.location ="/acceder"}, 3000)
-
-    
-    /*
-    if(errors !== undefined && errors.length && typeof message === "string") {
-      const {path} = errors[0] 
-      console.log(path)
-      if(path === 'id_periodo' || path === 'cedula'){
-      } else {
-        errors.map((err) => {
-          const {message} = err  
-          throw new Error(message)
-        })
-      }
+    if(alert.type === "success"){
+      yield put({type: REQUEST_SUCCESS, payload: alert.message})
+      setTimeout(() => window.location = "/acceder", 2000)
     } else {
-      yield put({ type: REQUEST_FAILURE, payload: { serverErrors: message} })
+      yield put({type: REQUEST_FAILURE, payload: {serverErrors: alert.message, statusError: 502}})
     }
-    */
 
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
