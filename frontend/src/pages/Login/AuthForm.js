@@ -7,6 +7,9 @@ import * as Yup from 'yup'
 import CrsField from 'components/Form/CrsField'
 import Button from '@material-ui/core/Button'
 
+// @React ReCAPTCHA
+import ReCAPTCHA from "react-google-recaptcha"
+
 function AuthForm({onSubmit, disabledButton=false}) {
   const initialValues = {
     username: '',
@@ -59,6 +62,11 @@ function AuthForm({onSubmit, disabledButton=false}) {
                   <Button type="submit" variant="outlined" color="primary" disabled={disabledButton}>
                       { disabledButton ? 'Cargando...' : 'Ingresar'}
                   </Button>
+
+                  <ReCAPTCHA
+                    sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
+                    size="invisible"
+                  />
                 </form>
               )
             }

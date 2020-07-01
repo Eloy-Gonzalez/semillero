@@ -7,6 +7,9 @@ import * as Yup from 'yup'
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
 
+// @React ReCAPTCHA
+import ReCAPTCHA from "react-google-recaptcha"
+
 // @Services
 import {getQuestions} from 'utils/helpers'
 
@@ -112,6 +115,10 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 						error={errors.respuesta_seguridad && touched.respuesta_seguridad}
 					/>
                 	{ActionsButtons}
+                	 <ReCAPTCHA
+					    sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
+					    size="invisible"
+					  />
 				</form>
 			)}
 		</Formik>
