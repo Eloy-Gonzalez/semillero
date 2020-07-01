@@ -226,7 +226,7 @@ exports.login = (req, res) => {
 					bcrypt.compare(password, result[0].password).then(response => {
 						// Si coinciden las contraseñas
 						if (response) {
-							const payload = { id : btoa(id), username : username, version : version };
+							const payload = { id : id, username : username, version : version };
 
 							// Se crea el token junto con los datos del usuario
 							const token = jwt.sign(payload, require('../config').key, {
