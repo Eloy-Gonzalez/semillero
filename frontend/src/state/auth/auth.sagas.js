@@ -30,7 +30,7 @@ function* loginWorker({ payload }) {
     
     const response = yield call(postLoginService, payload);
     const _TOKEN_ = response.data.token
-    
+
     if(_TOKEN_) {
       const {username} = jsonwebtoken.decode(_TOKEN_)
       const payload = { isAuthenticated: true, username }

@@ -16,8 +16,7 @@ const PaperModal = styled("div")(({theme}) => ({
   borderRadius:"5px"
 }));
 
-const MaterialModal = props => {
-  const { open, handleClose } = props;
+const MaterialModal = ({ open, handleClose, children }) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -33,7 +32,7 @@ const MaterialModal = props => {
       }}
     >
       <Fade in={open}>
-        <PaperModal className="paper">{props.children}</PaperModal>
+        <PaperModal className="paper">{children}</PaperModal>
       </Fade>
     </Modal>
   );

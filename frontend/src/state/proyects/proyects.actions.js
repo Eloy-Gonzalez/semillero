@@ -1,4 +1,4 @@
-import { SET_PROYECTS, GET_PROYECTS } from './proyects.actionsTypes'
+import {SET_PROYECTS, GET_PROYECTS, REGITER_NEW_PROYECT} from './proyects.actionsTypes'
 
 const setProyects = (payload) => {
   return (dispatch) => {
@@ -17,4 +17,22 @@ const getProyects = () => {
   }
 }
 
-export {getProyects, setProyects}
+const  createProyectAction = (payload) => {
+  return (dispatch) => {
+    dispatch({
+      type: REGITER_NEW_PROYECT,
+      payload
+    })
+  }
+}
+
+const  deleteProyectAction = (id) => {
+  return (dispatch) => {
+    dispatch({
+      type: REGITER_NEW_PROYECT,
+      payload: id
+    })
+  }
+}
+
+export {getProyects, setProyects, createProyectAction}

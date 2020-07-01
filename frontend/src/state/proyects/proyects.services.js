@@ -8,3 +8,11 @@ export function getProyectsService(payload) {
 export function getCategoriesService(){
 	return request.post(`${BASE_API}/categorias`, {params: {}})
 }
+
+export function getPeriodosService(){
+	return request.post(`${BASE_API}/periodos`, {params: {}})
+}
+
+export function registerNewProyectService(payload){
+	return request.post(`${BASE_API}/proyectos/create`, {params: payload})
+}

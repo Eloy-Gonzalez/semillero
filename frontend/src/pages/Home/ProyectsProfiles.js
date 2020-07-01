@@ -2,25 +2,33 @@
 import React, {useEffect, useCallback, useMemo, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 
+// @Material UI
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 
 // @Selectors 
 import {selectProyects} from 'state/proyects/proyects.selectors'
+
 // @Actions
-import {getProyects} from 'state/proyects/proyects.actions'
+import {getProyects, createProyectAction, deleteProyectAction} from 'state/proyects/proyects.actions'
+import {openModal, closeModal} from 'state/app/app.actions'
 
 // @Components
 import Pagination from 'components/Pagination'
 import SimpleTable from 'components/SimpleTable'
 import FormAddProyects from './FormAddProyects'
 import ActionsButtons from 'components/ActionsButtons'
+import MaterialModal from 'components/Modal'
 
 // Selectors
-import {selectLoading} from 'state/app/app.selectors'
+import {selectLoading, selectModal} from 'state/app/app.selectors'
 
 function ProyectsProfiles() {
+	const dispatch = useDispatch()
 	const proyects = useSelector(state => selectProyects(state))
 	const loading = useSelector(state => selectLoading(state))
-	const dispatch = useDispatch()
+	const modal = useSelector(state => selectModal(state))
 	
 	useEffect(() => {
 		dispatch(getProyects())
@@ -41,24 +49,37 @@ function ProyectsProfiles() {
 	], [])
 
 	const onSubmit = useCallback((values, actions) => {
-		alert(JSON.stringify(values))
-		actions.setSubmitting(false)
-	}, [])
+		dispatch(createProyectAction(values))
+	}, [dispatch])
 
 	const onDelete = useCallback((id) => {
-		alert(id)
-	}, [])
+		dispatch(deleteProyectAction(id))
+	}, [dispatch])
+
+	const createProyect = useCallback(() => {
+		dispatch(openModal(
+			<FormAddProyects 
+				onSubmit={onSubmit}
+				ActionsButtons={<ActionsButtons disableButton={loading}/>}
+			/>)
+		)
+	}, [dispatch, loading, onSubmit])
 
 	return (
 		<div>
 			<p style={{textAlign:"right"}}>
-				Add
+				<Tooltip title="Registrar nuevo video">
+					<IconButton aria-label="Crear nuevo" onClick={createProyect}>
+	                    <AddCircleOutlineIcon />
+	                 </IconButton>
+                </Tooltip>
 			</p>
 			<div className="table--data">
 				<SimpleTable
 					columns={columns}
-					rows={proyects}
+					rows={currentPost}
 					handleDelete={onDelete}
+					onLoading={loading}
 				/>
 				<Pagination 
 					totalPosts={proyects.length}
@@ -66,6 +87,9 @@ function ProyectsProfiles() {
 					changePage={setCurrentPage}
 				/>
 			</div>
+			<MaterialModal open={modal.open} handleClose={() => dispatch(closeModal())} >
+				{modal.description}
+			</MaterialModal>
 		</div>
 	)
 

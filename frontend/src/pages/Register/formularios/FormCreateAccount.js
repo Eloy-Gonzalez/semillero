@@ -26,7 +26,7 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 		password: Yup.string().min(6, "¡Mínimo 6 caractéres!").max(255, "¡Máximo 255 caractéres!").required("¡Campo requerido!"),
 		passwordRepeat: Yup.string().oneOf([Yup.ref("password"),null], '¡Las contraseñas no coinciden!').required("¡Campo requerido!"),
 		id_pregunta: Yup.string().required("¡Campo requerido!"),
-		respuesta_seguridad: Yup.string().min(30, "¡Debes ingresar 30 o más caractéres!").required("¡Campo requerido!")
+		respuesta_seguridad: Yup.string().min(3, "¡Debes ingresar 3 o más caractéres!").required("¡Campo requerido!")
 	})
 	
   	const obtenerPreguntas = useCallback( async () => {

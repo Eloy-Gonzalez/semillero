@@ -21,6 +21,11 @@ const proyectsReducer = (state = initialState, { type, payload }) => {
         proyects: []
       })
 
+      case DELETE_PROYECT: 
+      return state.merge({
+        proyects: state.proyects.filter( (proyect) => proyect.id !== payload)
+      })
+
     default:
       return state
   }

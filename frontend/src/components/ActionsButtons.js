@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from '@material-ui/core/Button'
 
-function ActionsButtons({ actualVisible, totalForms, nextPrev, disabledButton=false }) {
+function ActionsButtons({ actualVisible=0, totalForms=0, nextPrev, disabledButton=false }) {
     return (
         <div className="formStep--actions">
             { actualVisible !== 0 &&
