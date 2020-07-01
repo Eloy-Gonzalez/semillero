@@ -6,14 +6,7 @@ import {
 } from './proyects.actionsTypes'
 
 const initialState = Map().merge({
-  proyects: {
-    id_proyecto: '',
-    nombre: '',
-    descripcion: '',
-    url_video: '',
-    id_estatus: '',
-    categoria: ''
-  }
+  proyects: []
 })
 
 const proyectsReducer = (state = initialState, { type, payload }) => {
@@ -25,14 +18,7 @@ const proyectsReducer = (state = initialState, { type, payload }) => {
 
     case CLEAR_PROYECTS:
       return state.merge({
-        proyects: {
-          id_proyecto: '',
-          nombre: '',
-          descripcion: '',
-          url_video: '',
-          id_estatus: '',
-          categoria: ''
-        }
+        proyects: []
       })
 
     default:
