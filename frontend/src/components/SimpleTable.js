@@ -42,7 +42,7 @@ function SimpleTable({ columns = [], rows = [], handleDelete, handleSubmit=() =>
               <TableCell align="center"><a href={row.url_video} target="_blank" rel="noopener noreferrer" style={{color: "#444"}}>{row.url_video}</a></TableCell>
               <TableCell align="right">
                 <Tooltip title="Eliminar">
-                  <IconButton aria-label="Eliminar" onClick={() => handleDelete(row.id)}>
+                  <IconButton aria-label="Eliminar" onClick={() => handleDelete(row.id, row.version)}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>

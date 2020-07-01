@@ -26,11 +26,11 @@ const  createProyectAction = (payload) => {
   }
 }
 
-const  deleteProyectAction = (id) => {
+const  deleteProyectAction = (payload) => {
   return (dispatch) => {
     dispatch({
       type: DELETE_PROYECT,
-      payload: id
+      payload
     })
   }
 }

@@ -52,9 +52,10 @@ function ProyectsProfiles() {
 		dispatch(createProyectAction(values))
 	}, [dispatch])
 
-	const onDelete = useCallback((id) => {
-		dispatch(deleteProyectAction(id))
-	}, [dispatch])
+	const onDelete = useCallback((id, version) => {
+		const payload = {id, version, proyects}
+		dispatch(deleteProyectAction(payload))
+	}, [proyects, dispatch])	
 
 	const createProyect = useCallback(() => {
 		dispatch(openModal(

@@ -16,3 +16,7 @@ export function getPeriodosService(){
 export function registerNewProyectService(payload){
 	return request.post(`${BASE_API}/proyectos/create`, {params: payload})
 }
+
+export function deleteProyectService(payload){
+	return request.post(`${BASE_API}/proyectos/delete`, {params: payload})
+}

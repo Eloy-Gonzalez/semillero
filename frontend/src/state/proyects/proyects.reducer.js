@@ -2,8 +2,7 @@ import { Map } from 'immutable'
 
 import {
   SET_PROYECTS,
-  CLEAR_PROYECTS,
-  DELETE_PROYECT
+  CLEAR_PROYECTS
 } from './proyects.actionsTypes'
 
 const initialState = Map().merge({
@@ -20,11 +19,6 @@ const proyectsReducer = (state = initialState, { type, payload }) => {
     case CLEAR_PROYECTS:
       return state.merge({
         proyects: []
-      })
-
-      case DELETE_PROYECT: 
-      return state.merge({
-        proyects: state.proyects.filter( (proyect) => proyect.id !== payload)
       })
 
     default:

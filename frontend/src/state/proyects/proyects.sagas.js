@@ -3,14 +3,20 @@ import { put, takeLatest, call } from 'redux-saga/effects'
 import jsonwebtoken from 'jsonwebtoken'
 
 // @services
-import {getProyectsService, registerNewProyectService, getPeriodosService} from './proyects.services'
+import {
+  getProyectsService,
+  registerNewProyectService,
+  getPeriodosService,
+  deleteProyectService
+} from './proyects.services'
 import {buildErrorsObj, getToken} from 'utils/helpers'
 
 // @ActionsTypes
 import {
   GET_PROYECTS,
   SET_PROYECTS,
-  REGITER_NEW_PROYECT
+  REGITER_NEW_PROYECT,
+  DELETE_PROYECT
 } from './proyects.actionsTypes'
 import {
   REQUEST_STARTED,
@@ -75,7 +81,7 @@ function* getProyectsWorker(){
   try {
     yield put({ type: REQUEST_STARTED })
     const {id: id_usuario} = jsonwebtoken.decode(getToken())
-    const payload = {id_usuario}
+    const payload = {id_usuario, borrado: false}
     const response = yield call(getProyectsService, payload)
     const {data} = response
 
@@ -90,10 +96,46 @@ function* getProyectsWorker(){
   }
 }
 
+function* deleteProyectWorker({ payload }){
+  try {
+    yield put({ type: REQUEST_STARTED })
+
+    const {id:id_usuario} = jsonwebtoken.decode(getToken())
+    const {id, version, proyects} = payload
+    const newsProyects = proyects.filter( pro => pro.id !== id)
+    const data = {id, actualizado_por:id_usuario, version}
+
+    const response = yield call(deleteProyectService, data)
+    const {alert} = response.data
+    const {message} = alert
+
+    if(alert.type === "success"){
+      yield put({ type: REQUEST_SUCCESS, payload: message})
+      yield put({ type: SET_PROYECTS, payload: newsProyects})
+    } else {
+        yield put({
+          type: REQUEST_FAILURE,
+          payload: {
+            serverErrors: message, 
+            statusError: 502
+          }
+        })
+    }
+    
+    yield put({ type: REQUEST_FINISHED })
+  } catch(err) {
+    yield put({
+      type: REQUEST_FAILURE,
+      payload: buildErrorsObj(err)
+    })
+  }
+}
+
 // @Whatcher
 function* requestWatcher() {
   yield takeLatest(GET_PROYECTS, getProyectsWorker)
   yield takeLatest(REGITER_NEW_PROYECT, registerNewProyectWorker)
+  yield takeLatest(DELETE_PROYECT, deleteProyectWorker)
 }
 
 export default { requestWatcher }
