@@ -1,6 +1,12 @@
 // @Vendors
-import React, {useCallback, useMemo} from 'react'
-import {useSelector} from 'react-redux'
+import React, {useEffect, useCallback, useMemo, useState} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
+
+
+// @Selectors 
+import {selectProyects} from 'state/proyects/proyects.selectors'
+// @Actions
+import {getProyects} from 'state/proyects/proyects.actions'
 
 // @Components
 import Pagination from 'components/Pagination'
@@ -11,9 +17,22 @@ import ActionsButtons from 'components/ActionsButtons'
 // Selectors
 import {selectLoading} from 'state/app/app.selectors'
 
-function ProyectsProfiles({totalPosts, proyects, changePage, postsPerPage}) {
-	const [showForm, setshowForm] = React.useState(false)
+function ProyectsProfiles() {
+	const proyects = useSelector(state => selectProyects(state))
 	const loading = useSelector(state => selectLoading(state))
+	const dispatch = useDispatch()
+	
+	useEffect(() => {
+		dispatch(getProyects())
+	}, [dispatch])
+
+	const [currentPage, setCurrentPage] = useState(1)
+	const [postsPerPage] = useState(5)
+	
+	// Get Index of Posts
+	const indexOfLastPost = currentPage * postsPerPage
+	const indexOfFirstPost = indexOfLastPost - postsPerPage
+	const currentPost = proyects.slice(indexOfFirstPost, indexOfLastPost)
 
 	const columns = useMemo(() => [
 		{id:0, label: "Nombre"},
@@ -26,33 +45,25 @@ function ProyectsProfiles({totalPosts, proyects, changePage, postsPerPage}) {
 		actions.setSubmitting(false)
 	}, [])
 
+	const onDelete = useCallback((id) => {
+		alert(id)
+	}, [])
+
 	return (
 		<div>
-			
 			<p style={{textAlign:"right"}}>
-				<button onClick={() => setshowForm(prev => !prev)}>{!showForm ? "Agregar" : "Ocultar"} nuevo proyecto +</button>
+				Add
 			</p>
 			<div className="table--data">
-				<SimpleTable 
+				<SimpleTable
 					columns={columns}
 					rows={proyects}
-					showForm={showForm}
-					FormAddProyects={
-						<FormAddProyects 
-							onSubmit={onSubmit}
-				            ActionsButtons={
-				              <ActionsButtons 
-				                actualVisible={0}
-				                totalForms={0}
-				                disabledButton={loading}
-				              />}
-						/>
-					}
+					handleDelete={onDelete}
 				/>
 				<Pagination 
-					totalPosts={totalPosts}
+					totalPosts={proyects.length}
 					postsPerPage={postsPerPage}
-					changePage={changePage}
+					changePage={setCurrentPage}
 				/>
 			</div>
 		</div>

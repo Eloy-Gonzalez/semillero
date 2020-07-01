@@ -35,7 +35,7 @@ function Login() {
 	        		<img src={avatar} alt="avatar"/>
 	        	</div>    
 	        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>  
-	            <AuthForm onSubmit={handleSubmit} disableButton={loading}/>
+	            <AuthForm onSubmit={handleSubmit} disabledButton={loading}/>
 	        </div>
     	</React.Fragment>
     )

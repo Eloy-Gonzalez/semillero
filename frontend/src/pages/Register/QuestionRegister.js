@@ -31,13 +31,13 @@ const BoxIcon = styled.div`
 function QuestionRegister({dispatch, actions}) {
 	return (
 		<Wrapper>
-			<BoxIcon onClick={() => dispatch(actions[0])}>
-				<PortraitIcon style={{fontSize:"50px", color:"#29aff4"}}/>
-				<p className="app--text-second" style={{margin: 0}}>Usuario no cedulado</p>
-			</BoxIcon>
 			<BoxIcon onClick={() => dispatch(actions[1])}>
 				<SubtitlesIcon style={{fontSize:"50px", color:"#29aff4"}}/>
 				<p className="app--text-second" style={{margin: 0}}>Usuario cedulado</p>
+			</BoxIcon>
+			<BoxIcon onClick={() => dispatch(actions[0])}>
+				<PortraitIcon style={{fontSize:"50px", color:"#29aff4"}}/>
+				<p className="app--text-second" style={{margin: 0}}>Usuario no cedulado</p>
 			</BoxIcon>
 		</Wrapper>
 	)

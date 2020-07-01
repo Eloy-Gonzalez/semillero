@@ -1,9 +1,12 @@
 // @Vendors
-import React, {useEffect} from 'react'
+import React, {Suspense, useEffect} from 'react'
 import {useSelector} from 'react-redux'
 
 // @Actions
 import {consultarSaime, setUbication, registerNewUser} from 'state/users/users.actions'
+
+// @Material UI
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 // @Selectors
 import {selectProfiles, selectUbication} from 'state/users/users.selectors'
@@ -33,7 +36,7 @@ function Ceduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loadin
 			nextPrev(3)
 		},
 		function(values, actions) {
-			const payload = {...profiles, ...ubication, ...values, id_pregunta: 1, respuesta_seguridad: 'MUÑECA'}
+			const payload = {...profiles, ...ubication, ...values}
 			dispatch(registerNewUser(payload))
 		}
 	], [dispatch, nextPrev, profiles, ubication])
@@ -42,17 +45,19 @@ function Ceduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loadin
 	return (
         <div className="target">
         	{PreviusStep}
-        	<VisualizedForm
-            	title={actualVisible === 0 ? "Ingresar cédula del participante" : actualVisible === 2 && "Datos Personales"}
-            	onSubmit={listSubmit[actualVisible]}
-            	ActionsButtons={
-              		<ActionsButtons 
-                	actualVisible={actualVisible}
-                	totalForms={(listFormiks.length -1)}
-                	nextPrev={nextPrev}
-                	disabledButton={loading}
-              	/>}
-          />
+        	<Suspense fallback={<div style={{textAlign:"center"}}><CircularProgress /></div>}>
+	        	<VisualizedForm
+	            	title={actualVisible === 0 ? "Cédula del participante" : actualVisible === 2 && "Datos Personales"}
+	            	onSubmit={listSubmit[actualVisible]}
+	            	ActionsButtons={
+	              		<ActionsButtons 
+	                	actualVisible={actualVisible}
+	                	totalForms={(listFormiks.length -1)}
+	                	nextPrev={nextPrev}
+	                	disabledButton={loading}
+	              	/>}
+	          	/>
+          	</Suspense>
         </div>
 	)
 }

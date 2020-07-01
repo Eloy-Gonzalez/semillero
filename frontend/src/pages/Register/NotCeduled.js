@@ -1,9 +1,12 @@
 // @Vendors
-import React, {useEffect} from 'react'
+import React, {Suspense, useEffect} from 'react'
 import {useSelector} from 'react-redux'
 
 // @Actions
 import {consultarSaime, setUbication, registerNewUser, setProfiles} from 'state/users/users.actions'
+
+// @Material UI
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 // @Selectors
 import {selectProfiles, selectUbication, selectRepresentant} from 'state/users/users.selectors'
@@ -39,7 +42,7 @@ function NotCeduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loa
 			nextPrev(4)
 		},
 		function(values, actions) {
-			const payload = {...representante, ...profiles, ...ubication, ...values, id_pregunta: 1, respuesta_seguridad: 'MUÑECA'}
+			const payload = {...representante, ...profiles, ...ubication, ...values}
 
 			dispatch(registerNewUser(payload))
 		}
@@ -49,17 +52,19 @@ function NotCeduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loa
 	return (
         <div className="target">
         	{PreviusStep}
-        	<VisualizedForm
-          		title={actualVisible === 0 ? "Cédula de su representante" : actualVisible === 2 && "Datos Personales"}
-            	onSubmit={listSubmit[actualVisible]}
-	            ActionsButtons={
-	              <ActionsButtons 
-	                actualVisible={actualVisible}
-	                totalForms={(listFormiks.length -1)}
-	                nextPrev={nextPrev}
-	                disabledButton={loading}
-	            />}
-          />
+        	<Suspense fallback={<div style={{textAlign:"center"}}><CircularProgress /></div>}>
+	        	<VisualizedForm
+	          		title={actualVisible === 0 ? "Cédula del representante" : actualVisible === 2 && "Datos Personales del Participante"}
+	            	onSubmit={listSubmit[actualVisible]}
+		            ActionsButtons={
+		              <ActionsButtons 
+		                actualVisible={actualVisible}
+		                totalForms={(listFormiks.length -1)}
+		                nextPrev={nextPrev}
+		                disabledButton={loading}
+		            />}
+	          	/>
+	          </Suspense>
         </div>
 	)
 }

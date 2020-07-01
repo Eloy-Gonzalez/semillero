@@ -1,15 +1,17 @@
 // @Vendors
 import { put, takeLatest, call } from 'redux-saga/effects'
+import jsonwebtoken from 'jsonwebtoken'
 
 // @services
 import {getProyectsService} from './proyects.services'
-import {buildErrorsObj} from 'utils/helpers'
+import {buildErrorsObj, getToken} from 'utils/helpers'
 
 // @ActionsTypes
 import {
   GET_PROYECTS,
+  SET_PROYECTS,
   REGITER_NEW_PROYECT
-} from 'state/users/users.actionsTypes'
+} from './proyects.actionsTypes'
 import {
   REQUEST_STARTED,
   REQUEST_FINISHED,
@@ -22,8 +24,6 @@ function* registerNewProyect({ payload }){
   try {
     yield put({ type: REQUEST_STARTED })
     alert("Registrar")
-    // yield put({ type: REQUEST_SUCCESS, payload: "¡Datos registrados!"})
-    // yield put({ type: REQUEST_FAILURE, payload: { serverErrors: message} })
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
     yield put({
@@ -33,13 +33,16 @@ function* registerNewProyect({ payload }){
   }
 }
 
-function* getProyectsWorker({ payload }){
+function* getProyectsWorker(){
   try {
     yield put({ type: REQUEST_STARTED })
-    const res = yield call(getProyectsService, payload)
-    console.log(res)
-    // yield put({ type: REQUEST_SUCCESS, payload: "¡Datos registrados!"})
-    // yield put({ type: REQUEST_FAILURE, payload: { serverErrors: message} })
+    // const token = jsonwebtoken.decode(getToken())
+    const payload = {id_usuario: 2314}
+    const response = yield call(getProyectsService, payload)
+    const {data} = response
+
+    yield put({ type: SET_PROYECTS, payload: data})
+    
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
     yield put({
