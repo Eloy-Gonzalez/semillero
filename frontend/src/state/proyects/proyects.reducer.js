@@ -2,7 +2,8 @@ import { Map } from 'immutable'
 
 import {
   SET_PROYECTS,
-  CLEAR_PROYECTS
+  CLEAR_PROYECTS,
+  DELETE_PROYECT
 } from './proyects.actionsTypes'
 
 const initialState = Map().merge({
