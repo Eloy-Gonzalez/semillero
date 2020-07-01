@@ -1,7 +1,7 @@
 {
 	"databases": {
 		"semillero": {
-			"path": "postgres://postgres:postgres@localhost:5432/semillero",
+			"path": "postgres://desarrollo:desarrollo@localhost:5432/semillero",
 			"pool": {
 		    "max": 2,
 		    "min": 0,
@@ -10,7 +10,7 @@
 			}
 		},
 		"saime": {
-			"path": "postgres://postgres:postgres@localhost:5432/saime",
+			"path": "postgres://desarrollo:desarrollo@localhost:5432/saime",
 			"pool": {
 		    "max": 2,
 		    "min": 0,
