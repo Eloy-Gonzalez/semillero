@@ -59,8 +59,8 @@ const Separe = styled.div`
 function PreviusStep({ actualVisible = 0, items }) {
 	const StepCircle = ({ text, separe, ...res}) => (
 		<React.Fragment>
-			<Circle
-				{...res}>{text}
+			<Circle {...res}>
+				{text}
 			</Circle>
 			{separe}
 		</React.Fragment>

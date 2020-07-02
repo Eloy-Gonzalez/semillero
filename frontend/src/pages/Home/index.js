@@ -9,7 +9,8 @@ export default function Home() {
     	<React.Fragment>
 			<div style={{gridColumn:"2 / 12", textAlign:"center"}}>
 				<h1 className="app-title">Comienza a subir tus Videos</h1>
-				<ProyectsProfiles />
+				
+				
 			</div>
 		</React.Fragment>
     )

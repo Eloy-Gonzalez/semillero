@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 })
 
 
-function SimpleTable({ columns = [], rows = [], handleDelete, handleSubmit=() => console.log("First complete form")}) {
+function SimpleTable({ columns = [], rows = [], handleDelete, handleSubmit=null, onLoading}) {
   const classes = useStyles()
 
   return (
@@ -33,7 +33,18 @@ function SimpleTable({ columns = [], rows = [], handleDelete, handleSubmit=() =>
           </TableRow>
         </TableHead>
         <TableBody>
-          { rows.length ? rows.map((row) => (
+        {
+          onLoading && 
+          [rows.length].map((ind) => (
+            <TableRow key={ind}>
+                <TableCell component="th" colSpan={columns.length} align="center" scope="row">
+                  Cargando...
+                </TableCell>
+            </TableRow>
+          ))
+        }
+
+          { !onLoading && rows.length ? rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
                 {row.nombre}

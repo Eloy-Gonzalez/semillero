@@ -9,16 +9,18 @@ import LoginRoute from './Routes/LoginRoute'
 
 // @Actions
 import {checkAutentication} from 'state/auth/auth.actions'
-import {clearServerErrors, clearServerSuccess} from 'state/app/app.actions'
+import {clearServerErrors, clearServerSuccess, closeModal, closeDialogConfirm} from 'state/app/app.actions'
 
 // @Selectors
-import {selectServerErrors, selectServerSuccess} from 'state/app/app.selectors'
+import {selectServerErrors, selectServerSuccess, selectModal, selectDialogConfirm} from 'state/app/app.selectors'
 
 // @Components
 import Backdrop from 'components/Backdrop'
 import Snackbars from 'components/Snackbars';
 import SnackbarsSuccess from 'components/SnackbarsSuccess';
 import CircularProgress from '@material-ui/core/CircularProgress'
+import MaterialModal from 'components/Modal'
+import DialogConfirm from 'components/DialogConfirm'
 
 // @Pages 
 import Login  from 'pages/Login'
@@ -30,6 +32,8 @@ function App() {
     const dispatch = useDispatch()
     const serverErrors = useSelector(state => selectServerErrors(state))
     const serverSuccess = useSelector(state => selectServerSuccess(state))
+    const modal = useSelector(state => selectModal(state))
+    const dialogConfirm = useSelector(state => selectDialogConfirm(state))
 
     useEffect(() => {
         dispatch(checkAutentication())
@@ -45,10 +49,24 @@ function App() {
             
             <Switch>
                 <PrivateRoute exact path="/" alias="Inicio" component={Home} />
-                <LoginRoute exact path="/crear-cuenta" alias="Crear Cuenta" component={Register} />
+                <PrivateRoute exact path="/periodos" alias="Periodos" component={Home} />
+                <PrivateRoute exact path="/fases" alias="Fases" component={Home} />
+                <PrivateRoute exact path="/categorias" alias="Crear Cuenta" component={Register} />
+                <PrivateRoute exact path="/usuarios" alias="Usuarios" component={Home} />
                 <LoginRoute exact path="/acceder" alias="Iniciar Sesión" component={Login} />
                 <Redirect to="/acceder" />
             </Switch>
+
+            <MaterialModal open={modal.open} handleClose={() => dispatch(closeModal())} >
+                {modal.description}
+            </MaterialModal>
+            <DialogConfirm 
+                dialogTitle={dialogConfirm.title}
+                dialogText={dialogConfirm.description}
+                open={dialogConfirm.open}
+                onClose={() => dispatch(closeDialogConfirm())}
+                onConfirm={() => dialogConfirm.onConfirm()}
+            />
         </React.Suspense>
     )
 }

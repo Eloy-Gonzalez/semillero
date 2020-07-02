@@ -1,5 +1,5 @@
 // @Vendors
-import React, {useEffect, useCallback, useMemo, useState} from 'react'
+import React, {useEffect, useCallback, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 
 // @Material UI
@@ -12,24 +12,22 @@ import {selectProyects} from 'state/proyects/proyects.selectors'
 
 // @Actions
 import {getProyects, createProyectAction, deleteProyectAction} from 'state/proyects/proyects.actions'
-import {openModal, closeModal} from 'state/app/app.actions'
+import {openModal, openDialogConfirm} from 'state/app/app.actions'
+
+// @Selectors
+import {selectLoading} from 'state/app/app.selectors'
 
 // @Components
 import Pagination from 'components/Pagination'
 import SimpleTable from 'components/SimpleTable'
 import FormAddProyects from './FormAddProyects'
 import ActionsButtons from 'components/ActionsButtons'
-import MaterialModal from 'components/Modal'
-
-// Selectors
-import {selectLoading, selectModal} from 'state/app/app.selectors'
 
 function ProyectsProfiles() {
 	const dispatch = useDispatch()
 	const proyects = useSelector(state => selectProyects(state))
 	const loading = useSelector(state => selectLoading(state))
-	const modal = useSelector(state => selectModal(state))
-	
+
 	useEffect(() => {
 		dispatch(getProyects())
 	}, [dispatch])
@@ -42,11 +40,11 @@ function ProyectsProfiles() {
 	const indexOfFirstPost = indexOfLastPost - postsPerPage
 	const currentPost = proyects.slice(indexOfFirstPost, indexOfLastPost)
 
-	const columns = useMemo(() => [
+	const columns = [
 		{id:0, label: "Nombre"},
 		{id:1, label: "Descripción"},
 		{id:2, label:"Hipervínculo"}
-	], [])
+	]
 
 	const onSubmit = useCallback((values, actions) => {
 		dispatch(createProyectAction(values))
@@ -54,7 +52,11 @@ function ProyectsProfiles() {
 
 	const onDelete = useCallback((id, version) => {
 		const payload = {id, version, proyects}
-		dispatch(deleteProyectAction(payload))
+		dispatch(openDialogConfirm({
+			title:"Eliminar registro",
+			description: "¿Seguro de Eliminar este elemento?",
+			onConfirm: () => dispatch(deleteProyectAction(payload))
+		}))
 	}, [proyects, dispatch])	
 
 	const createProyect = useCallback(() => {
@@ -69,8 +71,12 @@ function ProyectsProfiles() {
 	return (
 		<div>
 			<p style={{textAlign:"right"}}>
+				<span style={{fontSize:"1.2em"}}>Nuevo Proyecto</span>
 				<Tooltip title="Registrar nuevo video">
-					<IconButton aria-label="Crear nuevo" onClick={createProyect}>
+					<IconButton 
+						aria-label="Crear nuevo"
+						onClick={createProyect}
+					>
 	                    <AddCircleOutlineIcon />
 	                 </IconButton>
                 </Tooltip>
@@ -88,12 +94,8 @@ function ProyectsProfiles() {
 					changePage={setCurrentPage}
 				/>
 			</div>
-			<MaterialModal open={modal.open} handleClose={() => dispatch(closeModal())} >
-				{modal.description}
-			</MaterialModal>
 		</div>
 	)
-
 }
 
-export default React.memo(ProyectsProfiles)
+export default ProyectsProfiles

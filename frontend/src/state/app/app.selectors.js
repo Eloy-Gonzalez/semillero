@@ -1,18 +1,20 @@
-const selectLoading = state => state.appReducer.get('loading');
+// Loader
+const selectLoading = state => state.appReducer.get('loading')
 
-const selectServerErrors = state => state.appReducer.get('serverErrors');
+// Server
+const selectServerErrors = state => state.appReducer.get('serverErrors')
+const selectStatusError = state => state.appReducer.get('statusError')
+const selectServerSuccess = state => state.appReducer.get('serversuccess')
 
-const selectStatusError = state => state.appReducer.get('statusError');
-
-const selectServerSuccess = state => state.appReducer.get('serversuccess');
-
-
-const selectModal = state => state.appReducer.get('modal');
+// Alerts
+const selectModal = state => state.appReducer.get('modal')
+const selectDialogConfirm = state => state.appReducer.get('dialogConfirm')
 
 export {
 	selectLoading,
 	selectServerErrors,
 	selectStatusError,
 	selectModal,
-	selectServerSuccess
-};
+	selectServerSuccess,
+	selectDialogConfirm
+}

@@ -13,9 +13,9 @@ const publicItems = [
     { url: "/crear-cuenta", label:"Crear cuenta" }
 ]
 
-function index({ user = {}, logout = () => console.log("First login") } = {}) {
+function index({ user = {}, logout = () => console.log("First login"), ...rest} = {}) {
     return (
-        <div className="menu">
+        <div className="menu" {...rest}>
             <ul className="menu__list">
                 {
                     !user.isAuthenticated ? publicItems.map(({url, label}) => (

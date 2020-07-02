@@ -11,6 +11,7 @@ import {selectUser} from 'state/users/users.selectors'
 
 // @Components
 import AppFrame from 'components/AppFrame'
+import AdminFrame from 'components/AdminFrame'
 
 function PrivateRoute({ history, component: Component, alias, ...rest }) {
     const user = useSelector(state => selectUser(state))
@@ -20,10 +21,17 @@ function PrivateRoute({ history, component: Component, alias, ...rest }) {
         dispatch(logout())
     }, [dispatch])
 
+    const rol = 2
+
     return (
         <Route {...rest} render={
             props => 
-            user.isAuthenticated ? (
+            user.isAuthenticated ? 
+            rol === 2 ?  (
+                <AdminFrame title={alias} user={user} onLogout={doLogout}>
+                    <Component {...props}/>
+                </AdminFrame>
+            ) : (
                 <AppFrame title={alias} user={user} onLogout={doLogout}>
                     <Component {...props}/>
                 </AppFrame>
