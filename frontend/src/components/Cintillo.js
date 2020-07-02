@@ -12,22 +12,33 @@ const Wrapper = styled.div`
 	justify-content:center;
     min-height: 80px;
     align-items: center;
-    padding: 15px 0;
+    padding: 15px 20px;
     box-sizing: border-box;
     box-shadow: 0px 0px 10px 1px #b1b1b1;
 `
 const Icons = styled.div`
 	display:flex;
 	justify-content:space-between;
+	align-items:center;
 
 `
 const LeftIcon = styled.div`
-	width: 300px;
-	height: 50px;
+	width: 220px;
+	height: 40px;
+
+	@media (min-width: 720px) {
+		width: 300px;
+		height: 50px;
+	}
 `
 const RightIcon = styled.div`
-	width: 150px;
-	height: 50px;
+	width: 100px;
+	height: 30px;
+
+	@media (min-width: 720px) {
+		width: 150px;
+		height: 50px;
+	}
 `
 export default function Cintillo() {
 	return (

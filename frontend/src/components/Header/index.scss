@@ -1,9 +1,14 @@
 .header__primary {
     overflow-x: hidden;
     .header__primary-logo {
-        grid-column: 1/ 5;
+        z-index: 2;
+        grid-column: 3/ 10;
         img {
             max-width: 280px;
+        }
+
+        @media (min-width: 1024px) {
+            grid-column: 1/ 5;
         }
     }
     
@@ -11,11 +16,16 @@
         position: absolute;
         right: 0;
     }
+
+    .top--wave svg {
+        height: 100%;
+    }
     
     .wave--cirlces {
         top: 330px;
         opacity: .9;
         z-index: -1;
+
     }
 
     img, svg {
