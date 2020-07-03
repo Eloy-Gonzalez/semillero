@@ -1,7 +1,16 @@
 // @Vendors
 import React from 'react'
+import styled from 'styled-components'
 
 import Button from '@material-ui/core/Button'
+
+
+const BtnPag = styled.div`
+    margin: 10px 0 0;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-end;
+`
 
 function Pagination({ totalPosts, postsPerPage, changePage }){
 	const pageNumbers = []
@@ -11,16 +20,16 @@ function Pagination({ totalPosts, postsPerPage, changePage }){
 	}
 
 	return(
-		<div className="pagination--post">
+		<BtnPag>
 			{pageNumbers.map( (number) => (
 				<span key={number}>
-					<Button onClick={() => changePage(number)}>
+					<Button variant="outlined" onClick={() => changePage(number)}>
 						{number}
 					</Button>
 				</span>
 			))}
 			<p>Registros pro página {postsPerPage}</p>
-		</div>
+		</BtnPag>
 	)
 }
 

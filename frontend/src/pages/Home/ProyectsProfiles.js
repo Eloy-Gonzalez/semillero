@@ -23,22 +23,22 @@ import SimpleTable from 'components/SimpleTable'
 import FormAddProyects from './FormAddProyects'
 import ActionsButtons from 'components/ActionsButtons'
 
+// @Hooks
+import usePagination from 'hooks/usePagination'
+
 function ProyectsProfiles() {
 	const dispatch = useDispatch()
 	const proyects = useSelector(state => selectProyects(state))
 	const loading = useSelector(state => selectLoading(state))
+	const {
+		currentPost,
+		postsPerPage,
+		setCurrentPage
+	} = usePagination({ posts: proyects})
 
 	useEffect(() => {
 		dispatch(getProyects())
 	}, [dispatch])
-
-	const [currentPage, setCurrentPage] = useState(1)
-	const [postsPerPage] = useState(5)
-	
-	// Get Index of Posts
-	const indexOfLastPost = currentPage * postsPerPage
-	const indexOfFirstPost = indexOfLastPost - postsPerPage
-	const currentPost = proyects.slice(indexOfFirstPost, indexOfLastPost)
 
 	const columns = [
 		{id:0, label: "Nombre"},
