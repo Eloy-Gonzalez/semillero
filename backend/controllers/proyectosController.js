@@ -13,8 +13,10 @@ exports.get = (req, res) => {
 	console.log('func -> getProyectos');
 	if (req.body.params != undefined) {
 		const conditions = req.body.params;
-		Proyectos.findAll({
-			where : conditions
+		Proyectos.findAndCountAll({
+			where : conditions,
+			offset: 0, 
+			limit: 10
 		}).then(proyectos => {
 			res.status(200).json(proyectos);
 		}).catch(err => {

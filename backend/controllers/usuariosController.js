@@ -7,6 +7,8 @@ const Usuarios = db.Usuarios;
 const UsuariosPerfil = db.UsuariosPerfil;
 const UsuariosDomicilio = db.UsuariosDomicilio;
 const UsuariosRepresentante = db.UsuariosRepresentante;
+const UsuariosPermisos = db.UsuariosPermisos;
+const Permisos = db.Permisos;
 const Estados = db.Estados;
 const Municipios = db.Municipios;
 const Parroquias = db.Parroquias;
@@ -24,6 +26,9 @@ exports.get = (req, res) => {
 		Usuarios.findAll({
 			where: conditions,
 			include: [
+				{ model : UsuariosPermisos, include : [{ 
+					model : Permisos
+				}] },
 				{ model : UsuariosPerfil },
 				{ model : UsuariosRepresentante },
 				{ 
@@ -47,7 +52,7 @@ exports.get = (req, res) => {
 			// Validation after send query on database
 			if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
 				var { severity, code, detail } = err.parent;
-				detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+				//detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 				res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
 			}
 		})

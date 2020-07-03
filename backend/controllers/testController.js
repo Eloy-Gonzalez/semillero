@@ -13,6 +13,9 @@ const Municipios = db.Municipios;
 const Parroquias = db.Parroquias;
 const Proyectos = db.Proyectos;
 const ProyectosXCategorias = db.ProyectosXCategorias;
+const Categorias = db.Categorias;
+const Permisos = db.Permisos;
+const UsuariosPermisos = db.UsuariosPermisos;
 const Periodos = db.Periodos;
 const Fases = db.Fases;
 const Estatus = db.Estatus;
@@ -183,11 +186,11 @@ exports.usuario = async (req, res, next) => {
 			res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Usted ya posee un usuario en el sistema!'} });
 		}
 	});
-}
+};
 
 exports.getToken = (req, res) => {
 	console.log(req.headers['x-mppct-token']);
-}
+};
 
 exports.generateToken = (req, res) => {
 	console.log('func -> Test generate Token');
@@ -213,12 +216,13 @@ exports.generatePassword = (req, res) => {
 }
 
 exports.query = (req, res) => {
-	Usuarios.findAll({
+	console.clear();
+	Usuarios.findOne({
 		include: [
-			{ model : UsuariosPerfil },
-			{ model : UsuariosRepresentante },
+			{ model : UsuariosPerfil, required : false },
+			{ model : UsuariosRepresentante, required : false },
 			{ 
-				model: UsuariosDomicilio, include: [{ 
+				model: UsuariosDomicilio, required : true, include: [{ 
 					model: Parroquias, required: true, attributes: ['id_parroquia', 'nombre'], include: [{
 						model: Municipios, required: true,  attributes: ['id_municipio', 'nombre'], include: [{
 							model: Estados, required: true, attributes: ['id_estado', 'nombre'] 
@@ -226,11 +230,19 @@ exports.query = (req, res) => {
 					}]
 				}] 
 			},
-			{ model: Proyectos, include: [ { model : Estatus, required: true } ] }
+			{ model: Proyectos, required : false, include: [ 
+				{ model : Estatus, required: false, attributes : ['id', 'nombre'] },
+				{ model : Categorias, as :'Categorias', required : false }
+			]},
+			{ model: UsuariosPermisos, as : 'Permisos', required : false, attributes: ['id_permiso'], include: [
+				{ model : Permisos, as : 'permiso', required : false, attributes: ['nombre', 'tipo']}
+			]}
 		],
-		where: { id : 1}
-		})
+		where : { username : 'egonzalez2240@gmail.com' }
+	})
 	.then(usuarios => {
-	  	res.status(200).json(usuarios)
+	  	res.status(200).json(usuarios);
+	}).catch(err => {
+		console.log(err);
 	})
 }

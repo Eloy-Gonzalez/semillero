@@ -12,8 +12,16 @@ exports.get = (req, res) => {
 	console.log('func -> getCategorias');
 	if (req.body.params != undefined) {
 		const conditions = req.body.params;
-		Categorias.findAll({
-			where : conditions
+		var { offset, limit } = conditions;
+		delete conditions.offset; delete conditions.limit;
+
+		if ((limit == 0 || limit == null || limit == undefined)) {limit = 10}
+		if ((offset == 0 || offset == null || offset == undefined)) { offset = 0}
+
+		Categorias.findAndCountAll({
+			where : conditions,
+			offset : offset,
+			limit : limit
 		}).then(categorias => {
 			res.status(200).json(categorias);
 		}).catch(err => {

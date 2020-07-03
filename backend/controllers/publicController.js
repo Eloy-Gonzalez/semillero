@@ -23,16 +23,21 @@ var transporter = nodemailer.createTransport({
 });
 
 /* Model */
-const Proyectos = db.Proyectos;
-const ProyectosXCategorias = db.ProyectosXCategorias;
 const Usuarios = db.Usuarios;
 const UsuariosPerfil = db.UsuariosPerfil;
 const UsuariosDomicilio = db.UsuariosDomicilio;
 const UsuariosRepresentante = db.UsuariosRepresentante;
 const Estados = db.Estados;
-const PreguntasSeguridad = db.PreguntasSeguridad;
 const Municipios = db.Municipios;
 const Parroquias = db.Parroquias;
+const Proyectos = db.Proyectos;
+const ProyectosXCategorias = db.ProyectosXCategorias;
+const Categorias = db.Categorias;
+const Permisos = db.Permisos;
+const UsuariosPermisos = db.UsuariosPermisos;
+const Periodos = db.Periodos;
+const Fases = db.Fases;
+const Estatus = db.Estatus;
 
 const Saime = db.Saime;
 
@@ -210,38 +215,51 @@ exports.login = (req, res) => {
 	console.log('func -> Login');
 	if (req.body.params != undefined) {
 		const { username, password } = req.body.params;
-		db.semillero.query("\
-			SELECT\
-				*\
-			FROM seguridad.usuarios\
-			WHERE\
-				username = :username\
-			", { replacements: { username: username }, type: db.semillero.QueryTypes.SELECT }
-		).then(result => {
-			if (result.length > 0) {
-				const { id, username, borrado, version } = result[0];
-				if (borrado) {
-					res.status(200).json({ alert: { type: 'warning', title: 'Atención', message: 'Su cuenta ha sido bloqueada por un administrador, pongase en contacto con el equipo de soporte para mayor información!' }});
-				} else{
-					bcrypt.compare(password, result[0].password).then(response => {
-						// Si coinciden las contraseñas
-						if (response) {
-							const payload = { id : id, username : username, version : version };
-
-							// Se crea el token junto con los datos del usuario
-							const token = jwt.sign(payload, require('../config').key, {
-								expiresIn: '1h'
-							});
-							res.status(200).json({ token : token, alert : { type : 'success', title : 'Información', message : 'Inicio de sesión exitoso!'} });
-						} else {
-							res.status(200).json({ alert : { type : 'warning', title: 'Atención', message : 'Usuario o contraseña invalido!'} });
-						}
-					});
-				}
-			} else {
+		Usuarios.findOne({
+			include: [
+				{ model : UsuariosPerfil, required : false },
+				{ model : UsuariosRepresentante, required : false },
+				{ 
+					model: UsuariosDomicilio, required : true, include: [{ 
+						model: Parroquias, required: true, attributes: ['id_parroquia', 'nombre'], include: [{
+							model: Municipios, required: true,  attributes: ['id_municipio', 'nombre'], include: [{
+								model: Estados, required: true, attributes: ['id_estado', 'nombre'] 
+							}]
+						}]
+					}] 
+				},
+				{ model: Proyectos, required : false, include: [ 
+					{ model : Estatus, required: false, attributes : ['id', 'nombre'] },
+					{ model : Categorias, as :'Categorias', required : false }
+				]},
+				{ model: UsuariosPermisos, as : 'Permisos', required : false, attributes: ['id_permiso'], include: [
+					{ model : Permisos, as : 'permiso', required : false, attributes: ['nombre', 'tipo']}
+				]}
+			],
+			where : { username : username }
+		}).then(user => {
+			if (!user) {
 				res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Usuario invalido o no existente!'} });
 			}
-		});
+
+			const { borrado } = user;
+			if (borrado) {
+				res.status(200).json({ alert: { type: 'warning', title: 'Atención', message: 'Su cuenta ha sido bloqueada por un administrador, pongase en contacto con el equipo de soporte para mayor información!' }});
+			} else {
+					bcrypt.compare(password, user.password).then(response => {
+					if (response) {
+						delete user.dataValues.password;
+						const payload = { user };
+						const token = jwt.sign(payload, require('../config').key, {
+							expiresIn: '1h'
+						});
+						res.status(200).json({ token : token, alert : { type : 'success', title : 'Información', message : 'Inicio de sesión exitoso!'} });
+					} else {
+						res.status(200).json({ alert : { type : 'warning', title: 'Atención', message : 'Usuario o contraseña invalido!'} });
+					}
+				});
+			}
+		}).catch(err => {console.log(err);});
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}

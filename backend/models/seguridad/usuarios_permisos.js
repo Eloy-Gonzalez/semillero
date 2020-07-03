@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     id_usuario: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
+      unique: true,
       references: {
         model: 'usuarios',
         key: 'id'
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     id_permiso: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
+      unique: true,
       references: {
         model: 'permisos',
         key: 'id'

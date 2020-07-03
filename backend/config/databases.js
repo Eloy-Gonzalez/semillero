@@ -43,10 +43,13 @@ db.Saime = require('../models/saime/saime')(db['saime'], Sequelize);
 
 /* RELATIONS */
 db.Usuarios.hasMany(db.Proyectos, { foreignKey: 'id_usuario' });
-db.Proyectos.belongsTo(db.Usuarios, {  foreignKey: 'id_usuario' });
+db.Proyectos.belongsTo(db.Usuarios, { foreignKey: 'id_usuario' });
 
 db.Estatus.hasMany(db.Proyectos, { foreignKey: 'id_estatus' });
 db.Proyectos.belongsTo(db.Estatus, { foreignKey: 'id_estatus' });
+
+db.Usuarios.hasOne(db.PreguntasSeguridad, { foreignKey: 'id', targetKey: 'id', sourceKey: 'id_pregunta', as: 'pregunta_seguridad' });
+db.PreguntasSeguridad.belongsTo(db.Usuarios, { foreignKey: 'id', targetKey: 'id', sourceKey: 'id' });
 
 db.Usuarios.hasOne(db.UsuariosPerfil, { foreignKey: 'id_usuario', targetKey: 'id_usuario', sourceKey: 'id'});
 db.UsuariosPerfil.belongsTo(db.Usuarios, { foreignKey: 'id_usuario', targetKey: 'id', sourceKey: 'id_usuario'});
@@ -57,23 +60,35 @@ db.UsuariosRepresentante.belongsTo(db.Usuarios, { foreignKey: 'id_usuario', targ
 db.Usuarios.hasOne(db.UsuariosDomicilio, { foreignKey: 'id_usuario', targetKey: 'id_usuario', sourceKey: 'id' });
 db.UsuariosDomicilio.belongsTo(db.Usuarios, { foreignKey: 'id_usuario', targetKey: 'id', sourceKey: 'id_usuario'});
 
-db.Usuarios.hasOne(db.UsuariosRepresentante, { foreignKey: 'id_usuario', targetKey: 'id_usuario', sourceKey: 'id' });
-db.UsuariosRepresentante.belongsTo(db.Usuarios, { foreignKey: 'id_usuario', targetKey: 'id', sourceKey: 'id_usuario' });
-
-db.Usuarios.hasOne(db.PreguntasSeguridad, { foreignKey: 'id', targetKey: 'id', sourceKey: 'id_pregunta', as : 'pregunta_seguridad' });
-db.PreguntasSeguridad.belongsTo(db.Usuarios, { foreignKey: 'id', targetKey: 'id', sourceKey: 'id' });
-
 db.UsuariosDomicilio.hasOne(db.Parroquias, { foreignKey: 'id_parroquia', targetKey: 'id_parroquia', sourceKey: 'id_parroquia' });
 db.Parroquias.belongsTo(db.UsuariosDomicilio, { foreignKey: 'id_parroquia', targetKey: 'id_parroquia', sourceKey: 'id_parroquia' });
-
-db.Periodos.hasMany(db.Fases, { foreignKey: 'id_periodo', targetKey: 'id_periodo', sourceKey: 'id'});
-db.Fases.belongsTo(db.Periodos, { foreignKey: 'id_periodo', targetKey: 'id', sourceKey: 'id_periodo'});
 
 db.Parroquias.hasOne(db.Municipios, { foreignKey: 'id_municipio', targetKey: 'id_municipio', sourceKey: 'id_municipio'});
 db.Municipios.belongsTo(db.Parroquias,{ foreignKey: 'id_municipio', targetKey: 'id_municipio', sourceKey: 'id_municipio'});
 
 db.Municipios.hasOne(db.Estados, { foreignKey: 'id_estado', targetKey: 'id_estado', sourceKey: 'id_estado' });
 db.Estados.belongsTo(db.Municipios, { foreignKey: 'id_estado', targetKey: 'id_estado', sourceKey: 'id_estado' });
+
+db.Usuarios.hasMany(db.UsuariosPermisos, { as: 'Permisos', foreignKey: 'id_usuario'});
+db.UsuariosPermisos.belongsTo(db.Usuarios, { as: 'role', foreignKey: 'id_usuario' });
+
+db.Usuarios.belongsToMany(db.Permisos, { as: 'Roles', through: { model: db.UsuariosPermisos }, foreignKey: 'id_usuario' });
+db.Permisos.belongsToMany(db.Usuarios, { as: 'Usuarios', through: { model: db.UsuariosPermisos }, foreignKey: 'id_permiso' });
+
+db.Permisos.hasMany(db.UsuariosPermisos, { as: 'p', foreignKey: 'id_permiso' });
+db.UsuariosPermisos.belongsTo(db.Permisos, { as: 'permiso', foreignKey: 'id_permiso' });
+
+db.Proyectos.hasMany(db.ProyectosXCategorias, { as: 'proyectos', foreignKey: 'id_proyecto' });
+db.ProyectosXCategorias.belongsTo(db.Proyectos, { as: 'p', foreignKey: 'id_proyecto'});
+
+db.Proyectos.belongsToMany(db.Categorias, { as: 'Categorias', through: { model: db.ProyectosXCategorias, unique: false}, foreignKey: 'id_proyecto' });
+db.Categorias.belongsToMany(db.Proyectos, { as: 'Proyectos', through: { model: db.ProyectosXCategorias, unique: false }, foreignKey: 'id_categoria' });
+
+db.Categorias.hasMany(db.ProyectosXCategorias, { as: 'categorias', foreignKey: 'id_categoria' });
+db.ProyectosXCategorias.belongsTo(db.Categorias, { as: 'c', foreignKey: 'id_categoria' });
+
+db.Periodos.hasMany(db.Fases, { foreignKey: 'id_periodo', targetKey: 'id_periodo', sourceKey: 'id'});
+db.Fases.belongsTo(db.Periodos, { foreignKey: 'id_periodo', targetKey: 'id', sourceKey: 'id_periodo'});
 
 // Sincronización con los modelos hacia el motor de base de datos
 // db['semillero'].sync({force : true});
