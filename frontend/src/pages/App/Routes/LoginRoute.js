@@ -7,19 +7,19 @@ import {Route, Redirect} from 'react-router-dom';
 import AppFrame from 'components/AppFrame'
 
 // @Selectors
-import {selectIsAuthenticated} from 'state/users/users.selectors'
+import {selectUser} from 'state/users/users.selectors'
 
 function LoginRoute({ component: Component, alias="Not title assigned", ...rest }) {
-    const isAuthenticated = useSelector(state => selectIsAuthenticated(state))
-    
+    const user = useSelector(state => selectUser(state))
+    const ref = user.rol_id === 2 ? "/admin" : "/"
     return (
         <Route {...rest} render={
             (props) => 
-            !isAuthenticated ? (
+            !user.isAuthenticated ? (
                 <AppFrame title={alias}>
                     <Component {...props}/>
                 </AppFrame>
-            ) : <Redirect to="/" />
+            ) : <Redirect to={ref} />
         } />
     )
 }

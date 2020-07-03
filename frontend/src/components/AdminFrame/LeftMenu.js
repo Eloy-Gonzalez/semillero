@@ -74,12 +74,14 @@ const BoxIcon = styled.div`
 function LeftMenu({ history }) {
 	const classes = useStyles()
 	const [open, setOpen] = React.useState(false)
+	
 	const handleClick = () => {
 		setOpen(!open)
 	}
-	
-	const href= (location) => {
-		history.push(location)
+
+	const prefix = "/admin"
+	const link = (href) => {
+		history.push(`${prefix}${href}`)
 	}
 
 	return (
@@ -106,25 +108,28 @@ function LeftMenu({ history }) {
 				        </ListSubheader>
 				    }
 		        >
-			      <ListItem button onClick={() => href("periodos/")}>
-			        <ListItemIcon>
-			          <AlarmIcon/>
-			        </ListItemIcon>
-			        <ListItemText primary="Períodos" />
+			      <ListItem button onClick={() => link("/periodos")}>
+				        <ListItemIcon>
+				          <AlarmIcon/>
+				        </ListItemIcon>
+				        <ListItemText primary="Períodos" />
 			      </ListItem>
-			      <ListItem button onClick={() => href("/fases")}>
-			        <ListItemIcon>
-			          <LoopIcon/>
-			        </ListItemIcon>
-			        <ListItemText primary="Fases" />
+
+			      <ListItem button onClick={() => link("/fases")}>
+				        <ListItemIcon>
+				          <LoopIcon/>
+				        </ListItemIcon>
+				        <ListItemText primary="Fases" />
 			      </ListItem>
-			      <ListItem button onClick={() => href("/categorias")}>
-			        <ListItemIcon>
-			          <CategoryIcon/>
-			        </ListItemIcon>
-			        <ListItemText primary="Categorías" />
+
+			      <ListItem button onClick={() => link("/categorias")}>
+				        <ListItemIcon>
+				          <CategoryIcon/>
+				        </ListItemIcon>
+				        <ListItemText primary="Categorías" />
 			      </ListItem>
-			      <ListItem button onClick={() => href("/")} onClick={handleClick}>
+
+			      <ListItem button onClick={handleClick}>
 			        <ListItemIcon>
 			          <SupervisorAccountIcon/>
 			        </ListItemIcon>
@@ -133,7 +138,7 @@ function LeftMenu({ history }) {
 			      </ListItem>
 			      <Collapse in={open} timeout="auto" unmountOnExit>
 			        <List component="div" disablePadding>
-				        <ListItem button onClick={() => href("/usuarios")} className={classes.nested}>
+				        <ListItem button onClick={() => link("/usuarios")} className={classes.nested}>
 			            	<ListItemIcon>
 			              	<PeopleAltIcon/>
 			            	</ListItemIcon>
@@ -148,4 +153,4 @@ function LeftMenu({ history }) {
 	)
 }
 
-export default withRouter(LeftMenu)
+export default withRouter(React.memo(LeftMenu))

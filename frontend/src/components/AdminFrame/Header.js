@@ -8,7 +8,7 @@ const HeaderStyled = styled.div`
 	padding: 20px;
 	box-sizing:border-box;
 	display:flex;
-	justify-content:center;
+	justify-content: flex-end;
 `
 
 export default function Header({menu}) {

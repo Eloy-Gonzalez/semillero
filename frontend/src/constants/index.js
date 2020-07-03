@@ -1,1 +1,1 @@
-export const BASE_API = "http://crs.mppct.gob.ve:8000"
+export const BASE_API = "http://10.10.10.38:8000"

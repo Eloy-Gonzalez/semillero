@@ -10,25 +10,26 @@ import {getToken} from 'utils/helpers'
 import {logout} from 'state/auth/auth.actions'
 
 // @Components
-import AppFrame from 'components/AppFrame'
+import AdminFrame from 'components/AdminFrame'
 
-function PrivateRoute({ component: Component, alias, user, ...rest }) {
+function AdminRoute({ component: Component, alias, user, ...rest }) {
     const dispatch = useDispatch()
 
     const doLogout = useCallback(() => {
         dispatch(logout())
     }, [dispatch])
 
+    const rol_user = 2
     return (
         <Route {...rest} render={
             props => 
-            user.isAuthenticated || getToken()
-            ? <AppFrame title={alias} user={user} onLogout={doLogout}>
+            (rol_user === 2 && user.isAuthenticated || getToken())
+            ? <AdminFrame title={alias} user={user} onLogout={doLogout}>
                     <Component {...props}/>
-              </AppFrame> 
-            : <Redirect to="/acceder"/>
+              </AdminFrame> 
+            : <Redirect to="/"/>
         } />
     )
 }
 
-export default React.memo(PrivateRoute)
+export default React.memo(AdminRoute)

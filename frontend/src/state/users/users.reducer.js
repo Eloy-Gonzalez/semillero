@@ -10,14 +10,16 @@ import {
   // CLEANERS
   CLEAR_PROFILES,
   CLEAR_UBICATION,
-  CLEAR_REPRESENTANTE
+  CLEAR_REPRESENTANTE,
+  CLEAR_USER
 } from './users.actionsTypes'
 
 const initialState = Map().merge({
   user: {
     isAuthenticated: false,
     username: '',
-    password: ''
+    password: '',
+    rol_id: 0
   },
   profiles: {
     cedula: '',
@@ -77,6 +79,16 @@ const authReducer = (state = initialState, { type, payload }) => {
     })
 
     // CLEANERS
+    case CLEAR_USER: 
+      return state.merge({
+        user: {
+          isAuthenticated: false,
+          username: '',
+          password: '',
+          rol_id: 0
+        }
+    })
+
     case CLEAR_PROFILES: 
       return state.merge({
         profiles: {
