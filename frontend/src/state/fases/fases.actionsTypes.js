@@ -1,0 +1,13 @@
+const PREFIX = 'FASES'
+
+// GETTERS
+export const GET_FASES = `${PREFIX}/GET_FASES`
+
+// SETTERS
+export const SET_FASES = `${PREFIX}/SET_FASES`
+
+// SEND
+export const CREATE_PERIODO = `${PREFIX}/CREATE_PERIODO`
+
+// CLEANERS
+export const CLEAR_FASES = `${PREFIX}/CLEAR_FASES`

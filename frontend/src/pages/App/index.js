@@ -13,7 +13,6 @@ import {clearServerErrors, clearServerSuccess, closeModal, closeDialogConfirm} f
 
 // @Selectors
 import {selectServerErrors, selectServerSuccess, selectModal, selectDialogConfirm} from 'state/app/app.selectors'
-// @Selectors
 import {selectUser} from 'state/users/users.selectors'
 
 // @Components
@@ -30,6 +29,9 @@ import {checkAutentication} from 'state/auth/auth.actions'
 // @Admin Pages
 import Administrador from 'pages/Administrador'
 import Periodos from 'pages/Periodos'
+import Fases from 'pages/Fases'
+import Categorias from 'pages/Categorias'
+import Usuarios from 'pages/Usuarios'
 
 // @Pages 
 import Login  from 'pages/Login'
@@ -58,9 +60,9 @@ function App() {
             <SnackbarsSuccess  onClose={() => dispatch(clearServerSuccess())} message={serverSuccess} open={!!serverSuccess} />
             
             <Switch>
-                <AdminRoute exact path="/admin/usuarios" alias="Usuarios" component={Register} user={user}/>
-                <AdminRoute exact path="/admin/categorias" alias="Categorias" component={Register} user={user}/>
-                <AdminRoute exact path="/admin/fases" alias="Fases" component={Periodos} user={user}/>
+                <AdminRoute exact path="/admin/usuarios" alias="Usuarios" component={Usuarios} user={user}/>
+                <AdminRoute exact path="/admin/categorias" alias="Categorias" component={Categorias} user={user}/>
+                <AdminRoute exact path="/admin/fases" alias="Fases" component={Fases} user={user}/>
                 <AdminRoute exact path="/admin/periodos" alias="Periodos" component={Periodos} user={user}/>
                 <AdminRoute exact path="/admin" alias="Administrador" component={Administrador} user={user}/>
                 <PrivateRoute exact path="/" alias="Inicio" component={Home} user={user}/>

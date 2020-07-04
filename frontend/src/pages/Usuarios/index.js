@@ -46,7 +46,7 @@ function Periodos(){
 
 	return (
 		<Fragment>
-			<h1>Administrar Periodos</h1>
+			<h1>Administrar Usuarios</h1>
 			<TablePeriodos
 				columns={columns}
 				rows={currentPost}

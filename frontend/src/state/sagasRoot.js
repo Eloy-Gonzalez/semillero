@@ -6,6 +6,7 @@ import auth from './auth/auth.sagas'
 import users from './users/users.sagas'
 import proyects from './proyects/proyects.sagas'
 import periodos from './periodos/periodos.sagas'
+import fases from './fases/fases.sagas'
 
 export default function* () {
   yield all(
@@ -13,7 +14,7 @@ export default function* () {
       ...Object.values(auth),
       ...Object.values(users),
       ...Object.values(proyects),
-      ...Object.values(periodos)
+      ...Object.values(fases)
     ].map(fork)
   )
 }

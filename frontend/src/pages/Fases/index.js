@@ -3,23 +3,24 @@ import React, {Fragment, useState, useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 
 // @ActionsTypes
-import {GET_PERIODOS} from 'state/periodos/periodos.actionsTypes'
+import {GET_FASES} from 'state/fases/fases.actionsTypes'
 
 // @Components
-import TablePeriodos from './TablePeriodos'
+import TableFases from './TableFases'
 import Pagination from 'components/Pagination'
+
 // @Hooks
 import usePagination from 'hooks/usePagination'
 
-function Periodos(){
+function Fases(){
 	const dispatch = useDispatch()
-	const periodos = useSelector(state => state.periodosReducer.get('periodos'))
+	const fases = useSelector(state => state.fasesReducer.get('fases'))
 	const loading = useSelector(state => state.appReducer.get('loading'))
 	const {
 		currentPost,
 		postsPerPage,
 		setCurrentPage
-	} = usePagination({ posts: periodos, postsPerPage: 10})
+	} = usePagination({ posts: fases, postsPerPage: 10})
 
 	const columns = [
 		{title: "Nombre"},
@@ -29,7 +30,7 @@ function Periodos(){
 	]
 
 	useEffect(() => {
-  		dispatch({ type: GET_PERIODOS})
+  		dispatch({ type: GET_FASES})
   	}, [])
 
   	const onView = (id) => {
@@ -46,8 +47,8 @@ function Periodos(){
 
 	return (
 		<Fragment>
-			<h1>Administrar Periodos</h1>
-			<TablePeriodos
+			<h1>Administrar Fases</h1>
+			<TableFases
 				columns={columns}
 				rows={currentPost}
 				onLoading={loading}
@@ -56,7 +57,7 @@ function Periodos(){
 				handleDelete={onDelete}
 			/>
 			<Pagination 
-				totalPosts={periodos.length}
+				totalPosts={fases.length}
 				postsPerPage={postsPerPage}
 				changePage={setCurrentPage}
 			/>
@@ -65,4 +66,4 @@ function Periodos(){
 
 }
 
-export default Periodos
+export default Fases
