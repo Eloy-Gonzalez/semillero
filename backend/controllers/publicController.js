@@ -72,7 +72,6 @@ exports.registro = (req, res, next) => {
 			id_parroquia,
 			direccion_habitacional,
  		} = req.body.params;
-		
 		Usuarios.count({ where : { username : username }}).then(async user => {
 			if (!user) {
 				var passwordHashed = bcrypt.hashSync(password, 8);
@@ -81,8 +80,18 @@ exports.registro = (req, res, next) => {
 						username: username,
 						password: passwordHashed,
 						id_pregunta: id_pregunta,
-						respuesta_seguridad : respuesta_seguridad
+						respuesta_seguridad : respuesta_seguridad,
+						borrado : true
 					}).then(user => {
+						const token = jwt.sign({id : user.dataValues.id, username : user.dataValues.username }, require('../config').key, {
+							expiresIn: '24h'
+						});
+						var mailOptions = {
+							from: userEmail,
+							to: user.dataValues.username,
+							subject: 'Activación cuenta de usuario para el sistema semillero',
+							html: `<h1> Hola, ${user.dataValues.primer_nombre} ${user.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser?token=${token}">Activar usuario</a>`,
+						};
 						// Usuarios Domicilio
 						UsuariosDomicilio.create({
 							id_usuario : user.dataValues.id,
@@ -91,6 +100,7 @@ exports.registro = (req, res, next) => {
 							id_parroquia : id_parroquia,
 							direccion_habitacional : direccion_habitacional,
 						}).then( async user2 => {
+							var cedulaHijo;
 							if (cedula == undefined || cedula == '' || cedula == null) {
 								// Usuarios Representante
 								await UsuariosRepresentante.create({
@@ -112,18 +122,10 @@ exports.registro = (req, res, next) => {
 										detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 									}
-								})
-							}
-
-							var cedulaHijo;
-
-							if (cedula == undefined || cedula == '' || cedula == null) {
+								});
 								// Usuarios Perfil
-								UsuariosRepresentante.count({ where : {
-									cedula : cedula_representante
-								}}).then(count => {
+								UsuariosRepresentante.count({ where : { cedula : cedula_representante	}}).then(count => {
 									cedulaHijo = `${cedula_representante}-${count}`;
-									console.log(count);
 									// Usuarios Perfil
 									UsuariosPerfil.create({
 										id_usuario : user.dataValues.id,
@@ -136,6 +138,13 @@ exports.registro = (req, res, next) => {
 									  fecha_nacimiento : fecha_nacimiento,
 									}).then(usuario => {
 										res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+										// transporter.sendMail(mailOptions, function(error, info){
+										// 	if (!error){
+										// 		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Se ha enviado un enlace al correo electronico suministrado para la activación de su cuenta de usuario!'} });
+										// 	} else {
+										// 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+										// 	}
+										// });
 									}).catch(err => {
 										// Validation before send query on database
 										if (err.name == 'SequelizeValidationError') {
@@ -157,33 +166,39 @@ exports.registro = (req, res, next) => {
 										detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
 										res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
 									}
-								})
+								});
 							} else {
 								cedulaHijo = cedula;
-
-							// Usuarios Perfil
-							UsuariosPerfil.create({
-								id_usuario : user.dataValues.id,
-								cedula : cedulaHijo,
-		  					primer_nombre : primer_nombre,
-		  					segundo_nombre : segundo_nombre,
-							  primer_apellido : primer_apellido,
-							  segundo_apellido : segundo_apellido,
-		  					genero : genero,
-							  fecha_nacimiento : fecha_nacimiento,
-							}).then(usuario => {
-								res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
-							}).catch(err => {
-								// Validation before send query on database
-								if (err.name == 'SequelizeValidationError') {
-									res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
-								}
-								if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
-									var { severity, code, detail } = err.parent;
-									detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
-									res.status(200).json({ alert : { type: 'danger', title : 'AtenciÃ³n', message : `${severity}: ${code} ${detail}`}});	
-								}
-							})
+								// Usuarios Perfil
+								UsuariosPerfil.create({
+									id_usuario : user.dataValues.id,
+									cedula : cedulaHijo,
+			  					primer_nombre : primer_nombre,
+			  					segundo_nombre : segundo_nombre,
+								  primer_apellido : primer_apellido,
+								  segundo_apellido : segundo_apellido,
+			  					genero : genero,
+								  fecha_nacimiento : fecha_nacimiento,
+								}).then(usuario => {
+									// transporter.sendMail(mailOptions, function(error, info){
+									// 	if (!error){
+									// 		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Se ha enviado un enlace al correo electronico suministrado para la activación de su cuenta de usuario!'} });
+									// 	} else {
+									// 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+									// 	}
+									// });
+									res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+								}).catch(err => {
+									// Validation before send query on database
+									if (err.name == 'SequelizeValidationError') {
+										res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : err.errors[0].message }});
+									}
+									if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+										var { severity, code, detail } = err.parent;
+										detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+										res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+									}
+								});
 							}
 						})
 					}).catch(err => {
@@ -259,9 +274,53 @@ exports.login = (req, res) => {
 					}
 				});
 			}
-		}).catch(err => {console.log(err);});
+		}).catch(err => {
+		// Validation after send query on database
+		if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
+			const { severity, code, detail } = err.parent;
+		}
+		// Validation after send query on database
+		if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+			var { severity, code, detail } = err.parent;
+			detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+			res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+		}
+		});
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
+	}
+};
+
+/* API ACTIVATE USER
+*/
+exports.activateuser = (req, res) => {
+	console.log('func -> Activate User');
+	if (req.body.params != undefined) {
+		const { id, username } = req.body.params;
+		if (id != undefined && username != undefined) {
+			Usuarios.update({ borrado : false }, { where : { id : id, username : username }}).then(result => {
+				if (result[0] > 0) {
+					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario activado exitosamente!'}});
+				} else {
+					res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Error al activar usuario, por favor intentelo de nuevo!'}});
+				}
+			}).catch(err => {
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
+					const { severity, code, detail } = err.parent;
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+					var { severity, code, detail } = err.parent;
+					detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+				}
+			});
+		} else {
+			res.status(200).json({ alert : { type: 'warning', title : 'Atención', message : 'Atributos \'id\' y \'username\' requeridos!'}})
+		}
+	} else {
+		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});	
 	}
 };
 
@@ -315,7 +374,7 @@ exports.recoverpassword2 = (req, res) => {
 							from: userEmail,
 							to: resp.dataValues.username,
 							subject: 'Recuperación de acceso Sistema semillero',
-							html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/updatepassword">Restablecer contraseña</a>`,
+							html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/updatepassword?token=${token}">Restablecer contraseña</a>`,
 						};
 						transporter.sendMail(mailOptions, function(error, info){
 							if (!error){
@@ -335,7 +394,7 @@ exports.recoverpassword2 = (req, res) => {
 	} else {
 		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
-}
+};
 
 /* API UPDATE PASSWORD
 	@params username string, password string
@@ -483,4 +542,4 @@ exports.saime = (req, res) => {
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
-}
+};

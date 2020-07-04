@@ -1,5 +1,24 @@
 let db = require('../config/databases.js');
 let errDb = require('../helpers/errorsDb.js');
+let nodemailer = require('nodemailer');
+
+let userEmail = 'autogestion@mppct.gob.ve'; // sistemasmppct@gmail.com
+let userPassword = '$1g3f1rrHH2020'; // sistemas12345
+
+// Transporter without auth
+var transporter = nodemailer.createTransport({
+  host: '172.17.190.39',
+  port: 25,
+  secure: false,
+	auth: {
+    user: userEmail,
+    pass: userPassword,
+  },
+  tls: {
+   // do not fail on invalid certs
+   rejectUnauthorized: false
+  },
+});
 
 /* Model */
 const Proyectos = db.Proyectos;
@@ -58,9 +77,29 @@ exports.create = async (req, res) => {
 						id_categoria : index
 					})
 				});
-
 				await ProyectosXCategorias.bulkCreate(data, { transaction : t });
-				res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
+				const { id_usuario, id_estatus } = proyecto.dataValues;
+				db.semillero.query("\
+					SELECT e.id, e.nombre, u.username, p.primer_nombre, p.primer_apellido from seguridad.estatus as e, seguridad.usuarios as u, seguridad.usuarios_perfil as p \
+					where u.id = :id_usuario and e.id = :id_estatus\
+				", { replacements: { id_usuario : id_usuario, id_estatus : id_estatus }, type: db.semillero.QueryTypes.SELECT }
+				).then(result => {
+
+					var mailOptions = {
+						from: userEmail,
+						to: result[0].username,
+						subject: 'Sistema Semillero',
+						html: `<h1>Hola, ${result[0].primer_nombre} ${result[0].primer_apellido}!</h1><p>Su proyecto ha sido registrado exitosamente en el sistema con estatus: <b>${result[0].nombre}</b>, para más detalles, por favor ingrese al sistema haciendo click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/login">Ingresar al sistema</a></p>`,
+					};
+					// transporter.sendMail(mailOptions, function(error, info){
+					// 	if (!error){
+					// 		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
+					// 	} else {
+					// 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+					// 	}
+					// });
+					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
+				});
 				// PUSH
 				await t.commit();
 			} catch(err) {
@@ -120,6 +159,8 @@ exports.update = async (req, res) => {
 						}
 					}, { transaction : t }).then(result => {
 						if (result[0] > 0) {
+							console.log(result);
+							// Incluir envio de email si el estatus del proyecto ha sido cambiado
 							res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Actualización exitosa!'}});
 						} else {
 							res.status(200).json({ alert : { type : 'warning', title : 'Atención', message : 'Error al actualizar datos!'}});
@@ -245,4 +286,4 @@ exports.restore = (req, res) => {
 	} else {
 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});
 	}
-}
+};

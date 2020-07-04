@@ -107,8 +107,6 @@ exports.usuario = async (req, res, next) => {
 								cedula : cedula_representante
 							}}).then(count => {
 								cedulaHijo = `${cedula_representante}-${count}`;
-								console.log(cedulaHijo);
-								console.log(count);
 								// Usuarios Perfil
 								UsuariosPerfil.create({
 									id_usuario : user.dataValues.id,
@@ -217,32 +215,4 @@ exports.generatePassword = (req, res) => {
 
 exports.query = (req, res) => {
 	console.clear();
-	Usuarios.findOne({
-		include: [
-			{ model : UsuariosPerfil, required : false },
-			{ model : UsuariosRepresentante, required : false },
-			{ 
-				model: UsuariosDomicilio, required : true, include: [{ 
-					model: Parroquias, required: true, attributes: ['id_parroquia', 'nombre'], include: [{
-						model: Municipios, required: true,  attributes: ['id_municipio', 'nombre'], include: [{
-							model: Estados, required: true, attributes: ['id_estado', 'nombre'] 
-						}]
-					}]
-				}] 
-			},
-			{ model: Proyectos, required : false, include: [ 
-				{ model : Estatus, required: false, attributes : ['id', 'nombre'] },
-				{ model : Categorias, as :'Categorias', required : false }
-			]},
-			{ model: UsuariosPermisos, as : 'Permisos', required : false, attributes: ['id_permiso'], include: [
-				{ model : Permisos, as : 'permiso', required : false, attributes: ['nombre', 'tipo']}
-			]}
-		],
-		where : { username : 'egonzalez2240@gmail.com' }
-	})
-	.then(usuarios => {
-	  	res.status(200).json(usuarios);
-	}).catch(err => {
-		console.log(err);
-	})
 }

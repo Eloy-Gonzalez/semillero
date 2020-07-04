@@ -31,6 +31,9 @@ module.exports = (app) => {
 	// Login
 	app.post('/login', publicController.login);
 
+	// ActivateUser
+	app.post('/activateuser', publicController.activateuser);
+
 	// LostPassword
 	app.post('/recoverpassword', publicController.recoverpassword);
 	app.post('/recoverpassword2', publicController.recoverpassword2);
