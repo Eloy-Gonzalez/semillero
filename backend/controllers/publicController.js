@@ -86,12 +86,6 @@ exports.registro = (req, res, next) => {
 						const token = jwt.sign({id : user.dataValues.id, username : user.dataValues.username }, require('../config').key, {
 							expiresIn: '24h'
 						});
-						var mailOptions = {
-							from: userEmail,
-							to: user.dataValues.username,
-							subject: 'Activación cuenta de usuario para el sistema semillero',
-							html: `<h1> Hola, ${user.dataValues.primer_nombre} ${user.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser?token=${token}">Activar usuario</a>`,
-						};
 						// Usuarios Domicilio
 						UsuariosDomicilio.create({
 							id_usuario : user.dataValues.id,
@@ -137,14 +131,21 @@ exports.registro = (req, res, next) => {
 				  					genero : genero,
 									  fecha_nacimiento : fecha_nacimiento,
 									}).then(usuario => {
-										res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
-										// transporter.sendMail(mailOptions, function(error, info){
-										// 	if (!error){
-										// 		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Se ha enviado un enlace al correo electronico suministrado para la activación de su cuenta de usuario!'} });
-										// 	} else {
-										// 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
-										// 	}
-										// });
+										var mailOptions = {
+											from: userEmail,
+											to: user.dataValues.username,
+											subject: 'Activación cuenta de usuario para el sistema semillero',
+											html: `<h1> Hola, ${usuario.dataValues.primer_nombre} ${usuario.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser?token=${token}">Activar usuario</a>`,
+										};
+										transporter.sendMail(mailOptions, function(error, info){
+											if (!error){
+												console.log(error);
+												res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Se ha enviado un enlace al correo electronico suministrado para la activación de su cuenta de usuario!'} });
+											} else {
+												res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+											}
+										});
+										//res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 									}).catch(err => {
 										// Validation before send query on database
 										if (err.name == 'SequelizeValidationError') {
@@ -179,15 +180,21 @@ exports.registro = (req, res, next) => {
 								  segundo_apellido : segundo_apellido,
 			  					genero : genero,
 								  fecha_nacimiento : fecha_nacimiento,
-								}).then(usuario => {
-									// transporter.sendMail(mailOptions, function(error, info){
-									// 	if (!error){
-									// 		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Se ha enviado un enlace al correo electronico suministrado para la activación de su cuenta de usuario!'} });
-									// 	} else {
-									// 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
-									// 	}
-									// });
-									res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
+								}).then(usuario2 => {
+									var mailOptions2 = {
+										from: userEmail,
+										to: user.dataValues.username,
+										subject: 'Activación cuenta de usuario para el sistema semillero',
+										html: `<h1> Hola, ${usuario2.dataValues.primer_nombre} ${usuario2.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser?token=${token}">Activar usuario</a>`,
+									};
+									transporter.sendMail(mailOptions2, function(error, info){
+										if (!error){
+											res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Se ha enviado un enlace al correo electronico suministrado para la activación de su cuenta de usuario!'} });
+										} else {
+											res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+										}
+									});
+									//res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario registrado éxitosamente!'} });
 								}).catch(err => {
 									// Validation before send query on database
 									if (err.name == 'SequelizeValidationError') {
@@ -298,7 +305,7 @@ exports.activateuser = (req, res) => {
 	if (req.body.params != undefined) {
 		const { id, username } = req.body.params;
 		if (id != undefined && username != undefined) {
-			Usuarios.update({ borrado : false }, { where : { id : id, username : username }}).then(result => {
+			Usuarios.update({ borrado : false, actualizado_por : id }, { where : { id : id, username : username }}).then(result => {
 				if (result[0] > 0) {
 					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario activado exitosamente!'}});
 				} else {

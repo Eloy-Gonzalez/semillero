@@ -4,6 +4,7 @@
 let express 		= require('express');
 let app 				= express();
 let bodyParser 	= require('body-parser');
+let helmet 			= require('helmet');
 
 /******************************************************************************
 								[CONFIGURACIÓN]
@@ -18,6 +19,7 @@ app.use(require('cors')({
 }));
 
 // Configuraciones Adicionales
+app.use(helmet.frameguard({ action: 'SAMEORIGIN' }));
 app.set('appName', 'Backend_Semillero');
 app.set('version', '1.0');
 app.set('port', process.env.PORT || 8000);
