@@ -31,6 +31,30 @@ import QuestionRegister from './QuestionRegister'
 import Ceduled from "./Ceduled"
 import NotCeduled from "./NotCeduled"
 
+// @material ui
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import { sizing } from '@material-ui/system';
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+  img: { 
+    maxHeight: '100vh'
+  }
+}));
+
 const FormSearchCedula = React.lazy( () => import("./formularios/FormSearchCedula"))
 const DetailUserProfile = React.lazy( () => import("./formularios/DetailUserProfile"))
 const FormUsuariosDomicilio = React.lazy( () => import("./formularios/FormUsuariosDomicilio"))
@@ -38,6 +62,8 @@ const FormCreateAccount = React.lazy( () => import("./formularios/FormCreateAcco
 const FormUsuariosPerfil = React.lazy( () => import("./formularios/FormUsuariosPerfil"))
 
 function Register() {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(true);
   const dispatch = useDispatch()
   const {actualVisible} = useSelector(state => selectFormStep(state))
   const loading = useSelector(state => selectLoading(state))
@@ -65,7 +91,15 @@ function Register() {
   const FormsFase2 = React.useMemo(() => [
     FormUsuariosDomicilio,
     FormCreateAccount
-  ], [])
+  ], []);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="container card--box">
@@ -123,6 +157,24 @@ function Register() {
                     actions={[FORM_NOT_CEDULED, FORM_CEDULED]}
                   />
           }
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+            <img src="images/normas.png" className={classes.img}/>
+          </div>
+        </Fade>
+      </Modal>
     </div>
   )
 }
