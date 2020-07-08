@@ -22,14 +22,17 @@ function AdminRoute({ component: Component, alias, user, ...rest }) {
     }, [dispatch])
 
     if(getToken()){
-        if(jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ADMINISTRADOR" || jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ROOT") {
-
-            return (<Route {...rest} render={
-                props => 
-              <AdminFrame title={alias} user={user} onLogout={doLogout}>
-                    <Component {...props}/>
-              </AdminFrame>
-            }/>)
+        if(jsonwebtoken.decode(getToken()).user.Permisos.length) {
+            if(jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ADMINISTRADOR" || jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ROOT") {
+                return (<Route {...rest} render={
+                    props => 
+                  <AdminFrame title={alias} user={user} onLogout={doLogout}>
+                        <Component {...props}/>
+                  </AdminFrame>
+                }/>)
+            } else {
+                return (<Redirect to="/" />)
+            }
         } else {
             return (<Redirect to="/" />)
         }

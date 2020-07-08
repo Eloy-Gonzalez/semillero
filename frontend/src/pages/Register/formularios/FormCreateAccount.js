@@ -7,6 +7,10 @@ import * as Yup from 'yup'
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
 import Grid from '@material-ui/core/Grid'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import IconButton from '@material-ui/core/IconButton'
 
 // @React ReCAPTCHA
 import ReCAPTCHA from "react-google-recaptcha"
@@ -17,6 +21,23 @@ import {getQuestions} from 'utils/helpers'
 
 function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onSubmit}) {
 	const [preguntas, setPreguntas] = useState([])
+	const [state, setState] = useState({
+		showPassword: false,
+		showResponse: false
+	})
+
+	const handleClickShowPassword = useCallback(() => {
+		setState({ ...state, showPassword: !state.showPassword })
+	}, [setState, state])
+	
+	const handleClickShowResponse = useCallback(() => {
+		setState({ ...state, showResponse: !state.showResponse })
+	},[setState, state])
+
+	const handleMouseDownPassword = useCallback((event) => {
+    	event.preventDefault()
+  	},[])
+
 	const initialValues = {
 		username: '',
 		password: '',
@@ -60,7 +81,7 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 			{
 				({errors, touched, values, handleChange, handleBlur, handleSubmit}) => (
 				<form onSubmit={handleSubmit} className="anim_form-data">
-				<Grid container spancing={2}>
+				<Grid container maxwidth="md" spacing={3}>
 					<Grid item sm={12} md={4}>
 						<CrsField
 							id="username"
@@ -81,7 +102,20 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 							onBlur={handleBlur}
 							value={values.password}
 							label="Contraseña"
-							type="password"
+							type={state.showPassword ? "text" : "password"}
+							InputProps={{
+					            endAdornment: 
+					             <InputAdornment position="end">
+					                <IconButton
+					                  aria-label="toggle password visibility"
+					                  onClick={handleClickShowPassword}
+					                  onMouseDown={handleMouseDownPassword}
+					                >
+					                  {state.showPassword ? <Visibility /> : <VisibilityOff />}
+					                </IconButton>
+				              	</InputAdornment>
+
+					        }}
 							helperText={<ErrorMessage name="password"/>}
 							error={errors.password && touched.password}
 						/>
@@ -100,28 +134,40 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 						/>
 					</Grid>
 				</Grid>
-				<Grid container spancing={2}>
-					<Grid item sm={12} md={4}>
+				<Grid container maxwidth="md" spacing={3}>
+					<Grid item sm={12} md={6}>
 	                	<SimpleSelect
 	                		name="id_pregunta"
 	                		value={values.id_pregunta}
 	                		onChange={handleChange}
 	                		onBlur={handleBlur}
 	                		label="Pregunta de seguridad (*)"
-	                		style={{minWidth: "260px"}}
 		                    items={preguntas}
 	                		helpertext={<ErrorMessage name="id_pregunta"/>}
 	                		error={errors.id_pregunta && touched.id_pregunta}
 	                		/>
 					</Grid>
-					<Grid item sm={12} md={4}>
+					<Grid item sm={12} md={6}>
 						<CrsField
 							name="respuesta_seguridad"
 							onChange={handleChange}
 							onBlur={handleBlur}
 							value={values.respuesta_seguridad}
 							label="Respuesta de seguridad"
-							type="password"
+							type={state.showResponse ? "text" : "password"}
+							InputProps={{
+					            endAdornment: 
+					             <InputAdornment position="end">
+					                <IconButton
+					                  aria-label="toggle password visibility"
+					                  onClick={handleClickShowResponse}
+					                  onMouseDown={handleMouseDownPassword}
+					                >
+					                  {state.showResponse ? <Visibility /> : <VisibilityOff />}
+					                </IconButton>
+				              	</InputAdornment>
+
+					        }}
 							helperText={<ErrorMessage name="respuesta_seguridad"/>}
 							error={errors.respuesta_seguridad && touched.respuesta_seguridad}
 						/>
@@ -130,10 +176,11 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
                 		{ActionsButtons}
                 	</Grid>
                 </Grid>
-            	 <ReCAPTCHA
-				    sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
-				    size="invisible"
-				  />
+
+                  <ReCAPTCHA
+                    sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
+                    size="invisible"
+                  />
 				</form>
 			)}
 		</Formik>

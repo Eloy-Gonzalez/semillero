@@ -6,13 +6,14 @@ import jsonwebtoken from 'jsonwebtoken'
 import { getToken, setToken, removeToken } from 'utils/helpers';
 
 // @services
-import { postLoginService } from './auth.services';
+import { postLoginService, activateAccountService } from './auth.services';
 
 // @ActionsTypes
 import {
   LOGIN,
   LOGOUT,
-  CHECK_AUTH
+  CHECK_AUTH,
+  VALIDATE_ACCOUNT
 } from './auth.actionsTypes';
 import {
   REQUEST_STARTED,
@@ -72,7 +73,7 @@ function* loginWorker({ payload }) {
       })
     }
 
-    yield put({ type: REQUEST_FINISHED });
+    yield put({ type: REQUEST_FINISHED })
   } catch (err) {
     yield put({
       type: REQUEST_FAILURE,
@@ -127,11 +128,41 @@ function* logoutWorker() {
   }
 }
 
+function* activateAccountWorker({ payload }) {
+  try {
+    yield put({ type: REQUEST_STARTED })
+    
+    const res = yield call(activateAccountService, payload)
+    const {data} = res
+
+    if(data.alert.type === "success"){
+      yield put({ type: REQUEST_SUCCESS, payload: data.alert.message})
+      setTimeout(() => window.location="/acceder", 3000)
+    } else {
+    yield put({
+        type: REQUEST_FAILURE,
+        payload: {
+          serverErrors: "Ocurrió con el token de validación", 
+          statusError: 502
+        }
+      })
+    }
+
+    yield put({ type: REQUEST_FINISHED })
+  } catch(err) {
+    yield put({
+      type: REQUEST_FAILURE,
+      payload: buildErrorsObj(err)
+    })
+  }
+}
+
 // @Whatcher
 function* requestWatcher() {
   yield takeLatest(LOGIN, loginWorker)
   yield takeLatest(CHECK_AUTH, checkAuthenticationWorker)
   yield takeLatest(LOGOUT, logoutWorker)
+  yield takeLatest(VALIDATE_ACCOUNT, activateAccountWorker)
 }
 
 export default {requestWatcher}
