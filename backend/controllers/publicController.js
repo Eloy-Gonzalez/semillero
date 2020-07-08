@@ -135,7 +135,7 @@ exports.registro = (req, res, next) => {
 											from: userEmail,
 											to: user.dataValues.username,
 											subject: 'Activación cuenta de usuario para el sistema semillero',
-											html: `<h1> Hola, ${usuario.dataValues.primer_nombre} ${usuario.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser/token=${token}">Activar usuario</a>`,
+											html: `<h1> Hola, ${usuario.dataValues.primer_nombre} ${usuario.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser/${token}">Activar usuario</a>`,
 										};
 										transporter.sendMail(mailOptions, function(error, info){
 											if (!error){
@@ -185,7 +185,7 @@ exports.registro = (req, res, next) => {
 										from: userEmail,
 										to: user.dataValues.username,
 										subject: 'Activación cuenta de usuario para el sistema semillero',
-										html: `<h1> Hola, ${usuario2.dataValues.primer_nombre} ${usuario2.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser/token=${token}">Activar usuario</a>`,
+										html: `<h1> Hola, ${usuario2.dataValues.primer_nombre} ${usuario2.dataValues.primer_apellido}!</h1><p>Para activar su cuenta de usuario, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/activateuser/${token}">Activar usuario</a>`,
 									};
 									transporter.sendMail(mailOptions2, function(error, info){
 										if (!error){
