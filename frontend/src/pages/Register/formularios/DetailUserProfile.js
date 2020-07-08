@@ -1,5 +1,8 @@
+// @Vendors
 import React, {useEffect} from 'react'
 import styled from 'styled-components'
+import moment from 'moment'
+import 'moment/locale/es'
 
 import {useSelector} from 'react-redux'
 import {selectProfiles, selectRepresentant} from 'state/users/users.selectors'
@@ -21,6 +24,7 @@ const Text = styled.p`
 	color:#777;
 	font-family: sans-serif;
 `
+
 function DetailUserProfile({ ActionsButtons, onSubmit }){
 	const profiles = useSelector(state => selectProfiles(state))
 	const representant = useSelector(state => selectRepresentant(state))
@@ -70,7 +74,7 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 						<Title>Fecha de nacimiento</Title>
 					</label>
 					<span>
-						<Text>{nacimiento}</Text>
+						<Text>{moment(nacimiento,"YYYYMMDD").calendar()}</Text>
 					</span>
 				</div>
 				<div>
@@ -82,7 +86,7 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 					</span>
 				</div>
 			</Table>
-			<form onSubmit={(e) => onSubmit(e)}>
+			<form onSubmit={(e) => onSubmit(e, nacimiento)}>
 				{ActionsButtons}
 			</form>
 		</>

@@ -33,16 +33,19 @@ function* registerNewProyectWorker({ payload: Data }){
 
     try {
       // Obtener id del usuario
-      const {id: id_usuario} = jsonwebtoken.decode(getToken())
+      const {user} = jsonwebtoken.decode(getToken())
       
       // Obtener y filtrar el (los) periodo(s) activo(s)
       const periodos = yield call(getPeriodosService)
       const periodoActivo = periodos.data.filter(periodo => periodo.estado === true)
       const id_periodo = periodoActivo[0].id
-      
+
       // Armar objeto con id del usuario e id periodo activo
-      const payload = {id_usuario, id_periodo, ...Data }
-        
+      const payload = {
+          id_usuario: user.id,
+          id_periodo, 
+          ...Data
+        }
       const response = yield call(registerNewProyectService, payload)
       const {alert} = response.data
       const {message} = alert
@@ -80,12 +83,14 @@ function* registerNewProyectWorker({ payload: Data }){
 function* getProyectsWorker(){
   try {
     yield put({ type: REQUEST_STARTED })
-    const {id: id_usuario} = jsonwebtoken.decode(getToken())
-    const payload = {id_usuario, borrado: false}
+    const {user} = jsonwebtoken.decode(getToken())
+
+    const payload = {id_usuario:user.id, borrado: false}
     const response = yield call(getProyectsService, payload)
     const {data} = response
+    const {rows} = data
 
-    yield put({ type: SET_PROYECTS, payload: data})
+    yield put({ type: SET_PROYECTS, payload: rows})
     
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
@@ -100,16 +105,16 @@ function* deleteProyectWorker({ payload }){
   try {
     yield put({ type: REQUEST_STARTED })
 
-    const {id:id_usuario} = jsonwebtoken.decode(getToken())
+    const {user} = jsonwebtoken.decode(getToken())
     const {id, version, proyects} = payload
-    const newsProyects = proyects.filter( pro => pro.id !== id)
-    const data = {id, actualizado_por:id_usuario, version}
+    const data = {id, actualizado_por:user.id, version}
 
     const response = yield call(deleteProyectService, data)
     const {alert} = response.data
     const {message} = alert
 
     if(alert.type === "success"){
+      const newsProyects = proyects.filter( pro => pro.id !== id)
       yield put({ type: REQUEST_SUCCESS, payload: message})
       yield put({ type: SET_PROYECTS, payload: newsProyects})
     } else {

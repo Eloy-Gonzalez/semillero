@@ -16,11 +16,11 @@ import {selectLoading} from 'state/app/app.selectors'
 import './index.scss'
 
 // @material ui
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import { sizing } from '@material-ui/system';
+import Modal from "@material-ui/core/Modal";
+import { makeStyles } from '@material-ui/core/styles'
+import Backdrop from '@material-ui/core/Backdrop'
+import Fade from '@material-ui/core/Fade'
+import Grid from '@material-ui/core/Grid'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -35,13 +35,13 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   img: { 
-  	maxHeight: '100vh'
+  	maxHeight: '90vh'
   }
-}));
+}))
 
 function Login() {
-	const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+	const classes = useStyles()
+	const [open, setOpen] = React.useState(true)
 	const dispatch = useDispatch()
 	const loading = useSelector(state => selectLoading(state))
 
@@ -54,14 +54,6 @@ function Login() {
     	actions.setSubmitting(false)
   	}, [dispatch])
 
-	const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
     return (
     	<React.Fragment>
 	      <Modal
@@ -69,7 +61,7 @@ function Login() {
 	        aria-describedby="transition-modal-description"
 	        className={classes.modal}
 	        open={open}
-	        onClose={handleClose}
+	        onClose={() => setOpen(false)}
 	        closeAfterTransition
 	        BackdropComponent={Backdrop}
 	        BackdropProps={{
@@ -78,17 +70,22 @@ function Login() {
 	      >
 	        <Fade in={open}>
 	          <div className={classes.paper}>
-	            <img src="images/registro.png" className={classes.img}/>
+	            <img src="images/registro.png" className={classes.img} alt="Registro"/>
 	          </div>
 	        </Fade>
 	      </Modal>
-	        <div className="box--login card--box" style={{textAlign: "center"}}>
-	        	<div className="avatar">
-	        		<img src={avatar} alt="avatar"/>
-	        	</div>    
-	        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>
-	            <AuthForm onSubmit={handleSubmit} disabledButton={loading}/>
-	        </div>
+
+	      <Grid container justify="center">
+	      	<Grid item sm={12} md={5}>
+		        <div className="box--login card--box" style={{textAlign: "center"}}>
+		        	<div className="avatar">
+		        		<img src={avatar} alt="avatar"/>
+		        	</div>    
+		        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>
+		            <AuthForm onSubmit={handleSubmit} disabledButton={loading}/>
+		        </div>
+	      	</Grid>
+	      </Grid>
     	</React.Fragment>
     )
 }

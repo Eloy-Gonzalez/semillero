@@ -1,7 +1,8 @@
 // @Vendors
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {Route, Redirect} from 'react-router-dom'
 import {useDispatch} from 'react-redux'
+import jsonwebtoken from 'jsonwebtoken'
 
 // @Utils
 import {getToken} from 'utils/helpers'
@@ -13,23 +14,30 @@ import {logout} from 'state/auth/auth.actions'
 import AdminFrame from 'components/AdminFrame'
 
 function AdminRoute({ component: Component, alias, user, ...rest }) {
+
     const dispatch = useDispatch()
 
     const doLogout = useCallback(() => {
         dispatch(logout())
     }, [dispatch])
 
-    const rol_user = 2
-    return (
-        <Route {...rest} render={
-            props => 
-            (rol_user === 2 && user.isAuthenticated || getToken())
-            ? <AdminFrame title={alias} user={user} onLogout={doLogout}>
+    if(getToken()){
+        if(jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ADMINISTRADOR" || jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ROOT") {
+
+            return (<Route {...rest} render={
+                props => 
+              <AdminFrame title={alias} user={user} onLogout={doLogout}>
                     <Component {...props}/>
-              </AdminFrame> 
-            : <Redirect to="/"/>
-        } />
-    )
+              </AdminFrame>
+            }/>)
+        } else {
+            return (<Redirect to="/" />)
+        }
+
+    } else {
+        return (<Redirect to="/acceder" />)
+    }
+
 }
 
 export default React.memo(AdminRoute)

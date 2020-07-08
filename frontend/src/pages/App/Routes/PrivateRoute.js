@@ -18,7 +18,7 @@ function PrivateRoute({ component: Component, alias, user, ...rest }) {
     const doLogout = useCallback(() => {
         dispatch(logout())
     }, [dispatch])
-
+    
     return (
         <Route {...rest} render={
             props => 

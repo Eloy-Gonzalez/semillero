@@ -15,6 +15,7 @@ function SimpleSelect({variant="outlined", ...props}) {
 	  formControl: {
 	    margin: 0,
 	    minWidth: 120,
+	    width: "100%"
 	  },
 	  selectEmpty: {
 	    marginTop: theme.spacing(2),

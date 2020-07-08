@@ -6,14 +6,12 @@ import * as Yup from 'yup'
 // @Components
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
-
-// @ReCACPTCHA
-// import ReCAPTCHA from "react-google-recaptcha";
+import Grid from '@material-ui/core/Grid'
 
 function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false, ActionsButtons="", nextForm}) {
 	
 	const initialValues = {
-		nacionalidad: '',
+		nacionalidad: 'V',
 		cedula: ''
 	}
 	
@@ -33,34 +31,41 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 	            validationSchema={SignupSchema}
 	          >
 	            {({errors, touched, values, handleChange, handleBlur, handleSubmit}) => (
-	              	<form onSubmit={handleSubmit} className="anim_form-data" style={{display: "grid", gridTemplateColumns:"auto 1fr", gridColumnGap:"15px"}}>
-	                	<SimpleSelect 
-	                		style={{minWidth: "160px"}}
-	                		id="nacionalidad"
-	                		name="nacionalidad"
-	                		value={values.nacionalidad}
-	                		onChange={handleChange}
-	                		onBlur={handleBlur}
-	                		label="Nacionalidad (*)"
-		                    items={[{label:"V", value:"V"}, {label:"E", value:"E"}]}
-	                		helpertext={<ErrorMessage name="nacionalidad"/>}
-	                		error={errors.nacionalidad && touched.nacionalidad}
-	                		/>
-		                <CrsField
-		                    name="cedula"
-		                    onChange={handleChange}
-		                    onBlur={handleBlur}
-		                    value={values.cedula}
-		                    label="Ingresar Cédula (*)"
-		                    autoFocus={autofocus}
-		                    helperText={<ErrorMessage name='cedula' />}
-		                    error={errors.cedula && touched.cedula}
-		            	/>
-		            	{ActionsButtons}
-		            	{/*<ReCAPTCHA
-		            		size="invisible"
-		            		sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
-						/>*/}
+	              	<form onSubmit={handleSubmit} className="anim_form-data">
+	                	<Grid container maxwidth="md" spacing={3}>
+		                	<Grid item sm={12} md={3}>
+			                	<SimpleSelect 
+			                		style={{minWidth: "160px"}}
+			                		id="nacionalidad"
+			                		name="nacionalidad"
+			                		value={values.nacionalidad}
+			                		onChange={handleChange}
+			                		onBlur={handleBlur}
+			                		label="Nacionalidad (*)"
+				                    items={[{label:"V", value:"V"}, {label:"E", value:"E"}]}
+			                		helpertext={<ErrorMessage name="nacionalidad"/>}
+			                		error={errors.nacionalidad && touched.nacionalidad}
+			                		/>
+		                		
+		                	</Grid>
+
+		                	<Grid item sm={12} md={9}>
+				                <CrsField
+				                    name="cedula"
+				                    onChange={handleChange}
+				                    onBlur={handleBlur}
+				                    value={values.cedula}
+				                    label="Ingresar Cédula (*)"
+				                    autoFocus={autofocus}
+				                    helperText={<ErrorMessage name='cedula' />}
+				                    error={errors.cedula && touched.cedula}
+				            	/>
+		                	</Grid>
+
+		                	<Grid item sm={12}>
+		            			{ActionsButtons}
+		                	</Grid>
+	                	</Grid>
 		         	</form>
 		         )}
 	          </Formik>

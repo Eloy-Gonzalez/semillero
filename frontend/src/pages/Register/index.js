@@ -36,7 +36,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { sizing } from '@material-ui/system';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   img: { 
-    maxHeight: '100vh'
+    maxHeight: '90vh'
   }
 }));
 
@@ -91,15 +90,7 @@ function Register() {
   const FormsFase2 = React.useMemo(() => [
     FormUsuariosDomicilio,
     FormCreateAccount
-  ], []);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  ], [])
 
   return (
     <div className="container card--box">
@@ -162,7 +153,7 @@ function Register() {
         aria-describedby="transition-modal-description"
         className={classes.modal}
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -171,7 +162,7 @@ function Register() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <img src="images/normas.png" className={classes.img}/>
+            <img src="images/normas.png" className={classes.img} alt="Normas"/>
           </div>
         </Fade>
       </Modal>

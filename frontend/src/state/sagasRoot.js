@@ -14,6 +14,7 @@ export default function* () {
       ...Object.values(auth),
       ...Object.values(users),
       ...Object.values(proyects),
+      ...Object.values(periodos),
       ...Object.values(fases)
     ].map(fork)
   )

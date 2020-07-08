@@ -1,5 +1,9 @@
+// @Vendors
 import React from 'react'
+
+// @Material ui
 import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 function ActionsButtons({ actualVisible=0, totalForms=0, nextPrev, disabledButton=false }) {
     return (
@@ -10,7 +14,7 @@ function ActionsButtons({ actualVisible=0, totalForms=0, nextPrev, disabledButto
                 </Button>
             }
             <Button type="submit" className="btn--next" variant="outlined" color="primary" disabled={disabledButton}>
-                { disabledButton ? 'Cargando...' :
+                { disabledButton ? <CircularProgress/> :
                     actualVisible === totalForms ? 
                     'Enviar' : 'Continuar' }
             </Button>

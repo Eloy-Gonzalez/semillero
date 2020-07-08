@@ -1,16 +1,17 @@
+// @Vendors
 import React, {useEffect, useState, useCallback} from 'react'
-
-// @Material UI
-import SimpleSelect from 'components/Form/SimpleSelect'
-
 import {Formik, ErrorMessage} from 'formik'
 import * as Yup from 'yup'
 
-import CrsField from 'components/Form/CrsField'
+// @Utils > helpers
 import {getEstados, getMunicipios, getParroquias} from 'utils/helpers'
 
-import './index.scss'
+// @Components
+import CrsField from 'components/Form/CrsField'
 
+// @Material UI
+import SimpleSelect from 'components/Form/SimpleSelect'
+import Grid from '@material-ui/core/Grid'
 
 function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" }) {
 	const [edos, setEdos] = useState([])
@@ -102,77 +103,98 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 			>
 			{
 				({ values,errors,touched,handleChange,handleBlur,handleSubmit}) => (
-					<form onSubmit={handleSubmit} className="grid--form-data anim_form-data">
-					<CrsField  
-						name="telefono_personal"
-						value={values.telefono_personal}
-						onChange={handleChange}
-						onBlur={handleBlur}
-						label="Teléfono Personal(*)"
-						helperText={<ErrorMessage name="telefono_personal"/>}
-						error={errors.telefono_personal && touched.telefono_personal}
-					/>
-					<CrsField  
-						name="telefono_habitacional"
-						value={values.telefono_habitacional}
-						onChange={handleChange}
-						onBlur={handleBlur}
-						label="Teléfono Habitación"
-						helperText={<ErrorMessage name="telefono_habitacional"/>}
-						autoFocus={autofocus}
-						error={errors.telefono_habitacional && touched.telefono_habitacional}
-					/>
-                	<SimpleSelect 
-                		style={{minWidth: "160px"}}
-                		id="edo"
-                		name="edo"
-                		value={values.edo}
-						onChange={(e) => obtenerMunicipios(e,handleChange)}
-						onBlur={handleBlur}
-                		label="Estado (*)"
-	                    items={edos}
-                		helpertext={<ErrorMessage name="edo"/>}
-                		error={errors.edo && touched.edo}
-                	/>
-                	<SimpleSelect 
-                		style={{minWidth: "160px"}}
-                		id="mun"
-                		name="mun"
-                		value={values.mun}
-						onChange={(e) => obtenerParroquias(e,handleChange)}
-						onBlur={handleBlur}
-                		label="Municipio (*)"
-	                    items={muns}
-                		helpertext={<ErrorMessage name="mun"/>}
-                		error={errors.mun && touched.mun}
-                	/>
-                	<SimpleSelect 
-                		style={{minWidth: "160px"}}
-                		id="id_parroquia"
-                		name="id_parroquia"
-                		value={values.id_parroquia}
-						onChange={handleChange}
-						onBlur={handleBlur}
-                		label="Parroquia (*)"
-	                    items={paqs}
-                		helpertext={<ErrorMessage name="id_parroquia"/>}
-                		error={errors.id_parroquia && touched.id_parroquia}
-                	/>
-                	<div style={{gridColumn:"1 / -1"}}>
-						<CrsField  
-							name="direccion_habitacional"
-							value={values.direccion_habitacional}
-							onChange={handleChange}
-							onBlur={handleBlur}
-							label="Dirección de Habitación (*)"
-							rows={3}
-							placeholder="Ingrese una dirección detallada"
-							helperText={<ErrorMessage name="direccion_habitacional"/>}
-							error={errors.direccion_habitacional && touched.direccion_habitacional}
-						/>
-					</div>
-					{ActionsButtons}
-					</form>
+				<form onSubmit={handleSubmit} className="anim_form-data">
+					<Grid container maxwidth="md" spacing={3}>
+						<Grid item sm={12} md={6}>
+							<CrsField
+								name="telefono_personal"
+								value={values.telefono_personal}
+								onChange={handleChange}
+								onBlur={handleBlur}
+								label="Teléfono Personal (*)"
+								helperText={<ErrorMessage name="telefono_personal"/>}
+								error={errors.telefono_personal && touched.telefono_personal}
+							/>
+						</Grid>
+
+						<Grid item sm={12} md={6}>
+							<CrsField  
+								name="telefono_habitacional"
+								value={values.telefono_habitacional}
+								onChange={handleChange}
+								onBlur={handleBlur}
+								label="Teléfono Habitación"
+								helperText={<ErrorMessage name="telefono_habitacional"/>}
+								autoFocus={autofocus}
+								error={errors.telefono_habitacional && touched.telefono_habitacional}
+							/>
+						</Grid>
+						
+						<Grid item sm={12} md={4}>
+		                	<SimpleSelect 
+		                		style={{minWidth: "160px"}}
+		                		id="edo"
+		                		name="edo"
+		                		value={values.edo}
+								onChange={(e) => obtenerMunicipios(e,handleChange)}
+								onBlur={handleBlur}
+		                		label="Estado (*)"
+			                    items={edos}
+		                		helpertext={<ErrorMessage name="edo"/>}
+		                		error={errors.edo && touched.edo}
+		                	/>
+						</Grid>
+
+						<Grid item sm={12} md={4}>
+		                	<SimpleSelect 
+		                		style={{minWidth: "160px"}}
+		                		id="mun"
+		                		name="mun"
+		                		value={values.mun}
+								onChange={(e) => obtenerParroquias(e,handleChange)}
+								onBlur={handleBlur}
+		                		label="Municipio (*)"
+			                    items={muns}
+		                		helpertext={<ErrorMessage name="mun"/>}
+		                		error={errors.mun && touched.mun}
+		                	/>
+						</Grid>
+						
+						<Grid item sm={12} md={4}>
+		                	<SimpleSelect 
+		                		style={{minWidth: "160px"}}
+		                		id="id_parroquia"
+		                		name="id_parroquia"
+		                		value={values.id_parroquia}
+								onChange={handleChange}
+								onBlur={handleBlur}
+		                		label="Parroquia (*)"
+			                    items={paqs}
+		                		helpertext={<ErrorMessage name="id_parroquia"/>}
+		                		error={errors.id_parroquia && touched.id_parroquia}
+		                	/>
+						</Grid>
+
+						<Grid item sm={12} md={12}>
+		                	<div style={{gridColumn:"1 / -1"}}>
+								<CrsField  
+									name="direccion_habitacional"
+									value={values.direccion_habitacional}
+									onChange={handleChange}
+									onBlur={handleBlur}
+									label="Dirección de Habitación (*)"
+									rows={3}
+									placeholder="Ingrese una dirección detallada"
+									helperText={<ErrorMessage name="direccion_habitacional"/>}
+									error={errors.direccion_habitacional && touched.direccion_habitacional}
+								/>
+							</div>
+						</Grid>
+						<Grid sm={12}>
+							{ActionsButtons}
+						</Grid>
+					</Grid>
+				</form>
 				)
 			}
 			</Formik>

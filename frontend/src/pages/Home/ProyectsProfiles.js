@@ -1,5 +1,5 @@
 // @Vendors
-import React, {useEffect, useCallback, useState} from 'react'
+import React, {useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 
 // @Material UI
@@ -52,8 +52,9 @@ function ProyectsProfiles() {
 
 	const onDelete = useCallback((id, version) => {
 		const payload = {id, version, proyects}
+
 		dispatch(openDialogConfirm({
-			title:"Eliminar registro",
+			title:"Eliminar video",
 			description: "¿Seguro de Eliminar este elemento?",
 			onConfirm: () => dispatch(deleteProyectAction(payload))
 		}))
@@ -71,7 +72,7 @@ function ProyectsProfiles() {
 	return (
 		<div>
 			<p style={{textAlign:"right"}}>
-				<span style={{fontSize:"1.2em"}}>Nuevo Proyecto</span>
+				<span style={{fontSize:"1.2em"}}>Nuevo video</span>
 				<Tooltip title="Registrar nuevo video">
 					<IconButton 
 						aria-label="Crear nuevo"

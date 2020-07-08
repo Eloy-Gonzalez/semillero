@@ -6,6 +6,7 @@ import * as Yup from 'yup'
 // @Components
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
+import Grid from '@material-ui/core/Grid'
 
 // @React ReCAPTCHA
 import ReCAPTCHA from "react-google-recaptcha"
@@ -59,7 +60,8 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 			{
 				({errors, touched, values, handleChange, handleBlur, handleSubmit}) => (
 				<form onSubmit={handleSubmit} className="anim_form-data">
-					<div className="grid--form-data" style={{marginBottom:"40px"}}>
+				<Grid container spancing={2}>
+					<Grid item sm={12} md={4}>
 						<CrsField
 							id="username"
 							name="username"
@@ -70,6 +72,8 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 							helperText={<ErrorMessage name="username"/>}
 							error={errors.username && touched.username}
 						/>
+					</Grid>
+					<Grid item sm={12} md={4}>
 						<CrsField 
 							id="password"
 							name="password"
@@ -81,6 +85,8 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 							helperText={<ErrorMessage name="password"/>}
 							error={errors.password && touched.password}
 						/>
+					</Grid>
+					<Grid item sm={12} md={4}>
 						<CrsField
 							id="passwordRepeat"
 							name="passwordRepeat"
@@ -92,33 +98,42 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 							helperText={<ErrorMessage name="passwordRepeat"/>}
 							error={errors.passwordRepeat && touched.passwordRepeat}
 						/>
-					</div>
-                	<SimpleSelect
-                		name="id_pregunta"
-                		value={values.id_pregunta}
-                		onChange={handleChange}
-                		onBlur={handleBlur}
-                		label="Pregunta de seguridad (*)"
-                		style={{minWidth: "260px"}}
-	                    items={preguntas}
-                		helpertext={<ErrorMessage name="id_pregunta"/>}
-                		error={errors.id_pregunta && touched.id_pregunta}
-                		/>
-					<CrsField
-						name="respuesta_seguridad"
-						onChange={handleChange}
-						onBlur={handleBlur}
-						value={values.respuesta_seguridad}
-						label="Respuesta de seguridad"
-						type="password"
-						helperText={<ErrorMessage name="respuesta_seguridad"/>}
-						error={errors.respuesta_seguridad && touched.respuesta_seguridad}
-					/>
-                	{ActionsButtons}
-                	 <ReCAPTCHA
-					    sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
-					    size="invisible"
-					  />
+					</Grid>
+				</Grid>
+				<Grid container spancing={2}>
+					<Grid item sm={12} md={4}>
+	                	<SimpleSelect
+	                		name="id_pregunta"
+	                		value={values.id_pregunta}
+	                		onChange={handleChange}
+	                		onBlur={handleBlur}
+	                		label="Pregunta de seguridad (*)"
+	                		style={{minWidth: "260px"}}
+		                    items={preguntas}
+	                		helpertext={<ErrorMessage name="id_pregunta"/>}
+	                		error={errors.id_pregunta && touched.id_pregunta}
+	                		/>
+					</Grid>
+					<Grid item sm={12} md={4}>
+						<CrsField
+							name="respuesta_seguridad"
+							onChange={handleChange}
+							onBlur={handleBlur}
+							value={values.respuesta_seguridad}
+							label="Respuesta de seguridad"
+							type="password"
+							helperText={<ErrorMessage name="respuesta_seguridad"/>}
+							error={errors.respuesta_seguridad && touched.respuesta_seguridad}
+						/>
+					</Grid>
+					<Grid item sm={12}>
+                		{ActionsButtons}
+                	</Grid>
+                </Grid>
+            	 <ReCAPTCHA
+				    sitekey="6LdL76kZAAAAAJncAhyQbdP_nMtyXB74FAVFaZRG"
+				    size="invisible"
+				  />
 				</form>
 			)}
 		</Formik>
