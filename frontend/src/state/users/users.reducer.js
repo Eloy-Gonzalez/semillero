@@ -19,7 +19,7 @@ const initialState = Map().merge({
     isAuthenticated: false,
     username: '',
     password: '',
-    rol_id: 0
+    Permisos: []
   },
   profiles: {
     cedula: '',

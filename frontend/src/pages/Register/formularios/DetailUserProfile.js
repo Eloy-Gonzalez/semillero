@@ -1,8 +1,13 @@
+// @Vendors
 import React, {useEffect} from 'react'
 import styled from 'styled-components'
+import moment from 'moment'
+import 'moment/locale/es'
 
 import {useSelector} from 'react-redux'
 import {selectProfiles, selectRepresentant} from 'state/users/users.selectors'
+
+moment.locale("es")
 
 const Table = styled.div`
 	display:grid;
@@ -70,7 +75,7 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 						<Title>Fecha de nacimiento</Title>
 					</label>
 					<span>
-						<Text>{nacimiento}</Text>
+						<Text>{moment(nacimiento,"YYYYMMDD").calendar()}</Text>
 					</span>
 				</div>
 				<div>

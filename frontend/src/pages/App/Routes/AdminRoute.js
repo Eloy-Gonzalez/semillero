@@ -1,5 +1,5 @@
 // @Vendors
-import React, {useCallback} from 'react'
+import React, {useEffect, useCallback, useState} from 'react'
 import {Route, Redirect} from 'react-router-dom'
 import {useDispatch} from 'react-redux'
 
@@ -14,22 +14,20 @@ import AdminFrame from 'components/AdminFrame'
 
 function AdminRoute({ component: Component, alias, user, ...rest }) {
     const dispatch = useDispatch()
-
     const doLogout = useCallback(() => {
         dispatch(logout())
     }, [dispatch])
 
-    const rol_user = 2
     return (
         <Route {...rest} render={
             props => 
-            (rol_user === 2 && user.isAuthenticated || getToken())
+            (getToken())
             ? <AdminFrame title={alias} user={user} onLogout={doLogout}>
                     <Component {...props}/>
               </AdminFrame> 
-            : <Redirect to="/"/>
+            : <Redirect to="/" />
         } />
     )
 }
 
-export default React.memo(AdminRoute)
+export default AdminRoute

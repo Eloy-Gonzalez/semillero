@@ -20,7 +20,17 @@ import {
   REQUEST_FAILURE,
   REQUEST_SUCCESS
 } from 'state/app/app.actionTypes'
-import { SET_ONE_USER, CLEAR_USER } from 'state/users/users.actionsTypes'
+import {
+  CLEAR_USER,
+  SET_PROFILES,
+  SET_UBICATION,
+  SET_REPRESENTANTE,
+  // CLEANERS
+  SET_ONE_USER,
+  CLEAR_PROFILES,
+  CLEAR_UBICATION,
+  CLEAR_REPRESENTANTE
+} from 'state/users/users.actionsTypes'
 
 import {buildErrorsObj} from 'utils/helpers'
 
@@ -32,14 +42,26 @@ function* loginWorker({ payload }) {
     const _TOKEN_ = response.data.token
 
     if(_TOKEN_) {
-      const {username} = jsonwebtoken.decode(_TOKEN_)
-      const rol_id = 2
-      const payload = { isAuthenticated: true, username, rol_id}
-      
-      yield put({ type: REQUEST_SUCCESS, payload: 'Bienvenido '+username })
-      yield put({ type: SET_ONE_USER, payload })
       yield call(setToken, _TOKEN_)
+      const {user} = jsonwebtoken.decode(_TOKEN_)
 
+      // Desglosar informacion del usuario y repartirla
+      const {
+        Permisos,
+        usuarios_domicilio: _UBICATION,
+        usuarios_perfil: _PROFILES,
+        usuarios_representante: _REPRESENTANT,
+        username
+      } = user
+
+      const _USER = { isAuthenticated: true, username: username, Permisos}
+
+      yield put({ type: SET_ONE_USER, payload: _USER })
+      yield put({ type: SET_PROFILES, payload: _PROFILES })
+      yield put({ type: SET_UBICATION, payload: _UBICATION })
+      yield put({ type: SET_REPRESENTANTE, payload: _REPRESENTANT })
+
+      yield put({ type: REQUEST_SUCCESS, payload: `Bienvenido ${username}` })
     } else {
       yield put({
         type: REQUEST_FAILURE,
@@ -61,15 +83,27 @@ function* loginWorker({ payload }) {
 
 function* checkAuthenticationWorker() {
   const _TOKEN_ = yield call(getToken)
-  const rol_id = 2
 
   if(_TOKEN_) {
     const {username, exp} = jsonwebtoken.decode(_TOKEN_)
     if(exp < Math.floor(Date.now() / 1000)){
       yield put({ type: LOGOUT })
     } else {
-      const payload = { isAuthenticated: true, username, rol_id }
-      yield put({ type: SET_ONE_USER, payload });
+      const {user} = jsonwebtoken.decode(_TOKEN_)
+      // Desglosar informacion del usuario y repartirla
+      const {
+        Permisos,
+        usuarios_domicilio: _UBICATION,
+        usuarios_perfil: _PROFILES,
+        usuarios_representante: _REPRESENTANT,
+        username
+      } = user
+      // Agregar valores al estado
+      const _USER = { isAuthenticated: true, username: username, Permisos}
+      yield put({ type: SET_ONE_USER, payload: _USER })
+      yield put({ type: SET_PROFILES, payload: _PROFILES })
+      yield put({ type: SET_UBICATION, payload: _UBICATION })
+      yield put({ type: SET_REPRESENTANTE, payload: _REPRESENTANT })
     }
   }
 }
@@ -79,6 +113,9 @@ function* logoutWorker() {
   if(isRemove) {
     yield put({ type: REQUEST_SUCCESS, payload: "¡Su sesión ha finalizado!"})
     yield put({ type: CLEAR_USER })
+    yield put({ type: CLEAR_PROFILES })
+    yield put({ type: CLEAR_UBICATION })
+    yield put({ type: CLEAR_REPRESENTANTE })
   } else {
     yield put({
       type: REQUEST_FAILURE,

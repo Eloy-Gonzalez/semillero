@@ -12,6 +12,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import ListAltIcon from '@material-ui/icons/ListAlt'
+import moment from 'moment'
+import 'moment/locale/es'
 
 const useStyles = makeStyles({
   table: {
@@ -52,15 +54,15 @@ function TablePeriodos({ columns = [], rows = [], handleView, handleEdit, handle
               </TableCell>
 
               <TableCell align="center">
-                {row.fecha_desde}
+                {moment(row.fecha_desde).format("DD [de] MMMM YYYY")}
               </TableCell>
               
               <TableCell align="center">
-                {row.fecha_hasta}
+                {moment(row.fecha_hasta).format("DD [de] MMMM YYYY")}
               </TableCell>
               
               <TableCell align="center">
-                {row.estado ? "Activo" : "Inactivo"}
+                {row.estado ? <i style={{color: "green"}}>Activo</i> : <i style={{color: "red"}}>Inactivo</i>}
               </TableCell>
               
               <TableCell align="right">
@@ -70,7 +72,7 @@ function TablePeriodos({ columns = [], rows = [], handleView, handleEdit, handle
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Editar">
-                  <IconButton aria-label="Eliminar" onClick={() => handleEdit(row.id)}>
+                  <IconButton aria-label="Eliminar" onClick={() => handleEdit(row.id, row.version)}>
                     <EditIcon/>
                   </IconButton>
                 </Tooltip>

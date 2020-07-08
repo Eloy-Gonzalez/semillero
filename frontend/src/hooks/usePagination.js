@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 
 export default function usePagination({ posts, postsPerPage = 5 }) {
 
@@ -6,7 +6,7 @@ export default function usePagination({ posts, postsPerPage = 5 }) {
 	
 	const indexOfLastPost = currentPage * postsPerPage
 	const indexOfFirstPost = indexOfLastPost - postsPerPage
-	const currentPost = posts.slice(indexOfFirstPost, indexOfLastPost)
+	const currentPost = posts.length ? posts.slice(indexOfFirstPost, indexOfLastPost) : []
 
 	return {
 		currentPage,
