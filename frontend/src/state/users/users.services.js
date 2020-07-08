@@ -9,3 +9,7 @@ export function searchSaimeService(keyword) {
 export function registerNewUserService(data) {
 	return axios.post(`${BASE_API}/registro`, { params: data })
 }
+
+export function checkUserService(data) {
+	return axios.post(`${BASE_API}/checkuser`, { params: data })
+}

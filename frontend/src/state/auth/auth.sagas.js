@@ -13,7 +13,8 @@ import {
   LOGIN,
   LOGOUT,
   CHECK_AUTH,
-  VALIDATE_ACCOUNT
+  VALIDATE_ACCOUNT,
+  RECOVER_PASS
 } from './auth.actionsTypes';
 import {
   REQUEST_STARTED,
@@ -142,11 +143,26 @@ function* activateAccountWorker({ payload }) {
     yield put({
         type: REQUEST_FAILURE,
         payload: {
-          serverErrors: "Ocurrió con el token de validación", 
+          serverErrors: "Ocurrió un error con el token de validación", 
           statusError: 502
         }
       })
     }
+
+    yield put({ type: REQUEST_FINISHED })
+  } catch(err) {
+    yield put({
+      type: REQUEST_FAILURE,
+      payload: buildErrorsObj(err)
+    })
+  }
+}
+
+function* recoverPassWorker({ payload }) {
+  try {
+    yield put({ type: REQUEST_STARTED })
+    alert("From sgas recover passs")
+    console.log(payload)
 
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
@@ -163,6 +179,7 @@ function* requestWatcher() {
   yield takeLatest(CHECK_AUTH, checkAuthenticationWorker)
   yield takeLatest(LOGOUT, logoutWorker)
   yield takeLatest(VALIDATE_ACCOUNT, activateAccountWorker)
+  yield takeLatest(RECOVER_PASS, recoverPassWorker)
 }
 
 export default {requestWatcher}

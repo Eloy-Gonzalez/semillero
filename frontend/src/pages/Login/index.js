@@ -1,26 +1,30 @@
 // @Vendors
 import React, {useCallback} from 'react'
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux'
 
 // Components
 import AuthForm from './AuthForm'
 import avatar from 'statics/images/logos/avatar_2x.png'
 
+import ReacoverPass: ViewRecoverPass from './RecoverPass'
+
 // @Actions
+import {openModal} from 'state/app/app.actions'
 import {login} from 'state/auth/auth.actions'
 
 // @Selectors
-import {selectLoading} from 'state/app/app.selectors' 
+import {selectLoading, selectModal} from 'state/app/app.selectors' 
 
 // @Styles - component
 import './index.scss'
 
 // @material ui
-import Modal from "@material-ui/core/Modal";
+import Modal from "@material-ui/core/Modal"
 import { makeStyles } from '@material-ui/core/styles'
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import Grid from '@material-ui/core/Grid'
+import Button from "@material-ui/core/Button"
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -35,7 +39,8 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   img: { 
-  	maxHeight: '90vh'
+  	maxHeight: '90vh',
+  	maxWidth: '90vw'
   }
 }))
 
@@ -53,6 +58,12 @@ function Login() {
     	dispatch(login(payload))
     	actions.setSubmitting(false)
   	}, [dispatch])
+
+	const recoverPass = useCallback(() => {
+		dispatch(openModal(
+			<ViewRecoverPass loading={loading}/>
+		))
+	}, [loading])
 
     return (
     	<React.Fragment>
@@ -83,6 +94,11 @@ function Login() {
 		        	</div>    
 		        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>
 		            <AuthForm onSubmit={handleSubmit} disabledButton={loading}/>
+		            <br />
+		            <Button onClick={() => recoverPass()}>
+		            	<span style={{color: "var(--darkBlue)"}}>Recuperar contraseña</span>
+		            </Button>
+
 		        </div>
 	      	</Grid>
 	      </Grid>

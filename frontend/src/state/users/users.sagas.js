@@ -2,7 +2,7 @@
 import { put, takeLatest, call } from 'redux-saga/effects'
 
 // @services
-import {searchSaimeService, registerNewUserService} from './users.services'
+import {searchSaimeService, registerNewUserService, checkUserService} from './users.services'
 import {buildErrorsObj} from 'utils/helpers'
 
 // @ActionsTypes
@@ -26,8 +26,11 @@ function* searchSaimeWorker({payload}){
     yield put({ type: REQUEST_STARTED })
 
     // Consultar datos de Api - Saime
+    const existsUser = yield call(checkUserService, payload)
     const res = yield call(searchSaimeService, payload)
     const {data} = res
+
+    console.log(existsUser)
 
     if(data.length) {
       const {cedula, primer_nombre, segundo_nombre,primer_apellido,segundo_apellido,fecha_nacimiento,sexo} = data[0]
@@ -88,7 +91,6 @@ function* registerNewUserWorker({ payload }){
     } else {
       yield put({type: REQUEST_FAILURE, payload: {serverErrors: alert.message, statusError: 502}})
     }
-
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
     yield put({
