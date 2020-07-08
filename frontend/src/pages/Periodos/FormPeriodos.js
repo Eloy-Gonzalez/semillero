@@ -8,7 +8,7 @@ import 'moment/locale/es'
 // @Components
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 
 // @React ReCAPTCHA
 // import ReCAPTCHA from "react-google-recaptcha"

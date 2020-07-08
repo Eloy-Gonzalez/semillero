@@ -71,7 +71,7 @@ function ProyectsProfiles() {
 	return (
 		<div>
 			<p style={{textAlign:"right"}}>
-				<span style={{fontSize:"1.2em"}}>Nuevo Proyecto</span>
+				<span style={{fontSize:"1.2em"}}>Nuevo video</span>
 				<Tooltip title="Registrar nuevo video">
 					<IconButton 
 						aria-label="Crear nuevo"
