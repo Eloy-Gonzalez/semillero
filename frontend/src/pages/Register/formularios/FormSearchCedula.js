@@ -14,10 +14,12 @@ function FormSearchCedula({ title="Consultar cedula", onSubmit, autofocus=false,
 		nacionalidad: 'V',
 		cedula: ''
 	}
+
+	const cedulaRegex = RegExp("^[0-9]+$")
 	
 	const SignupSchema = Yup.object().shape({
 	  nacionalidad: Yup.string().required("¡Campo obligatorio!"),
-	  cedula: Yup.number().integer().required("¡Campo obligatorio!")
+	  cedula: Yup.string().required("¡Campo obligatorio!").matches(cedulaRegex, "Cédula inválida")
 	})
 
 	return (
