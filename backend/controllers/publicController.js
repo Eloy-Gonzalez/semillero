@@ -266,7 +266,7 @@ exports.login = (req, res) => {
 
 			const { borrado } = user;
 			if (borrado) {
-				res.status(200).json({ alert: { type: 'warning', title: 'Atención', message: 'Su cuenta ha sido bloqueada por un administrador, pongase en contacto con el equipo de soporte para mayor información!' }});
+				res.status(200).json({ alert: { type: 'warning', title: 'Atención', message: 'Su cuenta ha sido bloqueada por un administrador o no ha sido activada, pongase en contacto con el equipo de soporte para mayor información!' }});
 			} else {
 					bcrypt.compare(password, user.password).then(response => {
 					if (response) {
