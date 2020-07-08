@@ -1,5 +1,5 @@
 // @Vendors
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {Switch, Redirect} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux'
 
@@ -10,6 +10,7 @@ import LoginRoute from './Routes/LoginRoute'
 
 // @Actions
 import {clearServerErrors, clearServerSuccess, closeModal, closeDialogConfirm} from 'state/app/app.actions'
+import {checkAutentication} from 'state/auth/auth.actions'
 
 // @Selectors
 import {selectServerErrors, selectServerSuccess, selectModal, selectDialogConfirm} from 'state/app/app.selectors'
@@ -23,9 +24,6 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import MaterialModal from 'components/Modal'
 import DialogConfirm from 'components/DialogConfirm'
 
-// @Actions
-import {checkAutentication} from 'state/auth/auth.actions'
-
 // @Admin Pages
 import Administrador from 'pages/Administrador'
 import Periodos from 'pages/Periodos'
@@ -36,8 +34,7 @@ import Usuarios from 'pages/Usuarios'
 // @Pages 
 import Login  from 'pages/Login'
 import Home from 'pages/Home'
-
-const Register = React.lazy(() => import('pages/Register'))
+import Register from 'pages/Register'
 
 function App() {
     const dispatch = useDispatch()
@@ -52,10 +49,7 @@ function App() {
     }, [dispatch])
 
     return (
-        <React.Suspense 
-                fallback={<Backdrop show={true} bgColor="#fff" style={{textAlign:"center"}}>
-                    <CircularProgress />
-                </Backdrop>}>
+        <React.Fragment>
             <Snackbars onClose={() => dispatch(clearServerErrors())} message={serverErrors} open={!!serverErrors} />
             <SnackbarsSuccess  onClose={() => dispatch(clearServerSuccess())} message={serverSuccess} open={!!serverSuccess} />
             
@@ -74,6 +68,7 @@ function App() {
             <MaterialModal open={modal.open} handleClose={() => dispatch(closeModal())} >
                 {modal.description}
             </MaterialModal>
+
             <DialogConfirm 
                 dialogTitle={dialogConfirm.title}
                 dialogText={dialogConfirm.description}
@@ -81,8 +76,7 @@ function App() {
                 onClose={() => dispatch(closeDialogConfirm())}
                 onConfirm={() => dialogConfirm.onConfirm()}
             />
-        </React.Suspense>
+        </React.Fragment>
     )
 }
-
 export default App
