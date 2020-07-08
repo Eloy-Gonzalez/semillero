@@ -139,7 +139,6 @@ exports.registro = (req, res, next) => {
 										};
 										transporter.sendMail(mailOptions, function(error, info){
 											if (!error){
-												console.log(error);
 												res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Se ha enviado un enlace al correo electronico suministrado para la activación de su cuenta de usuario!'} });
 											} else {
 												res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
