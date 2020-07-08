@@ -7,7 +7,8 @@ import CardContent from '@material-ui/core/CardContent'
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    width: "100%"
+    width: "100%",
+    overflowX: "auto"
   },
   /*bullet: {
     display: 'inline-block',

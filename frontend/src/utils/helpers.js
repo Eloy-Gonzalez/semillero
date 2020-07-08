@@ -59,9 +59,9 @@ export function getQuestions() {
   return axios.post(`${BASE_API}/preguntas`, { params: {} }) 
 }
 
-export function getEdad(date) {
+export function compareAge(date, edadCompare){
   let diff = moment(new Date()).diff(date)
   let years = moment.duration(diff).years()
     
-  return years <= 35 ? years : false
+  return years <= edadCompare ? years : false
 }

@@ -2,6 +2,8 @@
 import React, {Suspense, useEffect} from 'react'
 import {useSelector} from 'react-redux'
 
+// @ActionsTypes
+import {REQUEST_FAILURE} from 'state/app/app.actionTypes'
 // @Actions
 import {consultarSaime, setUbication, registerNewUser} from 'state/users/users.actions'
 
@@ -10,6 +12,9 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 // @Selectors
 import {selectProfiles, selectUbication} from 'state/users/users.selectors'
+
+// @Utils
+import {compareAge} from "utils/helpers"
 
 function Ceduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loading, ActionsButtons, dispatch, resetFormData	}){
 	
@@ -29,6 +34,15 @@ function Ceduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loadin
 		function(e, fecha) {
 			e.preventDefault()
 			e.stopPropagation()
+			if(compareAge(fecha, 35)){
+				nextPrev(2)
+			} else {
+		        dispatch( { type: REQUEST_FAILURE,
+		        	payload: {
+    		          serverErrors: "Usuarios mayores a 35 años, ¡No participan!", 
+    		          statusError: 502 }
+		        })
+			}
 		},
 		function(values, actions) {
 			dispatch(setUbication(values))

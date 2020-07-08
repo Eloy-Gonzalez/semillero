@@ -8,8 +8,6 @@ import * as Yup from 'yup'
 import CrsField from 'components/Form/CrsField'
 import SimpleSelect from 'components/Form/SimpleSelect'
 
-import './index.scss'
-
 function FormUsuariosPerfil ({ title = "Datos Personales", onSubmit, autofocus=false, ActionsButtons="", valuesInitials}) {
 	
 	const initialValues = {
@@ -54,7 +52,7 @@ function FormUsuariosPerfil ({ title = "Datos Personales", onSubmit, autofocus=f
 		                    name="segundo_nombre"
 		                    onChange={handleChange}
 		                    onBlur={handleBlur}
-		                    value={values.segundo_nombre && touched.segundo_nombre}
+		                    value={values.segundo_nombre}
 		                    label="Segundo Nombre"
 		                    color="primary"
 		                    helperText={<ErrorMessage name="segundo_nombre"/>}

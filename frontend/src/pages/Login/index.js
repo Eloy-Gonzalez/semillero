@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   img: { 
-  	maxHeight: '95vh'
+  	maxHeight: '90vh'
   }
 }))
 

@@ -2,6 +2,9 @@
 import React, {Suspense, useEffect} from 'react'
 import {useSelector} from 'react-redux'
 
+// @ActionsTypes
+import {REQUEST_FAILURE} from 'state/app/app.actionTypes'
+
 // @Actions
 import {consultarSaime, setUbication, registerNewUser, setProfiles} from 'state/users/users.actions'
 
@@ -10,6 +13,9 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 // @Selectors
 import {selectProfiles, selectUbication, selectRepresentant} from 'state/users/users.selectors'
+
+// @Utils
+import {compareAge} from "utils/helpers"
 
 function NotCeduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loading, ActionsButtons, dispatch, resetFormData}){
 	
@@ -33,9 +39,19 @@ function NotCeduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loa
 			nextPrev(2)
 		},
 		function(values, actions){
+			const {fecha_nacimiento} = values
 			const payload = {...values}
-			dispatch(setProfiles(payload))
-			nextPrev(3)
+			
+			if(compareAge(fecha_nacimiento, 35)){
+				dispatch(setProfiles(payload))
+				nextPrev(3)
+			} else {
+		        dispatch( { type: REQUEST_FAILURE,
+		        	payload: {
+    		          serverErrors: "Usuarios mayores a 35 años, ¡No participan!", 
+    		          statusError: 502 }
+		        })
+			}
 		},
 		function(values, actions) {
 			dispatch(setUbication(values))

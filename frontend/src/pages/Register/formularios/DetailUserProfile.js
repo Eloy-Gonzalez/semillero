@@ -7,8 +7,6 @@ import 'moment/locale/es'
 import {useSelector} from 'react-redux'
 import {selectProfiles, selectRepresentant} from 'state/users/users.selectors'
 
-moment.locale("es")
-
 const Table = styled.div`
 	display:grid;
 	gap:10px;
@@ -26,10 +24,6 @@ const Text = styled.p`
 	color:#777;
 	font-family: sans-serif;
 `
-
-const verifyEdad = (fecha) => {
-	return false;
-}
 
 function DetailUserProfile({ ActionsButtons, onSubmit }){
 	const profiles = useSelector(state => selectProfiles(state))
@@ -92,7 +86,7 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 					</span>
 				</div>
 			</Table>
-			<form onSubmit={(e) => onSubmit(e)}>
+			<form onSubmit={(e) => onSubmit(e, nacimiento)}>
 				{ActionsButtons}
 			</form>
 		</>
