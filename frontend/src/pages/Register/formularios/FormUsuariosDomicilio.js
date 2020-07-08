@@ -18,6 +18,10 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 	const [muns, setMuns] = useState([])
 	const [paqs, setPaqs] = useState([])
 
+	const phoneRegex = RegExp(
+  		/^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
+	);
+
 	const obtenerEstados = useCallback( async () => {
 		try {
 			const estados = await getEstados()
@@ -78,10 +82,10 @@ function FormUsuariosDomicilio({ onSubmit, autofocus=false, ActionsButtons="" })
 	}
 
 	const DomicilioSchema = Yup.object().shape({
-		telefono_habitacional: Yup.string()
+		telefono_habitacional: Yup.string().matches(phoneRegex, "Teléfono inválido")
 		.min(7, '¡Ingrese un valor entre 7 y 11 dígitos!')
 		.max(11, '¡Ingrese un valor entre 7 y 11 dígitos!'),
-		telefono_personal: Yup.string()
+		telefono_personal: Yup.string().matches(phoneRegex, "Teléfono inválido")
 		.min(7, '¡Ingrese un valor entre 7 y 11 dígitos!')
 		.max(11, '¡Ingrese un valor entre 7 y 11 dígitos!')
 		.required("¡Campo requerido!"),

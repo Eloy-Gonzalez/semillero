@@ -12,7 +12,7 @@ function index() {
                 <img src={bubbleTexture} alt="Texture bubble"/>
             </div>
             <div className="content-footer container--row">
-                <p className="app--text">&copy; Copyright 2020 | MINCYT | Oficinas de Tecnologías y Comunicación</p>
+                <p className="app--text">&copy; Copyright 2020 | MINCYT | Oficina de Tecnologías de la Información y la Comunicación <br/> RIF: 20013038-5</p>
             </div>
         </footer>
     )
