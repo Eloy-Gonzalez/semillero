@@ -297,6 +297,40 @@ exports.login = (req, res) => {
 	}
 };
 
+/* API CHECK USER
+*/
+exports.checkuser = (req, res) => {
+	console.log('func -> Check user');
+	if (req.body.params != undefined) {
+		const { cedula } = req.body.params;
+		if (cedula != undefined) {
+			UsuariosPerfil.count({ where : { cedula : cedula }}).then(result => {
+				console.log(result);
+				if (result > 0) {
+					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario ya se encuentra registrado en el sistema'}});
+				} else {
+					res.status(200).json({ alert : { type : 'danger', found : false }});
+				}
+			}).catch(err => {
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError') {
+					const { severity, code, detail } = err.parent;
+				}
+				// Validation after send query on database
+				if (err.name == 'SequelizeUniqueConstraintError' || err.name == 'SequelizeForeignKeyConstraintError' || err.name == 'SequelizeDatabaseError') {
+					var { severity, code, detail } = err.parent;
+					detail = (detail == undefined || detail == null ) ? errDb.errorsDb(code) : detail;
+					res.status(200).json({ alert : { type: 'danger', title : 'Atención', message : `${severity}: ${code} ${detail}`}});	
+				}
+			});
+		} else {
+			res.status(200).json({ alert : { type: 'warning', title : 'Atención', message : 'Atributos \'nacionalidad\' y \'cedula\' requeridos!'}})
+		}
+	} else {
+		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});	
+	}
+}
+
 /* API ACTIVATE USER
 */
 exports.activateuser = (req, res) => {
@@ -380,11 +414,11 @@ exports.recoverpassword2 = (req, res) => {
 							from: userEmail,
 							to: resp.dataValues.username,
 							subject: 'Recuperación de acceso Sistema semillero',
-							html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/updatepassword?token=${token}">Restablecer contraseña</a>`,
+							html: `<h1>  Hola, ${primer_nombre} ${primer_apellido}!</h1><p>Para continuar con el proceso de recuperación de contraseña, por favor haga click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/updatepassword/${token}">Restablecer contraseña</a>`,
 						};
 						transporter.sendMail(mailOptions, function(error, info){
 							if (!error){
-								res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un mensaje al correo registrado' }});
+								res.status(200).json({ alert: { type : 'success', title : 'Información', message : 'Se ha enviado un correo electronico a su correo registrado en el sistema' }});
 							} else {
 								res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
 							}

@@ -25,6 +25,9 @@ module.exports = (app) => {
 		res.status(200).json({title : 'Bienvenido al sistema'});
 	});
 
+	// Check user
+	app.post('/checkuser', publicController.checkuser);
+
 	// Registro
 	app.post('/registro', publicController.registro);
 
