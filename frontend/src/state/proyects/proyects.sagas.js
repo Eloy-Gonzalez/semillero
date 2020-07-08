@@ -105,16 +105,16 @@ function* deleteProyectWorker({ payload }){
   try {
     yield put({ type: REQUEST_STARTED })
 
-    const {id:id_usuario} = jsonwebtoken.decode(getToken())
+    const {user} = jsonwebtoken.decode(getToken())
     const {id, version, proyects} = payload
-    const newsProyects = proyects.filter( pro => pro.id !== id)
-    const data = {id, actualizado_por:id_usuario, version}
+    const data = {id, actualizado_por:user.id, version}
 
     const response = yield call(deleteProyectService, data)
     const {alert} = response.data
     const {message} = alert
 
     if(alert.type === "success"){
+      const newsProyects = proyects.filter( pro => pro.id !== id)
       yield put({ type: REQUEST_SUCCESS, payload: message})
       yield put({ type: SET_PROYECTS, payload: newsProyects})
     } else {

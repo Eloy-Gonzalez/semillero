@@ -1,6 +1,6 @@
 // @Vendors
 import React, {useEffect} from 'react'
-import {Switch, Redirect} from 'react-router-dom';
+import {Switch, Redirect} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 
 // @Routes
@@ -17,10 +17,8 @@ import {selectServerErrors, selectServerSuccess, selectModal, selectDialogConfir
 import {selectUser} from 'state/users/users.selectors'
 
 // @Components
-import Backdrop from 'components/Backdrop'
-import Snackbars from 'components/Snackbars';
-import SnackbarsSuccess from 'components/SnackbarsSuccess';
-import CircularProgress from '@material-ui/core/CircularProgress'
+import Snackbars from 'components/Snackbars'
+import SnackbarsSuccess from 'components/SnackbarsSuccess'
 import MaterialModal from 'components/Modal'
 import DialogConfirm from 'components/DialogConfirm'
 
@@ -35,6 +33,7 @@ import Usuarios from 'pages/Usuarios'
 import Login  from 'pages/Login'
 import Home from 'pages/Home'
 import Register from 'pages/Register'
+import Perfil from 'pages/Profile'
 
 function App() {
     const dispatch = useDispatch()
@@ -59,6 +58,7 @@ function App() {
                 <AdminRoute exact path="/admin/fases" alias="Fases" component={Fases} user={user}/>
                 <AdminRoute exact path="/admin/periodos" alias="Periodos" component={Periodos} user={user}/>
                 <AdminRoute exact path="/admin" alias="Administrador" component={Administrador} user={user}/>
+                <PrivateRoute exact path="/perfil" alias="Perfil" component={Perfil} user={user}/>
                 <PrivateRoute exact path="/" alias="Inicio" component={Home} user={user}/>
                 <LoginRoute exact path="/acceder" alias="Iniciar Sesión" component={Login} />
                 <LoginRoute exact path="/crear-cuenta" alias="Crear cuenta" component={Register} user={Register}/>

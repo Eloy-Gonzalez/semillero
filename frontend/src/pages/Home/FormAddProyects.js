@@ -47,9 +47,9 @@ function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 
 	return (
 		<Fragment>
-		<p className="app--text-second" style={{color:"rgb(148, 169, 71)"}}>
+		<h2 className="app--text-second" style={{color:"rgb(148, 169, 71)"}}>
 			Registar nuevo video
-		</p>
+		</h2>
 		<Formik 
 			initialValues={initialValues}
 			onSubmit={onSubmit}

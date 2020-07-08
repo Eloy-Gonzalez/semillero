@@ -67,12 +67,12 @@ function TablePeriodos({ columns = [], rows = [], handleView, handleEdit, handle
               
               <TableCell align="right">
                 <Tooltip title="Detalles">
-                  <IconButton aria-label="Eliminar" onClick={() => handleView(row.id)}>
+                  <IconButton aria-label="Ver" onClick={() => handleView(row.id)}>
                     <ListAltIcon/>
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Editar">
-                  <IconButton aria-label="Eliminar" onClick={() => handleEdit(row.id, row.version)}>
+                  <IconButton aria-label="Editar" onClick={() => handleEdit(row.id, row.version)}>
                     <EditIcon/>
                   </IconButton>
                 </Tooltip>

@@ -52,8 +52,9 @@ function ProyectsProfiles() {
 
 	const onDelete = useCallback((id, version) => {
 		const payload = {id, version, proyects}
+
 		dispatch(openDialogConfirm({
-			title:"Eliminar registro",
+			title:"Eliminar video",
 			description: "¿Seguro de Eliminar este elemento?",
 			onConfirm: () => dispatch(deleteProyectAction(payload))
 		}))

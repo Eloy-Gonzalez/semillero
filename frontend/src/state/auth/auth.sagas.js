@@ -85,7 +85,7 @@ function* checkAuthenticationWorker() {
   const _TOKEN_ = yield call(getToken)
 
   if(_TOKEN_) {
-    const {username, exp} = jsonwebtoken.decode(_TOKEN_)
+    const {exp} = jsonwebtoken.decode(_TOKEN_)
     if(exp < Math.floor(Date.now() / 1000)){
       yield put({ type: LOGOUT })
     } else {
