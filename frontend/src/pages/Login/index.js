@@ -16,8 +16,8 @@ import {selectLoading} from 'state/app/app.selectors'
 import './index.scss'
 
 // @material ui
+import Modal from "@material-ui/core/Modal";
 import { makeStyles } from '@material-ui/core/styles'
-import Modal from '@material-ui/core/Modal'
 import Backdrop from '@material-ui/core/Backdrop'
 import Fade from '@material-ui/core/Fade'
 import Grid from '@material-ui/core/Grid'
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   img: { 
-  	maxHeight: '100vh'
+  	maxHeight: '95vh'
   }
 }))
 

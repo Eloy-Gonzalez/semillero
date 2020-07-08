@@ -26,10 +26,9 @@ function Ceduled({PreviusStep = "", actualVisible, nextPrev, listFormiks, loadin
 			const {nacionalidad, cedula} = values
 			dispatch(consultarSaime({nacionalidad,cedula}))
 		},
-		function(e, nextForm) {
+		function(e, fecha) {
 			e.preventDefault()
 			e.stopPropagation()
-			nextPrev(2)
 		},
 		function(values, actions) {
 			dispatch(setUbication(values))

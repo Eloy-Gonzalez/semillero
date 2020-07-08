@@ -2,6 +2,8 @@
 import { get } from 'lodash'
 import axios from 'axios'
 import {BASE_API} from 'constants/index'
+import moment from 'moment'
+import 'moment/locale/es'
 
 import {AUTH_TOKEN} from 'state/auth/auth.actionsTypes'
 
@@ -55,4 +57,11 @@ export function getCategories() {
 
 export function getQuestions() {
   return axios.post(`${BASE_API}/preguntas`, { params: {} }) 
+}
+
+export function getEdad(date) {
+  let diff = moment(new Date()).diff(date)
+  let years = moment.duration(diff).years()
+    
+  return years <= 35 ? years : false
 }

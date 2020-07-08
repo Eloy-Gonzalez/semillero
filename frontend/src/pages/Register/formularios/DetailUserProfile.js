@@ -26,6 +26,11 @@ const Text = styled.p`
 	color:#777;
 	font-family: sans-serif;
 `
+
+const verifyEdad = (fecha) => {
+	return false;
+}
+
 function DetailUserProfile({ ActionsButtons, onSubmit }){
 	const profiles = useSelector(state => selectProfiles(state))
 	const representant = useSelector(state => selectRepresentant(state))

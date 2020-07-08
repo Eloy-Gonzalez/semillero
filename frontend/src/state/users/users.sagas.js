@@ -31,6 +31,7 @@ function* searchSaimeWorker({payload}){
 
     if(data.length) {
       const {cedula, primer_nombre, segundo_nombre,primer_apellido,segundo_apellido,fecha_nacimiento,sexo} = data[0]
+
       if(payload.isRepre) {
         const payload = {
           cedula_representante: cedula,

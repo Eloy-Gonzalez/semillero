@@ -32,7 +32,7 @@ function index({ user = {}, logout = () => console.log("First login"), history, 
                                     <span>{user.username}</span>
                                 </div>
                             </Button>
-                            <Button variant="outlined" style={{borderColor:"#fff", color:"#fff"}}>
+                            <Button variant="outlined" onClick={() => logout()} style={{borderColor:"#fff", color:"#fff"}}>
                                 <span className="app--text">Cerrar sesión</span>
                             </Button>
                         </div>
