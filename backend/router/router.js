@@ -21,120 +21,120 @@ module.exports = (app) => {
 	const rutasProtegidas = require('../middlewares/rutasProtegidas');
 
 	// Routes
-	app.get('/', (req,res)=>{
+	app.get('/api/', (req,res)=>{
 		res.status(200).json({title : 'Bienvenido al sistema'});
 	});
 
 	// Check user
-	app.post('/checkuser', publicController.checkuser);
+	app.post('/api/checkuser', publicController.checkuser);
 
 	// Registro
-	app.post('/registro', publicController.registro);
+	app.post('/api/registro', publicController.registro);
 
 	// Login
-	app.post('/login', publicController.login);
+	app.post('/api/login', publicController.login);
 
 	// ActivateUser
-	app.post('/activateuser', publicController.activateuser);
+	app.post('/api/activateuser', publicController.activateuser);
 
 	// LostPassword
-	app.post('/recoverpassword', publicController.recoverpassword);
-	app.post('/recoverpassword2', publicController.recoverpassword2);
+	app.post('/api/recoverpassword', publicController.recoverpassword);
+	app.post('/api/recoverpassword2', publicController.recoverpassword2);
 
 	// UpdatePassword
-	app.post('/updatepassword', rutasProtegidas.verifyToken, publicController.updatepassword);
+	app.post('/api/updatepassword', rutasProtegidas.verifyToken, publicController.updatepassword);
 
 	// Estados
-	app.post('/estados', publicController.estados);
+	app.post('/api/estados', publicController.estados);
 
 	// Municipios
-	app.post('/municipios', publicController.municipios);
+	app.post('/api/municipios', publicController.municipios);
 
 	// Parroquias
-	app.post('/parroquias', publicController.parroquias);
+	app.post('/api/parroquias', publicController.parroquias);
 
 	// Saime
-	app.post('/saime', publicController.saime);
+	app.post('/api/saime', publicController.saime);
 	
 	// Categorias
-	app.post('/categorias', categoriasController.get);
-	app.post('/categorias/create', rutasProtegidas.verifyToken, categoriasController.create);
-	app.post('/categorias/update', rutasProtegidas.verifyToken, categoriasController.update);
-	app.post('/categorias/delete', rutasProtegidas.verifyToken, categoriasController.delete);
-	app.post('/categorias/restore', rutasProtegidas.verifyToken, categoriasController.restore);
+	app.post('/api/categorias', categoriasController.get);
+	app.post('/api/categorias/create', rutasProtegidas.verifyToken, categoriasController.create);
+	app.post('/api/categorias/update', rutasProtegidas.verifyToken, categoriasController.update);
+	app.post('/api/categorias/delete', rutasProtegidas.verifyToken, categoriasController.delete);
+	app.post('/api/categorias/restore', rutasProtegidas.verifyToken, categoriasController.restore);
 
 	// Estatus
-	app.post('/estatus', estatusController.get);
-	app.post('/estatus/create', rutasProtegidas.verifyToken, estatusController.create);
-	app.post('/estatus/update', rutasProtegidas.verifyToken, estatusController.update);
-	app.post('/estatus/delete', rutasProtegidas.verifyToken, estatusController.delete);
-	app.post('/estatus/restore', rutasProtegidas.verifyToken, estatusController.restore);
+	app.post('/api/estatus', estatusController.get);
+	app.post('/api/estatus/create', rutasProtegidas.verifyToken, estatusController.create);
+	app.post('/api/estatus/update', rutasProtegidas.verifyToken, estatusController.update);
+	app.post('/api/estatus/delete', rutasProtegidas.verifyToken, estatusController.delete);
+	app.post('/api/estatus/restore', rutasProtegidas.verifyToken, estatusController.restore);
 
 	// Preguntas Seguridad
-	app.post('/preguntas', preguntasController.get);
-	app.post('/preguntas/create', rutasProtegidas.verifyToken, preguntasController.create);
-	app.post('/preguntas/update', rutasProtegidas.verifyToken, preguntasController.update);
-	app.post('/preguntas/delete', rutasProtegidas.verifyToken, preguntasController.delete);
-	app.post('/preguntas/restore', rutasProtegidas.verifyToken, preguntasController.restore);
+	app.post('/api/preguntas', preguntasController.get);
+	app.post('/api/preguntas/create', rutasProtegidas.verifyToken, preguntasController.create);
+	app.post('/api/preguntas/update', rutasProtegidas.verifyToken, preguntasController.update);
+	app.post('/api/preguntas/delete', rutasProtegidas.verifyToken, preguntasController.delete);
+	app.post('/api/preguntas/restore', rutasProtegidas.verifyToken, preguntasController.restore);
 
 	// Proyectos
-	app.post('/proyectos', proyectosController.get);
-	app.post('/proyectos/create', rutasProtegidas.verifyToken, proyectosController.create);
-	app.post('/proyectos/update', rutasProtegidas.verifyToken, proyectosController.update);
-	app.post('/proyectos/delete', rutasProtegidas.verifyToken, proyectosController.delete);
-	app.post('/proyectos/restore', rutasProtegidas.verifyToken, proyectosController.restore);
+	app.post('/api/proyectos', proyectosController.get);
+	app.post('/api/proyectos/create', rutasProtegidas.verifyToken, proyectosController.create);
+	app.post('/api/proyectos/update', rutasProtegidas.verifyToken, proyectosController.update);
+	app.post('/api/proyectos/delete', rutasProtegidas.verifyToken, proyectosController.delete);
+	app.post('/api/proyectos/restore', rutasProtegidas.verifyToken, proyectosController.restore);
 
 	// Periodos
-	app.post('/periodos', periodosController.get);
-	app.post('/periodos/create', rutasProtegidas.verifyToken, periodosController.create);
-	app.post('/periodos/update', rutasProtegidas.verifyToken, periodosController.update);
-	app.post('/periodos/delete', rutasProtegidas.verifyToken, periodosController.delete);
-	app.post('/periodos/restore', rutasProtegidas.verifyToken, periodosController.restore);
+	app.post('/api/periodos', periodosController.get);
+	app.post('/api/periodos/create', rutasProtegidas.verifyToken, periodosController.create);
+	app.post('/api/periodos/update', rutasProtegidas.verifyToken, periodosController.update);
+	app.post('/api/periodos/delete', rutasProtegidas.verifyToken, periodosController.delete);
+	app.post('/api/periodos/restore', rutasProtegidas.verifyToken, periodosController.restore);
 
 	// Fases
-	app.post('/fases', fasesController.get);
-	app.post('/fases/create', rutasProtegidas.verifyToken, fasesController.create);
-	app.post('/fases/update', rutasProtegidas.verifyToken, fasesController.update);
-	app.post('/fases/delete', rutasProtegidas.verifyToken, fasesController.delete);
-	app.post('/fases/restore', rutasProtegidas.verifyToken, fasesController.restore);
+	app.post('/api/fases', fasesController.get);
+	app.post('/api/fases/create', rutasProtegidas.verifyToken, fasesController.create);
+	app.post('/api/fases/update', rutasProtegidas.verifyToken, fasesController.update);
+	app.post('/api/fases/delete', rutasProtegidas.verifyToken, fasesController.delete);
+	app.post('/api/fases/restore', rutasProtegidas.verifyToken, fasesController.restore);
 
 	// Fases Descripcion
-	app.post('/fasesdescripcion', fasesdescripcionController.get);
-	app.post('/fasesdescripcion/create', rutasProtegidas.verifyToken, fasesdescripcionController.create);
-	app.post('/fasesdescripcion/update', rutasProtegidas.verifyToken, fasesdescripcionController.update);
-	app.post('/fasesdescripcion/delete', rutasProtegidas.verifyToken, fasesdescripcionController.delete);
-	app.post('/fasesdescripcion/restore', rutasProtegidas.verifyToken, fasesdescripcionController.restore);
+	app.post('/api/fasesdescripcion', fasesdescripcionController.get);
+	app.post('/api/fasesdescripcion/create', rutasProtegidas.verifyToken, fasesdescripcionController.create);
+	app.post('/api/fasesdescripcion/update', rutasProtegidas.verifyToken, fasesdescripcionController.update);
+	app.post('/api/fasesdescripcion/delete', rutasProtegidas.verifyToken, fasesdescripcionController.delete);
+	app.post('/api/fasesdescripcion/restore', rutasProtegidas.verifyToken, fasesdescripcionController.restore);
 
 	// Usuarios
-	app.post('/usuarios', usuariosController.get);
-	app.post('/usuarios/create', rutasProtegidas.verifyToken, usuariosController.create);
-	app.post('/usuarios/update', rutasProtegidas.verifyToken, usuariosController.update);
-	app.post('/usuarios/delete', rutasProtegidas.verifyToken, usuariosController.delete);
-	app.post('/usuarios/restore', rutasProtegidas.verifyToken, usuariosController.restore);
+	app.post('/api/usuarios', usuariosController.get);
+	app.post('/api/usuarios/create', rutasProtegidas.verifyToken, usuariosController.create);
+	app.post('/api/usuarios/update', rutasProtegidas.verifyToken, usuariosController.update);
+	app.post('/api/usuarios/delete', rutasProtegidas.verifyToken, usuariosController.delete);
+	app.post('/api/usuarios/restore', rutasProtegidas.verifyToken, usuariosController.restore);
 
 	// Usuarios Perfil
-	app.post('/usuariosperfil', rutasProtegidas.verifyToken, usuariosPerfilController.get);
-	app.post('/usuariosperfil/update', rutasProtegidas.verifyToken, usuariosPerfilController.update);
+	app.post('/api/usuariosperfil', rutasProtegidas.verifyToken, usuariosPerfilController.get);
+	app.post('/api/usuariosperfil/update', rutasProtegidas.verifyToken, usuariosPerfilController.update);
 
 	// Usuarios Domicilio
-	app.post('/usuariosdomicilio', rutasProtegidas.verifyToken, usuariosDomicilioController.get);
-	app.post('/usuariosdomicilio/update', rutasProtegidas.verifyToken, usuariosDomicilioController.update);
+	app.post('/api/usuariosdomicilio', rutasProtegidas.verifyToken, usuariosDomicilioController.get);
+	app.post('/api/usuariosdomicilio/update', rutasProtegidas.verifyToken, usuariosDomicilioController.update);
 
 	// Usuarios Representante
-	app.post('/usuariosrepresentante', rutasProtegidas.verifyToken, usuariosRepresentanteController.get);
-	app.post('/usuariosrepresentante/update', rutasProtegidas.verifyToken, usuariosRepresentanteController.update);
+	app.post('/api/usuariosrepresentante', rutasProtegidas.verifyToken, usuariosRepresentanteController.get);
+	app.post('/api/usuariosrepresentante/update', rutasProtegidas.verifyToken, usuariosRepresentanteController.update);
 
 	// Usuarios Permisos
-	app.post('/usuariospermisos/create', rutasProtegidas.verifyToken, usuariosPermisosController.create);
-	app.post('/usuariospermisos/update', rutasProtegidas.verifyToken, usuariosPermisosController.update);
-	app.post('/usuariospermisos/delete', rutasProtegidas.verifyToken, usuariosPermisosController.delete);
+	app.post('/api/usuariospermisos/create', rutasProtegidas.verifyToken, usuariosPermisosController.create);
+	app.post('/api/usuariospermisos/update', rutasProtegidas.verifyToken, usuariosPermisosController.update);
+	app.post('/api/usuariospermisos/delete', rutasProtegidas.verifyToken, usuariosPermisosController.delete);
 
 	// Permisos
-	app.post('/permisos', rutasProtegidas.verifyToken, permisosController.get);
-	app.post('/permisos/create', rutasProtegidas.verifyToken, permisosController.create);
-	app.post('/permisos/update', rutasProtegidas.verifyToken, permisosController.update);
-	app.post('/permisos/delete', rutasProtegidas.verifyToken, permisosController.delete);
-	app.post('/permisos/restore', rutasProtegidas.verifyToken, permisosController.restore);
+	app.post('/api/permisos', rutasProtegidas.verifyToken, permisosController.get);
+	app.post('/api/permisos/create', rutasProtegidas.verifyToken, permisosController.create);
+	app.post('/api/permisos/update', rutasProtegidas.verifyToken, permisosController.update);
+	app.post('/api/permisos/delete', rutasProtegidas.verifyToken, permisosController.delete);
+	app.post('/api/permisos/restore', rutasProtegidas.verifyToken, permisosController.restore);
 
 	// TEST ROUTES
 	// app.post('/test/gettoken', testController.getToken);
