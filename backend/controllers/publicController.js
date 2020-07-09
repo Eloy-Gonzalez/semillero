@@ -4,8 +4,8 @@ let jwt = require('jsonwebtoken');
 let bcrypt = require('bcryptjs');
 let nodemailer = require('nodemailer');
 
-let userEmail = 'autogestion@mppct.gob.ve'; // sistemasmppct@gmail.com
-let userPassword = '$1g3f1rrHH2020'; // sistemas12345
+let userEmail = 'semilleroscientificos@mppct.gob.ve'; // sistemasmppct@gmail.com
+let userPassword = 'S3mill3r0**'; // sistemas12345
 
 // Transporter without auth
 var transporter = nodemailer.createTransport({
@@ -38,6 +38,7 @@ const UsuariosPermisos = db.UsuariosPermisos;
 const Periodos = db.Periodos;
 const Fases = db.Fases;
 const Estatus = db.Estatus;
+const PreguntasSeguridad = db.PreguntasSeguridad;
 
 const Saime = db.Saime;
 
@@ -305,7 +306,6 @@ exports.checkuser = (req, res) => {
 		const { cedula } = req.body.params;
 		if (cedula != undefined) {
 			UsuariosPerfil.count({ where : { cedula : cedula }}).then(result => {
-				console.log(result);
 				if (result > 0) {
 					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Usuario ya se encuentra registrado en el sistema'}});
 				} else {
@@ -329,7 +329,7 @@ exports.checkuser = (req, res) => {
 	} else {
 		res.status(200).json({ alert: { type : 'danger', title : 'Atención', message : 'Objeto \'params\' vacio!'}});	
 	}
-}
+};
 
 /* API ACTIVATE USER
 */
@@ -454,7 +454,7 @@ exports.updatepassword = (req, res) => {
 			  }
 			}).then(result => {
 				if (result.length > 0) {
-					res.status(200).json({ alert: { type: 'successs', title: 'Información', message: 'Su contraseña ha sido actualizada exitosamente!'}});
+					res.status(200).json({ alert: { type: 'success', title: 'Información', message: 'Su contraseña ha sido actualizada exitosamente!'}});
 				} else {
 					res.status(200).json({ alert: { type: 'warning', title: 'Atención', message : 'Error al actualizar su contraseña!'}});
 				}
