@@ -34,7 +34,8 @@ import Login  from 'pages/Login'
 import Home from 'pages/Home'
 import Register from 'pages/Register'
 import Perfil from 'pages/Profile'
-import ActivateAccount from './ActivateAccount'
+import ActivateAccount from 'pages/Login/ActivateAccount'
+import ResetPassword from 'pages/Login/ResetPassword'
 
 function App() {
     const dispatch = useDispatch()
@@ -63,7 +64,8 @@ function App() {
                 <PrivateRoute exact path="/" alias="Inicio" component={Home} user={user}/>
                 <LoginRoute exact path="/acceder" alias="Iniciar Sesión" component={Login} />
                 <LoginRoute exact path="/crear-cuenta" alias="Crear cuenta" component={Register}/>
-                <LoginRoute exact path="/activateuser/:token" alias="Crear cuenta" component={ActivateAccount}/>
+                <LoginRoute exact path="/activateuser/:token" alias="Activar cuenta" component={ActivateAccount}/>
+                <LoginRoute exact path="/updatepassword/:token" alias="Restablecer contraseña" component={ResetPassword}/>
                 <Redirect to="/acceder" />
             </Switch>
 

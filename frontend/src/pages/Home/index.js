@@ -7,10 +7,10 @@ import Grid from '@material-ui/core/Grid';
 
 export default function Home() {
     return (
-    	<Grid container maxwidth="md" spacing={3}>
-			<Grid item sm={12} style={{textAlign: "center"}}>
+    	<Grid container spacing={3} justify="center">
+			<Grid item sm={12} style={{textAlign: "center", overflow: "auto"}}>
 				<h1 className="app-title">Comienza a subir tus Videos</h1>
-				<ProyectsProfiles/>
+				<ProyectsProfiles />
 			</Grid>
 		</Grid>
     )

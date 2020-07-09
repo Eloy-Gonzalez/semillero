@@ -6,14 +6,14 @@ import {useDispatch, useSelector} from 'react-redux'
 import AuthForm from './AuthForm'
 import avatar from 'statics/images/logos/avatar_2x.png'
 
-import ReacoverPass: ViewRecoverPass from './RecoverPass'
+import RecoverPass from './RecoverPass'
 
 // @Actions
 import {openModal} from 'state/app/app.actions'
 import {login} from 'state/auth/auth.actions'
 
 // @Selectors
-import {selectLoading, selectModal} from 'state/app/app.selectors' 
+import {selectLoading} from 'state/app/app.selectors' 
 
 // @Styles - component
 import './index.scss'
@@ -61,9 +61,9 @@ function Login() {
 
 	const recoverPass = useCallback(() => {
 		dispatch(openModal(
-			<ViewRecoverPass loading={loading}/>
+			<RecoverPass loading={loading}/>
 		))
-	}, [loading])
+	}, [dispatch,loading])
 
     return (
     	<React.Fragment>

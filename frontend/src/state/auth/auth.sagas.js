@@ -1,12 +1,12 @@
 // @Vendors
-import { put, takeLatest, call } from 'redux-saga/effects';
+import {put, takeLatest, call} from 'redux-saga/effects';
 import jsonwebtoken from 'jsonwebtoken'
 
 // @Helpers
-import { getToken, setToken, removeToken } from 'utils/helpers';
+import {getToken, setToken, removeToken} from 'utils/helpers';
 
 // @services
-import { postLoginService, activateAccountService } from './auth.services';
+import {postLoginService, activateAccountService,recoverpassword2} from './auth.services';
 
 // @ActionsTypes
 import {
@@ -158,28 +158,12 @@ function* activateAccountWorker({ payload }) {
   }
 }
 
-function* recoverPassWorker({ payload }) {
-  try {
-    yield put({ type: REQUEST_STARTED })
-    alert("From sgas recover passs")
-    console.log(payload)
-
-    yield put({ type: REQUEST_FINISHED })
-  } catch(err) {
-    yield put({
-      type: REQUEST_FAILURE,
-      payload: buildErrorsObj(err)
-    })
-  }
-}
-
 // @Whatcher
 function* requestWatcher() {
   yield takeLatest(LOGIN, loginWorker)
   yield takeLatest(CHECK_AUTH, checkAuthenticationWorker)
   yield takeLatest(LOGOUT, logoutWorker)
   yield takeLatest(VALIDATE_ACCOUNT, activateAccountWorker)
-  yield takeLatest(RECOVER_PASS, recoverPassWorker)
 }
 
 export default {requestWatcher}

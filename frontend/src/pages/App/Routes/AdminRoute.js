@@ -1,5 +1,5 @@
 // @Vendors
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback} from 'react'
 import {Route, Redirect} from 'react-router-dom'
 import {useDispatch} from 'react-redux'
 import jsonwebtoken from 'jsonwebtoken'
