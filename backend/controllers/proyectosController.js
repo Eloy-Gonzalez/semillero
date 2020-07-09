@@ -2,8 +2,8 @@ let db = require('../config/databases.js');
 let errDb = require('../helpers/errorsDb.js');
 let nodemailer = require('nodemailer');
 
-let userEmail = 'autogestion@mppct.gob.ve'; // sistemasmppct@gmail.com
-let userPassword = '$1g3f1rrHH2020'; // sistemas12345
+let userEmail = 'semilleroscientificos@mppct.gob.ve'; // sistemasmppct@gmail.com
+let userPassword = 'S3mill3r0**'; // sistemas12345
 
 // Transporter without auth
 var transporter = nodemailer.createTransport({
@@ -84,21 +84,20 @@ exports.create = async (req, res) => {
 					where u.id = :id_usuario and e.id = :id_estatus\
 				", { replacements: { id_usuario : id_usuario, id_estatus : id_estatus }, type: db.semillero.QueryTypes.SELECT }
 				).then(result => {
-
 					var mailOptions = {
 						from: userEmail,
 						to: result[0].username,
 						subject: 'Sistema Semillero',
 						html: `<h1>Hola, ${result[0].primer_nombre} ${result[0].primer_apellido}!</h1><p>Su proyecto ha sido registrado exitosamente en el sistema con estatus: <b>${result[0].nombre}</b>, para más detalles, por favor ingrese al sistema haciendo click en el siguiente enlace: <a href="http://crs.mppct.gob.ve/login">Ingresar al sistema</a></p>`,
 					};
-					// transporter.sendMail(mailOptions, function(error, info){
-					// 	if (!error){
-					// 		res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
-					// 	} else {
-					// 		res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
-					// 	}
-					// });
-					res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
+					transporter.sendMail(mailOptions, function(error, info){
+						if (!error){
+							res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
+						} else {
+							res.status(200).json({ alert : { type : 'danger', title : 'Atención', message : 'ERROR 00000 Servidor de correos no responde' }})
+						}
+					});
+					//res.status(200).json({ alert : { type : 'success', title : 'Información', message : 'Registro guardado exitosamente!'}});
 				});
 				// PUSH
 				await t.commit();
