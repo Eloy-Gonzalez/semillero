@@ -21,7 +21,7 @@ function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 		const {data} = allCategories
 		
 		const rows = []
-		data.rows.forEach((index) => {
+		data.rows && data.rows.forEach((index) => {
 			rows.push({ label: index.nombre, value: index.id})
 		})
 		setCategorias(rows)

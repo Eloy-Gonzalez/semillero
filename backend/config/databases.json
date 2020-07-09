@@ -1,22 +1,22 @@
 {
 	"databases": {
-		"semillero": {
-			"path": "postgres://postgres:postgres@localhost:5432/semillero",
-			"pool": {
-		    "max": 2,
-		    "min": 0,
-		    "acquire": 30000,
-		    "idle": 3000
+			"semillero": {
+					"path": "postgres://semillero:1qaz2wsx3edc@localhost:5432/semillero",
+					"pool": {
+				"max": 2,
+				"min": 0,
+				"acquire": 30000,
+				"idle": 3000
+					}
+			},
+			"saime": {
+					"path": "postgres://postgres:M3t4l_G34r@localhost:5432/saime",
+					"pool": {
+				"max": 2,
+				"min": 0,
+				"acquire": 30000,
+				"idle": 3000
+					}
 			}
-		},
-		"saime": {
-			"path": "postgres://postgres:postgres@localhost:5432/saime",
-			"pool": {
-		    "max": 2,
-		    "min": 0,
-		    "acquire": 30000,
-		    "idle": 3000
-			}
-		}
 	}
 }
