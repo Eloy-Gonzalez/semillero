@@ -7,9 +7,18 @@ const WrapperCircles = styled.div`
 `
 const Circles = styled.ul`
 	list-style:none;
-	display:flex;
 	justify-content:center;
 	align-items:center;
+	flex-flow:column wrap;
+	margin:0;
+	padding:0;
+	display:grid;
+	gap:20px;
+
+	@media (min-width: 720px) {
+		display:flex;
+		flex-flow:row wrap;
+	}
 `
 const Circle = styled.li`
 	margin: 0 1rem;
@@ -37,6 +46,11 @@ const Separe = styled.div`
 	opacity: .5;
 	position: relative;
 	transition: .4s linear;
+	display:none;
+
+	@media (min-width: 720px) {
+		display:block;
+	}
 
 	&::after {
 	    content: "";

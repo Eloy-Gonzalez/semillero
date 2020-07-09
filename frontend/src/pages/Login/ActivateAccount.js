@@ -26,7 +26,7 @@ function ActivateAccount({match}) {
 			const payload = { id, username, actualizado_por: id}
 			execute({ type: VALIDATE_ACCOUNT, payload})
 		}
-	}, [])
+	}, [execute, match])
 
 	return (
 		<Grid container maxwidth="md" spacing={3} style={{minHeight: "300px"}} justify="center">

@@ -34,9 +34,11 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    border: "none",
+    borderBottom: "solid 2px #3e3e3e",
+    overflow: "hidden",
+    borderRadius: "5px"
   },
   img: { 
   	maxHeight: '90vh',

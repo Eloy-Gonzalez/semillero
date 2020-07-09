@@ -1,5 +1,5 @@
 // @Vendors
-import React, {Fragment, useEffect, useCallback} from 'react'
+import React, {Fragment,useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 
 // @Material UI
@@ -71,14 +71,28 @@ function ProyectsProfiles() {
 
 	return (
 		<Fragment>
-
+			<p style={{textAlign:"right"}}>
+				<span style={{fontSize:"1.2em"}}>Nuevo video</span>
+				<Tooltip title="Registrar nuevo video">
+					<IconButton 
+						aria-label="Crear nuevo"
+						onClick={createProyect}
+					>
+	                    <AddCircleOutlineIcon />
+	                 </IconButton>
+                </Tooltip>
+			</p>
 			<SimpleTable
 				columns={columns}
 				rows={currentPost}
 				handleDelete={onDelete}
 				onLoading={loading}
 			/>
-			
+			<Pagination 
+				totalPosts={proyects.length}
+				postsPerPage={postsPerPage}
+				changePage={setCurrentPage}
+			/>
 		</Fragment>
 	)
 }

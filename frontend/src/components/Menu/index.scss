@@ -15,6 +15,18 @@
     }
 }
 
+.res-menu {
+    display: block;
+    grid-column: 1 / 13;
+    text-align: right;
+    z-index: 20;
+    margin: 10px 0 0 0;
+    
+    @media (min-width: 1024px) {
+        display: none;
+    }
+}
+
 .menu__list {
     display: flex;
     justify-content: flex-end;

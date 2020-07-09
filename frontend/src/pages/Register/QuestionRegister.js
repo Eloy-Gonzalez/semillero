@@ -22,6 +22,12 @@ const BoxIcon = styled.div`
     box-sizing: border-box;
     margin: 0 20px 0 0;
     transition: .3s cubic-bezier(0.83, 0.22, 0.35, 1.04);
+    text-align:center;
+    
+    &:last-of-type {
+        margin:0;
+    }
+
     &:hover {
     	cursor:pointer;
     	transform: translateY(-5px);

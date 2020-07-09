@@ -6,7 +6,7 @@
    
     .content-footer {
         text-align: center;
-        .app-text {
+        @media (max-width: 720px) {
             font-size: 15px;
             color: #777;
         }
@@ -14,7 +14,7 @@
 }
 
 .top__wave-footer {
-    width: 80px;
+    width: 60px;
     position: absolute;
     opacity: .8;
     animation: animBubble .6s cubic-bezier(0.83, 0.22, 0.35, 1.04) .24s;
@@ -24,6 +24,10 @@
     img {
        float: left; 
        width: 100%;
+    }
+
+    @media (min-width: 720px) {
+        width: 80px;
     }
 }
 

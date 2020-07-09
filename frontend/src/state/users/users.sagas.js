@@ -30,9 +30,15 @@ function* searchSaimeWorker({payload}){
     const res = yield call(searchSaimeService, payload)
     const {data} = res
 
-    console.log(existsUser)
-
-    if(data.length) {
+    if(!payload.isRepre && existsUser.data.alert.type === "success"){
+      yield put({
+        type: REQUEST_FAILURE,
+        payload: {
+          serverErrors: existsUser.data.alert.message,
+          statusError: 502
+        }
+      })
+    } else if(data.length) {
       const {cedula, primer_nombre, segundo_nombre,primer_apellido,segundo_apellido,fecha_nacimiento,sexo} = data[0]
 
       if(payload.isRepre) {

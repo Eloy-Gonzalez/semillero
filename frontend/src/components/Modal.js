@@ -1,20 +1,24 @@
 import React from "react";
+import styled from 'styled-components'
 
 // @Material UI
-import { styled } from '@material-ui/core/styles';
 import { Modal, Fade, Backdrop } from "@material-ui/core";
-  
-const PaperModal = styled("div")(({theme}) => ({
-  width: "65%",
-  justifySelf: "center",
-  alignSelf: "flex-start",
-  margin: "35px auto",
-  backgroundColor: "#fff",
-  outline: "none",
-  padding: "30px",
-  boxSizing:"border-box",
-  borderRadius:"5px"
-}));
+
+const PaperModal = styled.div`
+    width: 90%;
+    justify-self: center;
+    align-self: flex-start;
+    margin: 35px auto;
+    background-color: #fff;
+    outline: none;
+    padding: 30px;
+    box-sizing:border-box;
+    border-radius:5px;
+    
+    @media (min-width: 720px) {
+      width: 65%;
+    }
+`
 
 const MaterialModal = ({ open, handleClose, children }) => {
   return (

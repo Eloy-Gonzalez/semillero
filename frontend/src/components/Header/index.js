@@ -10,7 +10,7 @@ import TopWave from 'statics/images/textures/TopWave'
 import WaveCircles from 'statics/images/textures/WaveCircles'
 import LogoSemilleros from 'statics/images/logos/juventud.png'
 import VideoSemilleros from 'statics/videos/tapaSemilleros.mp4'
-import Menu from 'components/Menu'
+import MenuC from 'components/Menu'
 
 function Header({user={}, onLogout= () => console.log("Login first")}) {
     const refVideo = React.useRef()
@@ -24,7 +24,7 @@ function Header({user={}, onLogout= () => console.log("Login first")}) {
     return (
         <header className="header__primary container--row">
             <div className="row">
-                <Menu user={user} logout={onLogout}/>
+                <MenuC user={user} logout={onLogout}/>
                 <div className="header__primary-logo" style={{margin:"40px 0 0"}}>
                     { true ? 
                         <img src={LogoSemilleros} alt="Semilleros de Jóvenes Científicos"/> :

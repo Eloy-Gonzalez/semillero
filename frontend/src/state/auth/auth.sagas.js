@@ -6,15 +6,14 @@ import jsonwebtoken from 'jsonwebtoken'
 import {getToken, setToken, removeToken} from 'utils/helpers';
 
 // @services
-import {postLoginService, activateAccountService,recoverpassword2} from './auth.services';
+import {postLoginService, activateAccountService} from './auth.services';
 
 // @ActionsTypes
 import {
   LOGIN,
   LOGOUT,
   CHECK_AUTH,
-  VALIDATE_ACCOUNT,
-  RECOVER_PASS
+  VALIDATE_ACCOUNT
 } from './auth.actionsTypes';
 import {
   REQUEST_STARTED,

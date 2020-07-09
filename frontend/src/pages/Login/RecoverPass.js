@@ -92,7 +92,7 @@ export default function RecoverPass() {
 			})	      
 	    }
 		actions.setSubmitting(false)
-	}, [state])
+	}, [state, dispatch])
 
 	return  (
 		<Fragment>

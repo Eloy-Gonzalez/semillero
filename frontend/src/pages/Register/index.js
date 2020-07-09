@@ -36,6 +36,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -45,12 +46,18 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    border: "none",
+    borderBottom: "solid 2px #3e3e3e",
+    overflow: "hidden",
+    borderRadius: "5px"
   },
   img: { 
-    maxHeight: '90vh'
+    maxHeight: '90vh',
+    maxWidth: '90vw'
+  },
+  container: {
+    margin: '10px 0 0 0'
   }
 }));
 
@@ -93,80 +100,85 @@ function Register() {
   ], [])
 
   return (
-    <div className="container card--box">
-        <h2 className="app--text-second" 
-          style={{textAlign: "center",fontSize: "30px",margin: "0",fontWeight: "bold",color: "#263c61", position:"relative"}}>
+    <Grid container justify="center" className={classes.container}>
+        <Grid item sm={12}>
+        <div className="card--box">
             { print !== "QUESTION" &&
-              <IconButton 
-                aria-label="Atrás"
-                style={{position:"absolute",top:"0",left:"0"}}
-                onClick={() => setPrint("QUESTION")}
-              >
-                <Tooltip title="Regresar a opciones">
-                  <ArrowBackIosIcon/>
-                </Tooltip>
-              </IconButton>                
+            <IconButton 
+            aria-label="Atrás"
+            onClick={() => setPrint("QUESTION")}
+            >
+              <Tooltip title="Regresar a opciones">
+              <ArrowBackIosIcon/>
+              </Tooltip>
+              <br/>
+            </IconButton>
             }
-            Registrar nuevo usuario { print === "QUESTION" ? "" : print === FORM_CEDULED ? "(Cedulado)" : "(No Cedulado)"}
-        </h2>
-          {
-            print === FORM_NOT_CEDULED ?
-              <NotCeduled
-                actualVisible={actualVisible}
-                nextPrev={nextPrev} 
-                listFormiks={[...FormsFase1, FormUsuariosPerfil, ...FormsFase2]}
-                ActionsButtons={ActionsButtons}
-                dispatch={dispatch}
-                loading={loading}
-                resetFormData={resetFormData}
-                PreviusStep={
-                  <PreviusStep 
-                    items={["Consultar cédula", "Verificar datos","Datos Personales", "Datos Domicilio", "Finalizar"]} 
-                    actualVisible={actualVisible}
-                  />
-                }
-               />
-
-              : print === FORM_CEDULED ?
-                  <Ceduled
+            <h2 className="app--text-second" 
+              style={{textAlign: "center",fontSize: "30px",margin: "0",fontWeight: "bold",color: "#263c61", position:"relative"}}>
+                Registrar nuevo usuario { print === "QUESTION" ? "" : print === FORM_CEDULED ? "(Cedulado)" : "(No Cedulado)"}
+            </h2>
+            <br/>
+              {
+                print === FORM_NOT_CEDULED ?
+                  <NotCeduled
                     actualVisible={actualVisible}
                     nextPrev={nextPrev} 
-                    listFormiks={[...FormsFase1, ...FormsFase2]}
+                    listFormiks={[...FormsFase1, FormUsuariosPerfil, ...FormsFase2]}
                     ActionsButtons={ActionsButtons}
                     dispatch={dispatch}
                     loading={loading}
                     resetFormData={resetFormData}
                     PreviusStep={
                       <PreviusStep 
-                        items={["Consultar cédula", "Verificar datos","Datos Domicilio", "Finalizar"]} 
+                        items={["Consultar cédula", "Verificar datos","Datos Personales", "Datos Domicilio", "Finalizar"]} 
                         actualVisible={actualVisible}
                       />
                     }
-                  />
-                : <QuestionRegister 
-                    dispatch={setPrint}
-                    actions={[FORM_NOT_CEDULED, FORM_CEDULED]}
-                  />
-          }
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={() => setOpen(false)}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <div className={classes.paper}>
-            <img src="images/normas.png" className={classes.img} alt="Normas"/>
+                   />
+
+                  : print === FORM_CEDULED ?
+                      <Ceduled
+                        actualVisible={actualVisible}
+                        nextPrev={nextPrev} 
+                        listFormiks={[...FormsFase1, ...FormsFase2]}
+                        ActionsButtons={ActionsButtons}
+                        dispatch={dispatch}
+                        loading={loading}
+                        resetFormData={resetFormData}
+                        PreviusStep={
+                          <PreviusStep 
+                            items={["Consultar cédula", "Verificar datos","Datos Domicilio", "Finalizar"]} 
+                            actualVisible={actualVisible}
+                          />
+                        }
+                      />
+                    : <QuestionRegister 
+                        dispatch={setPrint}
+                        actions={[FORM_NOT_CEDULED, FORM_CEDULED]}
+                      />
+              }
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            className={classes.modal}
+            open={open}
+            onClose={() => setOpen(false)}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={open}>
+              <div className={classes.paper}>
+                <img src="images/normas.png" className={classes.img} alt="Normas"/>
+              </div>
+            </Fade>
+          </Modal>
           </div>
-        </Fade>
-      </Modal>
-    </div>
+        </Grid>
+    </Grid>
   )
 }
 
