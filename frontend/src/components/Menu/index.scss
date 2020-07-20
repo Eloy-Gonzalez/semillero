@@ -1,21 +1,23 @@
 .menu {
-    grid-column: 8 / 13;
+    grid-column: 1 / 13;
     grid-row: 1;
     align-self: flex-start;
     z-index: 5;
     display: none;
 
-    @media (min-width: 720px) {
-        display: block;
-        margin:60px 0 0 0;
+    @media only screen and (min-width: 720px) and (max-width: 1024px) {
+        margin:40px 0 0 0;
     }
 
     @media (min-width: 1024px) {
-        margin:90px 0 0 0;
+        justify-content: flex-end;
+        display: flex;
+        margin:80px 0 0 0;
     }
+
 }
 
-.res-menu {
+.responsive-menu {
     display: block;
     grid-column: 1 / 13;
     text-align: right;

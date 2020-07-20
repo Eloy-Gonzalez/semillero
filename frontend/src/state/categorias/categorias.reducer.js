@@ -1,24 +1,30 @@
 import { Map } from 'immutable'
 
 import {
-  SET_PERIODOS,
-  CLEAR_PERIODOS
-} from './periodos.actionsTypes'
+  SET_CATEGORIAS,
+  CLEAR_CATEGORIAS
+} from './categorias.actionsTypes'
 
 const initialState = Map().merge({
-  periodos: []
+  categorias: {
+    count: 0,
+    rows: []
+  }
 })
 
-const periodosReducer = (state = initialState, { type, payload }) => {
+const categoriasReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case SET_PERIODOS:
+    case SET_CATEGORIAS:
       return state.merge({
-        periodos: payload
+        categorias: payload
     })
 
-    case CLEAR_PERIODOS:
+    case CLEAR_CATEGORIAS:
       return state.merge({
-        periodos: []
+      categorias: {
+        count: 0,
+        rows: []
+      }
     })
 
     default:
@@ -26,4 +32,4 @@ const periodosReducer = (state = initialState, { type, payload }) => {
   }
 }
 
-export default periodosReducer
+export default categoriasReducer

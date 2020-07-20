@@ -24,10 +24,11 @@ import DialogConfirm from 'components/DialogConfirm'
 
 // @Admin Pages
 import Administrador from 'pages/Administrador'
-import Periodos from 'pages/Periodos'
-import Fases from 'pages/Fases'
-import Categorias from 'pages/Categorias'
-import Usuarios from 'pages/Usuarios'
+import Periodos from 'pages/Administrador/Periodos'
+import Fases from 'pages/Administrador/Fases'
+import Categorias from 'pages/Administrador/Categorias'
+import Usuarios from 'pages/Administrador/Usuarios'
+import Videos from 'pages/Administrador/Videos'
 
 // @Pages 
 import Login  from 'pages/Login'
@@ -55,10 +56,11 @@ function App() {
             <SnackbarsSuccess  onClose={() => dispatch(clearServerSuccess())} message={serverSuccess} open={!!serverSuccess} />
             
             <Switch>
-                <AdminRoute exact path="/admin/usuarios" alias="Usuarios" component={Usuarios} user={user}/>
-                <AdminRoute exact path="/admin/categorias" alias="Categorias" component={Categorias} user={user}/>
-                <AdminRoute exact path="/admin/fases" alias="Fases" component={Fases} user={user}/>
-                <AdminRoute exact path="/admin/periodos" alias="Periodos" component={Periodos} user={user}/>
+                <AdminRoute exact path="/admin/videos" alias="Administrar videos" component={Videos} user={user}/>
+                <AdminRoute exact path="/admin/usuarios" alias="Administrar Usuarios" component={Usuarios} user={user}/>
+                <AdminRoute exact path="/admin/categorias" alias="Administrar Categorias" component={Categorias} user={user}/>
+                <AdminRoute exact path="/admin/fases" alias="Administrar Fases" component={Fases} user={user}/>
+                <AdminRoute exact path="/admin/periodos" alias="Administrar Períodos" component={Periodos} user={user}/>
                 <AdminRoute exact path="/admin" alias="Administrador" component={Administrador} user={user}/>
                 <PrivateRoute exact path="/perfil" alias="Perfil" component={Perfil} user={user}/>
                 <PrivateRoute exact path="/" alias="Inicio" component={Home} user={user}/>

@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux'
 // Components
 import AuthForm from './AuthForm'
 import avatar from 'statics/images/logos/avatar_2x.png'
-
+import CircularProgress from '@material-ui/core/CircularProgress'
 import RecoverPass from './RecoverPass'
 
 // @Actions
@@ -95,12 +95,15 @@ function Login() {
 		        		<img src={avatar} alt="avatar"/>
 		        	</div>    
 		        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>
-		            <AuthForm onSubmit={handleSubmit} disabledButton={loading}/>
-		            <br />
-		            <Button onClick={() => recoverPass()}>
-		            	<span style={{color: "var(--darkBlue)"}}>Recuperar contraseña</span>
-		            </Button>
-
+		            { loading ? <CircularProgress /> : 
+		            	<React.Fragment>
+		            	<AuthForm onSubmit={handleSubmit} disabledButton={loading}/>
+		            	<br />
+			            <Button onClick={() => recoverPass()}>
+			            	<span style={{color: "var(--darkBlue)"}}>Recuperar contraseña</span>
+			            </Button>
+			            </React.Fragment>
+			        }
 		        </div>
 	      	</Grid>
 	      </Grid>

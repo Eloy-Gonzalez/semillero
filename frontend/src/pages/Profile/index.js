@@ -72,14 +72,14 @@ function Profile({ history }) {
 					<DatosDomicilio
 						ubication={userDomicilio}
 						onEdit={editUbication}
-						showEdit={true}
+						showEdit={false}
 					/>
 				</Grid>
 				<Grid item sm={12} md={6}>
 					<DatosDeAcceso
 						account={userAccount}
 						onEdit={editAccount}
-						showEdit={true}
+						showEdit={false}
 					/>
 				</Grid>
 				<Grid item sm={12} md={6}></Grid>

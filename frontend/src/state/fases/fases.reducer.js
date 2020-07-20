@@ -6,7 +6,10 @@ import {
 } from './fases.actionsTypes'
 
 const initialState = Map().merge({
-  fases: []
+  fases: {
+    count: 0,
+    rows: []
+  }
 })
 
 const fasesReducer = (state = initialState, { type, payload }) => {
@@ -18,7 +21,10 @@ const fasesReducer = (state = initialState, { type, payload }) => {
 
     case CLEAR_FASES:
       return state.merge({
-        fases: []
+        fases: {
+          count: 0,
+          rows: []
+        }
     })
 
     default:

@@ -19,7 +19,7 @@ import {selectLoading} from 'state/app/app.selectors'
 
 // @Components
 import Pagination from 'components/Pagination'
-import SimpleTable from 'components/SimpleTable'
+import TableProyects from './TableProyects'
 import FormAddProyects from './FormAddProyects'
 import ActionsButtons from 'components/ActionsButtons'
 
@@ -41,9 +41,10 @@ function ProyectsProfiles() {
 	}, [dispatch])
 
 	const columns = [
-		{id:0, label: "Nombre"},
-		{id:1, label: "Descripción"},
-		{id:2, label:"Hipervínculo"}
+		{label: "Nombre"},
+		{label: "Descripción"},
+		{label:"Hipervínculo"},
+		{label:"Estatus"}
 	]
 
 	const onSubmit = useCallback((values, actions) => {
@@ -82,7 +83,7 @@ function ProyectsProfiles() {
 	                 </IconButton>
                 </Tooltip>
 			</p>
-			<SimpleTable
+			<TableProyects
 				columns={columns}
 				rows={currentPost}
 				handleDelete={onDelete}

@@ -49,9 +49,6 @@ function MySnackbarContentWrapper({ className, message, onClose, variant, ...oth
 	const classes = useStyles1()
 	const Icon = variantIcon[variant]
 
-	React.useEffect(() => {
-		setTimeout(() => onClose(), 3000)
-	}, [onClose])
 
 	return (
 		<SnackbarContent

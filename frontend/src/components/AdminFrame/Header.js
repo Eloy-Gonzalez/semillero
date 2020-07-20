@@ -9,6 +9,10 @@ const HeaderStyled = styled.div`
 	box-sizing:border-box;
 	display:flex;
 	justify-content: flex-end;
+
+	@media(max-wdith: 720px) {
+		grid-column: 1 / 2;
+	}
 `
 
 export default function Header({menu}) {

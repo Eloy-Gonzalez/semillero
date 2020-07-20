@@ -73,7 +73,7 @@ function MenuC({ user = {}, logout = () => console.log("First login"), history, 
                 }
             </ul>
         </div>
-        <div className="res-menu">
+        <div className="responsive-menu">
             <IconButton
             aria-label="more"
             aria-controls="long-menu"
@@ -101,7 +101,7 @@ function MenuC({ user = {}, logout = () => console.log("First login"), history, 
                     {label}
                 </MenuItem>
             )) : 
-                <>
+                <div>
                     <MenuItem onClick={() => {
                         history.push("/perfil")
                         handleClose()
@@ -110,7 +110,7 @@ function MenuC({ user = {}, logout = () => console.log("First login"), history, 
                         logout()
                         handleClose()
                     }}>Cerrar sesión</MenuItem>
-                </>
+                </div>
             }
             </Menu>
         </div>

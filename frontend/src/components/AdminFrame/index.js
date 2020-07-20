@@ -18,6 +18,10 @@ const Frame = styled.div`
 	grid-template-rows: auto 1fr auto;
 	min-height: 100vh;
 
+    & .menu {
+        margin: 0;
+    }
+
 	@media (min-width: 720px){
 		grid-template-columns: 200px 1fr;
 	}
@@ -26,22 +30,18 @@ const Frame = styled.div`
 	}
 `
 
-function index({ title = "Not title assigned", children, user = {}, onLogout} = {}) {
+function index({ title, children, user = {}, onLogout} = {}) {
     return (
         <Frame>
             <Helmet> 
                 <link rel="icon" href={Logo} type="image/gif" sizes="16x16" />
                 <title>{title} - CRS</title> 
             </Helmet>
-            <Header 
-            	menu={<Menu user={user}
-            	logout={onLogout}
-            	style={{margin: "0"}}/>}
-            />
-            <LeftMenu />
-            <Container maxWidth="lg">
-            	{children}
-      		</Container>
+            <LeftMenu menu={<Menu user={user} logout={onLogout} />}>
+                <Container maxWidth="lg">
+                	{children}
+          		</Container>
+            </LeftMenu>
         </Frame>
     )
 }

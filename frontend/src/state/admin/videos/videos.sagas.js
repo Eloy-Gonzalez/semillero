@@ -2,28 +2,35 @@
 import { put, takeLatest, call } from 'redux-saga/effects'
 
 // @services
-import {getCategoriasService} from './categorias.services'
+import {getVideosServices} from './videos.services'
 import {buildErrorsObj} from 'utils/helpers'
 
 // @ActionsTypes
 import {
+  GET_VIDEOS,
+  SET_VIDEOS
+} from './videos.actionsTypes'
+import {
   REQUEST_STARTED,
   REQUEST_FINISHED,
-  REQUEST_FAILURE
+  REQUEST_FAILURE,
+  REQUEST_SUCCESS
 } from 'state/app/app.actionTypes'
-import {
-  GET_CATEGORIAS,
-  SET_CATEGORIAS
-} from './categorias.actionsTypes'
 
-function* getCategoriasWorker(){
+
+function* getVideosWorker() {
   try {
     yield put({ type: REQUEST_STARTED })
-      const response = yield call(getCategoriasService)
-      const {data} = response
-      yield put({ type: SET_CATEGORIAS, payload: response.data})
+
+    const res = yield call(getVideosServices)
+    const {data} = res
+    
+    if(data){
+      yield put({ type: SET_VIDEOS, payload: data})
+    }
+
     yield put({ type: REQUEST_FINISHED })
-  } catch(err) {
+  } catch (err) {
     yield put({
       type: REQUEST_FAILURE,
       payload: buildErrorsObj(err)
@@ -33,7 +40,7 @@ function* getCategoriasWorker(){
 
 // @Whatcher
 function* requestWatcher() {
-  yield takeLatest(GET_CATEGORIAS, getCategoriasWorker)
+  yield takeLatest(GET_VIDEOS, getVideosWorker)
 }
 
 export default { requestWatcher }

@@ -1,0 +1,10 @@
+const PREFIX = 'VIDEOS'
+
+// GETTERS
+export const GET_VIDEOS = `${PREFIX}/GET_VIDEOS`
+
+// SETTERS
+export const SET_VIDEOS = `${PREFIX}/SET_VIDEOS`
+
+// CLEANERS
+export const CLEAR_VIDEOS = `${PREFIX}/CLEAR_VIDEOS`
