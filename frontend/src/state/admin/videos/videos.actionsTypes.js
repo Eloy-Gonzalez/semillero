@@ -2,6 +2,7 @@ const PREFIX = 'VIDEOS'
 
 // GETTERS
 export const GET_VIDEOS = `${PREFIX}/GET_VIDEOS`
+export const UPDATE_FILTERS = `${PREFIX}/UPDATE_FILTERS`
 
 // SETTERS
 export const SET_VIDEOS = `${PREFIX}/SET_VIDEOS`

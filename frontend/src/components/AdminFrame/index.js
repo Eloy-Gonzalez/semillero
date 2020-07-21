@@ -37,7 +37,7 @@ function index({ title, children, user = {}, onLogout} = {}) {
                 <link rel="icon" href={Logo} type="image/gif" sizes="16x16" />
                 <title>{title} - CRS</title> 
             </Helmet>
-            <LeftMenu menu={<Menu user={user} logout={onLogout} />}>
+            <LeftMenu menu={<Menu user={user} logout={onLogout} admin={true} />}>
                 <Container maxWidth="lg">
                 	{children}
           		</Container>

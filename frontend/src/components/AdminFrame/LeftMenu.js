@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    background:"var(--lightGreen)",
+    background:"#fff",
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -65,7 +65,12 @@ const useStyles = makeStyles((theme) => ({
     flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth,    
+    width: drawerWidth,
+    background: "rgb(73, 89, 117)",
+    color: "#fff",
+    "& .MuiListItemIcon-root": {
+      color: "#fff"
+    }
   },
   drawerHeader: {
     display: 'flex',
@@ -97,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 0,
   },
   nested: {
-    paddingLeft: "30px"
+    paddingLeft: "60px"
   },
   heightHeader: {
     height: "64px"

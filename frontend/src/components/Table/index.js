@@ -161,11 +161,13 @@ function EnhancedTable(props) {
 	return (
 		<div className={classes.root}>
 			<Paper className={classes.paper}>
-				<EnhancedTableToolbar 
-					numSelected={selected.length}
-					selected={selected}
-					click={delClick}
-				/>
+				{( selected.length ?
+					<EnhancedTableToolbar 
+						numSelected={selected.length}
+						selected={selected}
+						click={delClick}
+					/> : null
+				)}
 
 				<div className={classes.tableWrapper}>
 					<Table
@@ -242,10 +244,10 @@ function EnhancedTable(props) {
 					rowsPerPage={rowsPerPage}
 					page={page}
 					backIconButtonProps={{
-						'aria-label': 'Previous Page',
+						'aria-label': 'Página anterior',
 					}}
 					nextIconButtonProps={{
-						'aria-label': 'Next Page',
+						'aria-label': 'Siguiente página',
 					}}
 					onChangePage={handleChangePage}
 					onChangeRowsPerPage={handleChangeRowsPerPage}

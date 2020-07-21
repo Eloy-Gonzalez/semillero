@@ -38,7 +38,7 @@ const AvatarSettings = styled.div`
     }
 `
 
-function MenuC({ user = {}, logout = () => console.log("First login"), history, ...rest}) {
+function MenuC({ user = {}, logout = () => console.log("First login"), history, admin =false, ...rest}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     
     const handleClick = (event) => {
@@ -60,12 +60,12 @@ function MenuC({ user = {}, logout = () => console.log("First login"), history, 
                     : (
                         <div className="user--profiles">
                             <Button variant="outlined" style={{borderColor:"#fff"}} onClick={() => history.push("/perfil")}>
-                                <div className="btn--perfil app--text" style={{color:"#fff"}}>
+                                <div className="btn--perfil app--text" style={{color: admin ? "#777" : "#fff"}}>
                                     <Avatar />
                                     <span>{user.username}</span>
                                 </div>
                             </Button>
-                            <Button variant="outlined" onClick={() => logout()} style={{borderColor:"#fff", color:"#fff"}}>
+                            <Button variant="outlined" onClick={() => logout()} style={{borderColor:"#fff", color: admin ? "#777" : "#fff"}}>
                                 <span className="app--text">Cerrar sesión</span>
                             </Button>
                         </div>
