@@ -102,7 +102,7 @@ function Videos(){
 	}, [dispatch])
 
 	return (
-		<Grid container maxwidth="md" spacing={4} justify="center">
+		<Grid container maxwidth="md" spacing={2} justify="center">
 			<Grid item sm={12}>
 				<h1>Administrar Videos</h1>
 				<Button onClick={() => dispatch({ type: GET_VIDEOS })}><RefreshIcon style={{color:"#777"}}/> &nbsp; Recargar </Button>

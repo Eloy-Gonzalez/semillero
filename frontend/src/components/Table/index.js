@@ -29,6 +29,8 @@ const useStyles = makeStyles(theme => ({
 		minWidth: 750,
 	},
 	tableWrapper: {
+		maxWidth: "calc(100vw - 10px)",
+		width: "100%",
 		overflowX: 'auto',
 	},
 }));
@@ -251,6 +253,10 @@ function EnhancedTable(props) {
 					}}
 					onChangePage={handleChangePage}
 					onChangeRowsPerPage={handleChangeRowsPerPage}
+					labelRowsPerPage="Registros por página:"
+					labelDisplayedRows={({ from, to, count }) =>
+						`Mostrando del ${from} al ${to} de ${count !== -1 && count} registros`
+					}
 				/>
 			</Paper>
 		</div>

@@ -90,12 +90,15 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: "34px 0 0 0",
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: -drawerWidth,
+     [theme.breakpoints.down('sm')]: {
+      margin: "0"
+    },
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -157,7 +160,7 @@ function LeftMenu({ history, children, menu }) {
         })}
       >
         <Toolbar>
-          <Grid container maxwidth="sm" spacing={1} alignItems="center" justify="space-between">
+          <Grid container maxwidth="md" spacing={1} alignItems="center" justify="space-between">
             <Grid item sm={6}>
               <IconButton
                 color="inherit"
@@ -259,14 +262,14 @@ function LeftMenu({ history, children, menu }) {
             <Divider />
       </Drawer>
 
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <div className={classes.heightHeader}/>
-        {children}
-      </main>
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: open,
+          })}
+        >
+          <div className={classes.heightHeader}/>
+          {children}
+        </main>
       </Fragment>
 	)
 }
