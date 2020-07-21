@@ -2,12 +2,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Helmet } from "react-helmet"
+import {Link} from 'react-router-dom'
 
 // @Components
 import Menu from 'components/Menu'
 import Header from './Header'
 import LeftMenu from './LeftMenu'
-import Container from '@material-ui/core/Container';
+import Container from '@material-ui/core/Container'
+import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 
 // @Statics > Icon
 import Logo from 'statics/images/logos/juventud.png'
@@ -20,6 +22,25 @@ const Frame = styled.div`
 
     & .menu {
         margin: 0;
+    }
+
+    & .MuiTypography-colorTextSecondary {
+        background: #e9e9e9;
+        padding: 5px 15px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        font-family: var(--font-text);
+        font-size: 20px;
+
+        & a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        & p {
+            margin: 0;
+            color: #777;
+        }
     }
 
 	@media (min-width: 720px){
@@ -39,6 +60,10 @@ function index({ title, children, user = {}, onLogout} = {}) {
             </Helmet>
             <LeftMenu menu={<Menu user={user} logout={onLogout} admin={true} />}>
                 <Container maxWidth="lg">
+                    <Breadcrumbs aria-label="Breadcrumb" className='breadscrumb'>
+                        <Link color="inherit" to="/admin">Inicio</Link>
+                        <p>{title}</p>
+                    </Breadcrumbs>
                 	{children}
           		</Container>
             </LeftMenu>

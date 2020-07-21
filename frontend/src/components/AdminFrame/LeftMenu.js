@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    "& svg": {
+      color: "#777"
+    }
   },
   hide: {
     display: 'none',
@@ -102,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 0,
   },
   nested: {
-    paddingLeft: "60px"
+    paddingLeft: "44px"
   },
   heightHeader: {
     height: "64px"
@@ -166,15 +169,15 @@ function LeftMenu({ history, children, menu }) {
                 <MenuIcon />
               </IconButton>
 
-              {open && <IconButton
+              <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 onClick={handleDrawerClose}
                 edge="start"
+                className={clsx(classes.menuButton, !open && classes.hide)}
               >
                 <ChevronLeftIcon />
               </IconButton>
-              }
             </Grid>
             <Grid item sm={6}>
               {menu}
