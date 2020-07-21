@@ -4,17 +4,15 @@ import jsonwebtoken from 'jsonwebtoken'
 
 // @services
 import {
-	0
+	getVideosService
 } from './videos.services'
 import {buildErrorsObj, getToken} from 'utils/helpers'
 
 // @ActionsTypes
 import {
   GET_VIDEOS,
-  SET_PROYECTS,
-  REGITER_NEW_VIDEO,
-  DELETE_VIDEO
-} from './proyects.actionsTypes'
+  SET_VIDEOS
+} from './videos.actionsTypes'
 import {
   REQUEST_STARTED,
   REQUEST_FINISHED,
@@ -25,15 +23,11 @@ import {
 function* getVideosWorker(){
   try {
     yield put({ type: REQUEST_STARTED })
-    
-    const {user} = jsonwebtoken.decode(getToken())
-    const {Permisos} = user
-    const payload = {permiso: Permisos}
+    console.log("from sagas videos... .............")
 
-    const response = yield call(getVideosService, payload)
-    const {data} = response
-    const {rows} = data
-    console.log(data)
+    // const response = yield call(getVideosService, { borrado: false })
+    // const {data} = response
+
     // yield put({ type: SET_VIDEOS, payload: rows})
 
     yield put({ type: REQUEST_FINISHED })
@@ -84,7 +78,6 @@ function* deleteVideoWorker({ payload }){
 // @Whatcher
 function* requestWatcher() {
   yield takeLatest(GET_VIDEOS, getVideosWorker)
-  yield takeLatest(DELETE_VIDEO, deleteVideoWorker)
 }
 
 export default { requestWatcher }

@@ -42,6 +42,7 @@ function FormRecoverPass({onSubmit, disabledButton=false}) {
                     type="username"
                     helperText={<ErrorMessage name="username"/>}
                     error={errors.username && touched.username}
+                    autoFocus={true}
                  />
                   <Button type="submit" variant="outlined" color="primary" disabled={disabledButton}>
                       { disabledButton ? 'Cargando...' : 'Ingresar'}

@@ -1,5 +1,5 @@
 // @Vendors
-import React, {Fragment, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 
 // @ActionsTypes
@@ -66,7 +66,7 @@ function Videos(){
   	}
 
 	useEffect(() => {
-		dispatch({ type: GET_VIDEOS})
+		dispatch({ type: GET_VIDEOS })
 	}, [dispatch])
 
 	return (

@@ -1,14 +1,28 @@
 // @Vendors
 import { get } from 'lodash'
+import jsonwebtoken from 'jsonwebtoken'
 import axios from 'axios'
-import {BASE_API} from 'constants/index'
+import {API_KEY, BASE_API} from 'constants/index'
 import moment from 'moment'
 import 'moment/locale/es'
 
 import {AUTH_TOKEN} from 'state/auth/auth.actionsTypes'
 
-// Operaciones para el Toke de Autenticación
-export function getToken(key = AUTH_TOKEN) {
+// Operaciones para el Token de Autenticación
+export function getToken({key = AUTH_TOKEN, recorted = false} = {}) {
+  
+  if(recorted) {
+    const TOKEN = JSON.parse(localStorage.getItem(key)) || false
+    if(TOKEN) {
+      const tokenDecode = jsonwebtoken.decode(TOKEN)
+      const {exp} = tokenDecode
+      const {username, id, borrado, creado_por, actualizado_por} = tokenDecode.user
+      const payload = {id, username, exp, creado_por, actualizado_por, borrado}
+      const tokenRecorted = jsonwebtoken.sign(payload, API_KEY)
+      return tokenRecorted
+    }
+  }
+
   return JSON.parse(localStorage.getItem(key)) || false
 }
 
@@ -26,7 +40,7 @@ export function removeToken(key = AUTH_TOKEN) {
 
 // Mapear mensajes de errores del servidor
 export const buildErrorsObj = (err) => {
-  let serverErrors = get(err, 'message', '') || get(err, 'statusText', '') || '¡Ocurrió un error al conectar con el servidor!';
+  let serverErrors = get(err, 'message', '') || get(err, 'statusText', '') || '¡Ocurrió un error con el servidor!';
 
   const errNro = get(err, 'errNro', '');
   if (errNro !== '') {

@@ -25,7 +25,10 @@ const Icons = styled.div`
 const LeftIcon = styled.div`
 	width: 220px;
 	height: 40px;
-
+	& img {
+		width: 100%;
+		height: 100%;
+	}
 	@media (min-width: 720px) {
 		width: 300px;
 		height: 50px;
@@ -35,6 +38,10 @@ const RightIcon = styled.div`
 	width: 100px;
 	height: 30px;
 
+	& img {
+		width: 100%;
+		height: 100%;
+	}
 	@media (min-width: 720px) {
 		width: 150px;
 		height: 50px;
@@ -45,10 +52,10 @@ export default function Cintillo() {
 		<Wrapper>
 			<Icons>
 				<LeftIcon>
-					<img style={{width:"100%", height:"100%"}} src={LogoGobierno} alt="Gobierno_Bolivariano"/>
+					<img src={LogoGobierno} alt="Gobierno_Bolivariano"/>
 				</LeftIcon>
 				<RightIcon>
-					<img style={{width:"100%", height:"100%"}} src={LogoVenezuela} alt="Juntos_Por_Venezuela" />
+					<img src={LogoVenezuela} alt="Juntos_Por_Venezuela" />
 				</RightIcon>
 			</Icons>
 		</Wrapper>

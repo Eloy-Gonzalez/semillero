@@ -21,7 +21,10 @@ const videosReducer = (state = initialState, { type, payload }) => {
 
     case CLEAR_VIDEOS:
       return state.merge({
-        videos: []
+        videos: {
+          count: 0,
+          rows: []
+        }
       })
 
     default:

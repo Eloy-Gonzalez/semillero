@@ -61,6 +61,7 @@ function FormRecoverPass2({pregunta, onSubmit, disabledButton=false}) {
                     type={state.showResponse ? "text": "password"}
                     helperText={<ErrorMessage name="respuesta"/>}
                     error={errors.respuesta && touched.respuesta}
+                    autoFocus={true}
                     InputProps={{
                         endAdornment: 
                          <InputAdornment position="end">

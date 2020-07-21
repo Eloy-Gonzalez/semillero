@@ -1,6 +1,6 @@
 import {useState} from 'react'
 
-export default function usePagination({ posts, postsPerPage = 5 }) {
+export default function usePagination({ posts = [], postsPerPage = 5 }) {
 
 	const [currentPage, setCurrentPage] = useState(1)
 	

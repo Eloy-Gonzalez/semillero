@@ -22,11 +22,19 @@ function* getVideosWorker() {
   try {
     yield put({ type: REQUEST_STARTED })
 
-    const res = yield call(getVideosServices)
+    const res = yield call(getVideosServices, {borrado: false})
     const {data} = res
-    
-    if(data){
+    if(data.rows) {
       yield put({ type: SET_VIDEOS, payload: data})
+    } else {
+      const {message, status} = data.alert
+      yield put({
+        type: REQUEST_FAILURE,
+        payload: {
+          serverErrors: message,
+          statusError: status
+        }
+      })
     }
 
     yield put({ type: REQUEST_FINISHED })

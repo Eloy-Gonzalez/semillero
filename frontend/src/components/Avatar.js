@@ -17,8 +17,6 @@ const BoxAvatar = styled.div`
 		border-radius: 50%;
 	}
 
-
-
 	${
 		props => props.wd &&`
 		width: ${props.wd};
