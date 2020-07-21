@@ -1,5 +1,5 @@
 // @Vendors
-import React, {useEffect, useCallback, Fragment} from 'react'
+import React, {useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
@@ -13,8 +13,8 @@ import {
 // @Components
 import Table from 'components/Table'
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
 
 // @Icons
 import DoneAllIcon from '@material-ui/icons/DoneAll'
@@ -28,7 +28,7 @@ function Videos(){
 	const filters = useSelector( state => state.videosReducer.get("filters"))
 	const isLoading = useSelector(state => state.appReducer.get('loading'))
 
-	const {rows, count} = videos
+	const {rows} = videos
     const {
       order,
       orderBy,
@@ -97,6 +97,10 @@ function Videos(){
       alert(selectedItem)
     }, [])
 
+  /* const requestSearch = useCallback((values) => {
+      dispatch({ type: UPDATE_FILTERS, payload: { ...filters, page: 0 } })
+   }, [dispatch, filters]) */
+
 	useEffect(() => {
 		dispatch({ type: GET_VIDEOS })
 	}, [dispatch])
@@ -105,7 +109,12 @@ function Videos(){
 		<Grid container maxwidth="md" spacing={2} justify="center">
 			<Grid item sm={12}>
 				<h1>Administrar Videos</h1>
-				<Button onClick={() => dispatch({ type: GET_VIDEOS })}><RefreshIcon style={{color:"#777"}}/> &nbsp; Recargar </Button>
+				<Tooltip title="Recargar datos">
+					<IconButton onClick={() => dispatch({ type: GET_VIDEOS })}>
+						<RefreshIcon style={{color:"#777"}}/>
+					</IconButton>
+				</Tooltip>
+
 	            <Table
 	              isLoading={isLoading}
 	              fieldId="id"

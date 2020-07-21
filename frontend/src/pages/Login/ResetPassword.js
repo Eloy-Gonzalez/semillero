@@ -48,9 +48,9 @@ function ResetPassword({ match, history }) {
 		const _TOKEN_ = jsonwebtoken.decode(token)
 		const {exp, username} = _TOKEN_
 		if(exp < Math.floor(Date.now() / 1000)) {
-			setState({ ...state, expires: true})
+			setState(prev => ({ ...prev, expires: true}))
 		} else {
-			setState({...state, username, token})
+			setState(prev => ({...prev, username, token}) )
 		}
 	}, [setState])
 

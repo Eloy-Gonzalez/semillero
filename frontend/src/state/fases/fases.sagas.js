@@ -10,7 +10,7 @@ import {
   REQUEST_STARTED,
   REQUEST_FINISHED,
   REQUEST_FAILURE,
-  REQUEST_SUCCESS
+  //REQUEST_SUCCESS
 } from 'state/app/app.actionTypes'
 import {
   GET_FASES,
@@ -22,7 +22,7 @@ function* getFasesWorker(){
     yield put({ type: REQUEST_STARTED })
       const response = yield call(getFasesService)
       const {data} = response
-      yield put({ type: SET_FASES, payload: response.data})
+      yield put({ type: SET_FASES, payload: data})
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
     yield put({

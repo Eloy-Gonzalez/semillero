@@ -14,7 +14,7 @@ import {
   REQUEST_STARTED,
   REQUEST_FINISHED,
   REQUEST_FAILURE,
-  REQUEST_SUCCESS
+  //REQUEST_SUCCESS
 } from 'state/app/app.actionTypes'
 
 

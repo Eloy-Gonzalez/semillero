@@ -2,25 +2,23 @@ import React, {Fragment} from 'react';
 import styled from 'styled-components'
 import {withRouter} from 'react-router-dom'
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Collapse from '@material-ui/core/Collapse'
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
-// @Material UI > Icons
+
+// @Icons - @Material UI
 import AlarmIcon from '@material-ui/icons/Alarm';
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt'
@@ -78,7 +76,6 @@ const useStyles = makeStyles((theme) => ({
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'center',
@@ -129,8 +126,7 @@ const BoxIcon = styled.div`
 `
 
 function LeftMenu({ history, children, menu }) {
-  const classes = useStyles();
-  const theme = useTheme();
+  const classes = useStyles()
   const [open, setOpen] = React.useState(true);
   const [openList, setOpenList] = React.useState(false);
 

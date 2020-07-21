@@ -1,17 +1,17 @@
 // @Vendors
 import { put, takeLatest, call } from 'redux-saga/effects'
-import jsonwebtoken from 'jsonwebtoken'
+// import jsonwebtoken from 'jsonwebtoken'
 
 // @services && @Utils
 import {getPeriodosService} from './periodos.services'
-import {buildErrorsObj, getToken} from 'utils/helpers'
+import {buildErrorsObj/*, getToken*/} from 'utils/helpers'
 
 // @ActionsTypes
 import {
   REQUEST_STARTED,
   REQUEST_FINISHED,
   REQUEST_FAILURE,
-  REQUEST_SUCCESS
+  //REQUEST_SUCCESS
 } from 'state/app/app.actionTypes'
 import {
   GET_PERIODOS,
@@ -25,7 +25,7 @@ function* getPeriodosWorker(){
     yield put({ type: REQUEST_STARTED })
       const response = yield call(getPeriodosService)
       const {data} = response
-      yield put({ type: SET_PERIODOS, payload: response.data})
+      yield put({ type: SET_PERIODOS, payload: data})
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
     yield put({
@@ -37,10 +37,8 @@ function* getPeriodosWorker(){
 
 function* createPeriodoWorker({ payload }){
   try {
-    yield put({ type: REQUEST_STARTED })
-      
-      console.log(payload)
-
+    yield put({ type: REQUEST_STARTED })  
+    console.log(payload)
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
     yield put({
@@ -54,10 +52,10 @@ function* deletePeriodoWorker({ payload }){
   try {
     yield put({ type: REQUEST_STARTED })
 
-    const {user} = jsonwebtoken.decode(getToken())
-    const {id, version, periodos} = payload
+    //const {user} = jsonwebtoken.decode(getToken())
+    const {id, /*version,*/ periodos} = payload
     const newsPeriodos = periodos.filter( pro => pro.id !== id)
-    const data = {id, actualizado_por:user.id_usuario, version}
+    //const data = {id, actualizado_por:user.id_usuario, version}
 
     console.log(payload)
     yield put({ type: SET_PERIODOS, payload: newsPeriodos})

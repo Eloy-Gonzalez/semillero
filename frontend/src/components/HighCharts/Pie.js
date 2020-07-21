@@ -1,5 +1,5 @@
-import React, { PureComponent, Fragment, Component } from "react"
-import { PieChart, Pie, Sector, Cell, Legend } from "recharts"
+import React, { Fragment, Component } from "react"
+import { PieChart, Pie, Cell, Legend } from "recharts"
 
 const RADIAN = Math.PI / 180
 
@@ -45,7 +45,7 @@ class PieChartComponent extends Component {
 			)
 	}
 	render() {
-		if (this.props.data == undefined) return null
+		if (this.props.data === undefined) return null
 		return (
 			<PieChart width={500} height={500}>
 				<Pie

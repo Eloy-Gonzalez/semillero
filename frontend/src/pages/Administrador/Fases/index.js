@@ -1,5 +1,5 @@
 // @Vendors
-import React, {Fragment, useState, useEffect} from 'react'
+import React, {Fragment, useEffect} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 
 // @ActionsTypes
@@ -32,7 +32,7 @@ function Fases(){
 
 	useEffect(() => {
   		dispatch({ type: GET_FASES})
-  	}, [])
+  	}, [dispatch])
 
 
   	const onEdit = (id) => {

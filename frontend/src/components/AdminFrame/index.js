@@ -6,7 +6,6 @@ import {Link} from 'react-router-dom'
 
 // @Components
 import Menu from 'components/Menu'
-import Header from './Header'
 import LeftMenu from './LeftMenu'
 import Container from '@material-ui/core/Container'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'

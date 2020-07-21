@@ -21,7 +21,7 @@ function* getCategoriasWorker(){
     yield put({ type: REQUEST_STARTED })
       const response = yield call(getCategoriasService)
       const {data} = response
-      yield put({ type: SET_CATEGORIAS, payload: response.data})
+      yield put({ type: SET_CATEGORIAS, payload: data})
     yield put({ type: REQUEST_FINISHED })
   } catch(err) {
     yield put({

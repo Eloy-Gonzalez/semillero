@@ -25,8 +25,8 @@ import {openModal, openDialogConfirm} from 'state/app/app.actions'
 
 // @ActionsTypes
 import {
-	CREATE_PERIODO,
-	UPDATE_PERIODO,
+	//CREATE_PERIODO,
+	// UPDATE_PERIODO,
 	DELETE_PERIODO
 } from 'state/periodos/periodos.actionsTypes'
 
@@ -52,7 +52,7 @@ function Periodos(){
 
 	useEffect(() => {
   		dispatch({type: GET_PERIODOS})
-  	}, [])
+  	}, [dispatch])
 
   	const onView = (id) => {
   		alert(id)
@@ -60,9 +60,6 @@ function Periodos(){
 
   	const onEdit = (id) => {
   		const editPeriodo = periodos.filter((prd) => prd.id === id )
-
-  		console.log(editPeriodo)
-
   		dispatch(openModal(
   			<Fragment>
 	  			<h1>Editar periodo</h1>
