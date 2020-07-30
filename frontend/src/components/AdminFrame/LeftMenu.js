@@ -31,7 +31,11 @@ import Grid from '@material-ui/core/Grid'
 // @Statics > Logos
 import LogoSemilleros from 'statics/images/logos/juventud.png'
 
-const drawerWidth = 240;
+// @Hooks 
+import useWindowWidth from 'hooks/useWindowWidth'
+
+
+let drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -127,8 +131,19 @@ const BoxIcon = styled.div`
 
 function LeftMenu({ history, children, menu }) {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true);
-  const [openList, setOpenList] = React.useState(false);
+  const [open, setOpen] = React.useState(true)
+  const [openList, setOpenList] = React.useState(false)
+
+
+  const {width} = useWindowWidth()
+
+  React.useEffect(() => {
+    if (width !== 0 &&  width < 720) {
+      setOpen(false)
+    } else {
+      setOpen(true)
+    }
+  }, [width, setOpen])
 
   const prefix = "/admin"
   const link = (href) => {

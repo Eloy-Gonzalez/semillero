@@ -128,9 +128,9 @@ function EnhancedTable(props) {
 		for (i = 1; i < delimiterRows; i++) {
 			loadingList.push((
 				<TableRow key={`loading_${i}`}>
-					<TableCell padding="checkbox">
+					{/* TableCell padding="checkbox">
 						<Skeleton />
-					</TableCell>
+					</TableCell>*/}
 					{columns.map((headRow, index) => (
 						<TableCell key={`${headRow.id}_${index}`}>
 							<Skeleton />
@@ -205,13 +205,14 @@ function EnhancedTable(props) {
 												key={row[fieldId]}
 												selected={isItemSelected}
 											>
+											{/*
 												<TableCell padding="checkbox">
 													<Checkbox
 														onClick={event => handleClick(event, row[fieldId])}
 														checked={isItemSelected}
 														inputProps={{ 'aria-labelledby': labelId }}
 													/>
-												</TableCell>
+												</TableCell>*/}
 												{columns.map((headRow, index) => {
 													const rowContent =
 														headRow.render

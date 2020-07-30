@@ -23,7 +23,9 @@ function LoginRoute({ component: Component, alias="Not title assigned", ...rest 
                 <AppFrame title={alias}>
                     <Component {...props}/>
                 </AppFrame>
-            ) : <Redirect to={jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ADMINISTRADOR" || jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ROOT" ? "/admin/videos" : "/"} />
+            ) : <Redirect to={
+                jsonwebtoken.decode(getToken()).user.Permisos.length ?
+                    jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ADMINISTRADOR" || jsonwebtoken.decode(getToken()).user.Permisos[0].permiso.nombre === "ROOT" ? "/admin/videos" : "/" : "/"} />
         } />
     )
 }

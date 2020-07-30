@@ -3,18 +3,23 @@ import React, {useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
+import Iframe from 'react-iframe'
 
 // @ActionsTypes
 import {
 	GET_VIDEOS,
 	UPDATE_FILTERS
 } from 'state/admin/videos/videos.actionsTypes'
+import {
+	MODAL_OPEN
+} from 'state/app/app.actionTypes'
 
 // @Components
 import Table from 'components/Table'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
+import DetailsVideo from './DetailsVideo'
 
 // @Icons
 import DoneAllIcon from '@material-ui/icons/DoneAll'
@@ -37,6 +42,11 @@ function Videos(){
       selected,
     } = filters
 
+    const changeState = useCallback( (value, row) => {
+    	const payload = <DetailsVideo data={ {value, row} } />
+    	dispatch({ type: MODAL_OPEN, payload })
+    }, [dispatch])
+
 	const columns = [
 		{
 			id: 'row.Usuario.usuarios_perfil',
@@ -44,7 +54,7 @@ function Videos(){
 			disablePadding: false,
 			label: 'Cédula',
 			rowProps: {
-				component: 'th', scope: 'row', padding: 'none'
+				component: 'th', scope: 'row'
 			},
 			render: (value, row) => {
 				const {cedula} = row.Usuario.usuarios_perfil
@@ -72,7 +82,7 @@ function Videos(){
 			numeric: true,
 			disablePadding: true,
 			label: "Estado",
-			render: value => {
+			render: (value, row) => {
 				
 				const title = 
 				value === 1 
@@ -81,25 +91,19 @@ function Videos(){
 				: "¡Rechazado!"
 
 
-				return <Tooltip title={title}>
-					{(
-						value === 1 
-						? <AccessTimeIcon/>
-						: value === 2 ? <DoneAllIcon style={{color:"#39a838"}}/>
-						: <CancelIcon style={{color: "#ca626c"}}/>
-					)}
-				</Tooltip>
+				return <IconButton onClick={() => changeState(value, row)}>
+					<Tooltip title={title}>
+						{(
+							value === 1 
+							? <AccessTimeIcon/>
+							: value === 2 ? <DoneAllIcon style={{color:"#39a838"}}/>
+							: <CancelIcon style={{color: "#ca626c"}}/>
+						)}
+					</Tooltip>
+				</IconButton>
 			}
 		}
 	]
-
-	const handleDelete = useCallback( (selectedItem) => {
-      alert(selectedItem)
-    }, [])
-
-  /* const requestSearch = useCallback((values) => {
-      dispatch({ type: UPDATE_FILTERS, payload: { ...filters, page: 0 } })
-   }, [dispatch, filters]) */
 
 	useEffect(() => {
 		dispatch({ type: GET_VIDEOS })
@@ -123,7 +127,6 @@ function Videos(){
 	              order={order}
 	              orderBy={orderBy}
 	              page={page}
-	              delClick={handleDelete}
 	              requestSort={ (order, orderBy) => {
 	              	dispatch({ 
               			type: UPDATE_FILTERS,

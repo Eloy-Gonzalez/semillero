@@ -60,7 +60,7 @@ function index({ title, children, user = {}, onLogout} = {}) {
             <LeftMenu menu={<Menu user={user} logout={onLogout} admin={true} />}>
                 <Container maxWidth="lg">
                     <Breadcrumbs aria-label="Breadcrumb" className='breadscrumb'>
-                        <Link color="inherit" to="/admin">Inicio</Link>
+                        <Link color="primary" to="/admin">Inicio</Link>
                         <p>{title}</p>
                     </Breadcrumbs>
                 	{children}
