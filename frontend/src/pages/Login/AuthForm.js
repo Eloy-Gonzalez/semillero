@@ -1,20 +1,35 @@
 // @Vendors
-import React from 'react'
+import React, {useState, useCallback}from 'react'
 import {Formik, ErrorMessage} from 'formik';
 import * as Yup from 'yup'
 
 // @Components
 import CrsField from 'components/Form/CrsField'
 import Button from '@material-ui/core/Button'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import IconButton from '@material-ui/core/IconButton'
 
 // @React ReCAPTCHA
 import ReCAPTCHA from "react-google-recaptcha"
 
-function AuthForm({onSubmit, disabledButton=false}) {
-  const initialValues = {
-    username: '',
-    password: ''
-  }
+const initialvalues = {
+  username: '',
+  password: ''
+}
+
+function AuthForm({ initialValues = initialvalues, onSubmit, disabledButton=false}) {
+  const [state, setState] = useState({
+    showPassword: false
+  })
+  const handleClickShowPassword = useCallback(() => {
+    setState({ ...state, showPassword: !state.showPassword })
+  }, [setState, state])
+
+  const handleMouseDownPassword = useCallback((event) => {
+      event.preventDefault()
+    },[])
 
   const SignupSchema = Yup.object().shape({
     username: Yup.string()
@@ -46,8 +61,9 @@ function AuthForm({onSubmit, disabledButton=false}) {
                     color="primary"
                     helperText={<ErrorMessage name="username"/>}
                     error={errors.username && touched.username}
+                    autoFocus={true}
                  />
-                 <CrsField 
+                <CrsField
                     id="password"
                     name="password"
                     onChange={handleChange}
@@ -58,7 +74,21 @@ function AuthForm({onSubmit, disabledButton=false}) {
                     type="password"
                     helperText={<ErrorMessage name="password"/>}
                     error={errors.password && touched.password}
-                 />
+                    type={state.showPassword ? "text" : "password"}
+                    InputProps={{
+                            endAdornment: 
+                             <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                >
+                                  {state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                              </InputAdornment>
+
+                        }}
+                  />
                   <Button type="submit" variant="outlined" color="primary" disabled={disabledButton}>
                       { disabledButton ? 'Cargando...' : 'Ingresar'}
                   </Button>

@@ -3,7 +3,6 @@ import React, {useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
-import Iframe from 'react-iframe'
 
 // @ActionsTypes
 import {

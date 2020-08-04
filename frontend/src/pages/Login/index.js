@@ -49,6 +49,11 @@ const useStyles = makeStyles((theme) => ({
 function Login() {
 	const classes = useStyles()
 	const [open, setOpen] = React.useState(true)
+	const [state, setState] = React.useState({
+	    username: '',
+	    password: ''
+	})
+
 	const dispatch = useDispatch()
 	const loading = useSelector(state => selectLoading(state))
 
@@ -57,9 +62,10 @@ function Login() {
 	        username: data.username,
 	        password: data.password
 	    }
+    	setState(payload)
     	dispatch(login(payload))
     	actions.setSubmitting(false)
-  	}, [dispatch])
+  	}, [setState, dispatch])
 
 	const recoverPass = useCallback(() => {
 		dispatch(openModal(
@@ -97,7 +103,10 @@ function Login() {
 		        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>
 		            { loading ? <CircularProgress /> : 
 		            	<React.Fragment>
-		            	<AuthForm onSubmit={handleSubmit} disabledButton={loading}/>
+		            	<AuthForm 
+		            		initialValues={state}
+		            		onSubmit={handleSubmit} 
+		            		disabledButton={loading}/>
 		            	<br />
 			            <Button onClick={() => recoverPass()}>
 			            	<span style={{color: "var(--darkBlue)"}}>Recuperar contraseña</span>

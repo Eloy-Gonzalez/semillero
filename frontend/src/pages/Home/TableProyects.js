@@ -62,8 +62,8 @@ function TableProyects({ columns = [], rows = [], handleDelete, handleSubmit=nul
                   }}>
                     {
                       row.id_estatus === 1 ? "En revisión..."
-                      : rows.id_estatus === 2 ? "Aprobado"
-                      : "Rechazado" }
+                      : rows.id_estatus === 2 ? "¡Verificado!"
+                      : "¡Rechazado!" }
                   </i>
               </TableCell>
               <TableCell align="right">

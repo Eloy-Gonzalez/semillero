@@ -19,7 +19,7 @@ import 'moment/locale/es'
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650,
+    minWidth: "100%",
   },
 })
 
