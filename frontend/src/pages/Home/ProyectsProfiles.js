@@ -1,51 +1,52 @@
 // @Vendors
 import React, {Fragment,useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
+import 	{
+	startCase,
+	toLower
+} from 'lodash'
 
 // @Material UI
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 
-// @Selectors 
-import {selectProyects} from 'state/proyects/proyects.selectors'
+// @Icons
+import RefreshIcon from '@material-ui/icons/Refresh' 
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import DoneAllIcon from '@material-ui/icons/DoneAll'
+import CancelIcon from '@material-ui/icons/Cancel'
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 // @Actions
 import {getProyects, createProyectAction, deleteProyectAction} from 'state/proyects/proyects.actions'
 import {openModal, openDialogConfirm} from 'state/app/app.actions'
 
-// @Selectors
-import {selectLoading} from 'state/app/app.selectors'
+// @AtionsTypes
+import  {
+	GET_PROYECTS,
+	UPDATE_FILTERS
+} from 'state/proyects/proyects.actionsTypes'
 
 // @Components
-import Pagination from 'components/Pagination'
-import TableProyects from './TableProyects'
 import FormAddProyects from './FormAddProyects'
 import ActionsButtons from 'components/ActionsButtons'
-
-// @Hooks
-import usePagination from 'hooks/usePagination'
+import Table from 'components/Table'
 
 function ProyectsProfiles() {
 	const dispatch = useDispatch()
-	const proyects = useSelector(state => selectProyects(state))
-	const loading = useSelector(state => selectLoading(state))
-	const {
-		currentPost,
-		postsPerPage,
-		setCurrentPage
-	} = usePagination({ posts: proyects})
+	const proyects = useSelector(state => state.proyectsReducer.get("proyects"))
+	const filters = useSelector(state => state.proyectsReducer.get("filters"))
+	const isLoading = useSelector(state => state.appReducer.get("loading"))
 
-	useEffect(() => {
-		dispatch(getProyects())
-	}, [dispatch])
+    const {
+      order,
+      orderBy,
+      page,
+      rowsPerPage,
+      selected,
+    } = filters 
 
-	const columns = [
-		{label: "Nombre"},
-		{label: "Descripción"},
-		{label:"Hipervínculo"},
-		{label:"Estatus"}
-	]
 
 	const onSubmit = useCallback((values, actions) => {
 		dispatch(createProyectAction(values))
@@ -65,15 +66,79 @@ function ProyectsProfiles() {
 		dispatch(openModal(
 			<FormAddProyects 
 				onSubmit={onSubmit}
-				ActionsButtons={<ActionsButtons disableButton={loading}/>}
+				ActionsButtons={<ActionsButtons disableButton={isLoading}/>}
 			/>)
 		)
-	}, [dispatch, loading, onSubmit])
+	}, [dispatch, isLoading, onSubmit])
 
+	const columns = [
+		{ 
+			id: 'nombre',
+			numeric: true,
+			disablePadding: false,
+			label: 'Video',
+			rowProps: {
+				component: 'th', scope: 'row'
+			},
+			render: (value, row) => {
+				return <a href={row.url_video} target="_blank" rel="noopener noreferrer" style={{color: "#444"}}> {startCase(toLower(value))} </a>
+			}
+		},
+		{ 
+			id: 'descripcion',
+			numeric: true,
+			disablePadding: false,
+			label: 'Descripción',
+			render: (value) => {
+				return <span>{startCase(toLower(value))}</span>
+			}
+		},
+		{
+			id: 'id_estatus',
+			numeric: true,
+			disablePadding: true,
+			label: "Estado",
+			render: (value, row) => {
+				const title = value === 1 
+				? "En revisión..."
+				: value === 2 
+					? "¡Verificado!" : "¡Rechazado!"
+
+				return (
+					<div style={{ display:"flex",alignItems:"center" }}>
+						<Tooltip title={title}>
+							{(
+								value === 1 
+								? <AccessTimeIcon/>
+								: value === 2 ? <DoneAllIcon style={{color:"#39a838"}}/>
+								: <CancelIcon style={{color: "#ca626c"}}/>
+							)}
+						</Tooltip>
+						<IconButton onClick={() => onDelete(row.id, row.version)}>
+							<Tooltip title="Eliminar este video">
+								<DeleteIcon/>
+							</Tooltip>
+						</IconButton>
+					</div>
+				)
+			}
+		}
+	] 
+
+	useEffect(() => {
+		dispatch(getProyects())
+	}, [dispatch])
 	return (
 		<Fragment>
-			<p style={{textAlign:"right"}}>
-				<span style={{fontSize:"1.2em"}}>Nuevo video</span>
+			<p style={{textAlign:"center"}}>
+				<Tooltip title="Recargar tabla">
+					<IconButton 
+						aria-label="Recargar tabla"
+						onClick={() => dispatch({ type: GET_PROYECTS})}
+					>
+						<RefreshIcon />
+	                 </IconButton>
+                </Tooltip>
 				<Tooltip title="Registrar nuevo video">
 					<IconButton 
 						aria-label="Crear nuevo"
@@ -83,17 +148,43 @@ function ProyectsProfiles() {
 	                 </IconButton>
                 </Tooltip>
 			</p>
-			<TableProyects
-				columns={columns}
-				rows={currentPost}
-				handleDelete={onDelete}
-				onLoading={loading}
-			/>
-			<Pagination 
-				totalPosts={proyects.length}
-				postsPerPage={postsPerPage}
-				changePage={setCurrentPage}
-			/>
+
+	            <Table
+	              isLoading={isLoading}
+	              fieldId="id"
+	              columns={columns}
+	              rows={proyects}
+	              count={proyects.length}
+	              order={order}
+	              orderBy={orderBy}
+	              page={page}
+	              requestSort={ (order, orderBy) => {
+	              	dispatch({ 
+              			type: UPDATE_FILTERS,
+              			payload: { ...filters, order, orderBy }
+	              	})
+	              }}
+	              rowsPerPage={rowsPerPage}
+	              selected={selected}
+	              setPage={ page => {
+	              	dispatch({ 
+              			type: UPDATE_FILTERS,
+              			payload: { ...filters, page }
+	              	})
+	              }}
+	              setRowsPerPage={ rowsPerPage => {
+	              	dispatch({ 
+              			type: UPDATE_FILTERS,
+              			payload: { ...filters, rowsPerPage }
+	              	})
+	              }}
+	              setSelected={ selected => {
+	              	dispatch({ 
+              			type: UPDATE_FILTERS,
+              			payload: { ...filters, selected }
+	              	})
+	              }}
+	            />
 		</Fragment>
 	)
 }

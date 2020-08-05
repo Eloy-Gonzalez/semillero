@@ -13,7 +13,7 @@ export function getPeriodosService(){
 	return request.post(`${BASE_API}/periodos`, {params: {}})
 }
 
-export function registerNewProyectService(payload, ) {
+export function registerNewProyectService(payload) {
 	return request.post(`${BASE_API}/proyectos/create`, {params: payload})
 }
 

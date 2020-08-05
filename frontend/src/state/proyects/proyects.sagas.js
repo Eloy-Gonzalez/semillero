@@ -27,33 +27,32 @@ import {
 } from 'state/app/app.actionTypes'
 
 
-function* registerNewProyectWorker({ payload: Data }){
+function* registerNewProyectWorker({ payload }){
   try {
     yield put({ type: REQUEST_STARTED })
 
     try {
       // Obtener id del usuario
-      const {user} = jsonwebtoken.decode(getToken())
+      const {id} = jsonwebtoken.decode(getToken({ recorted: true}))
       
       // Obtener y filtrar el (los) periodo(s) activo(s)
       const periodos = yield call(getPeriodosService)
       const periodoActivo = periodos.data.filter(periodo => periodo.estado === true)
       const id_periodo = periodoActivo[0].id
 
-      // Armar objeto con id del usuario e id periodo activo
-      const payload = {
-          id_usuario: user.id,
+      const params = {
+          id_usuario: id,
           id_periodo, 
-          ...Data
+          ...payload
         }
-      const response = yield call(registerNewProyectService, payload)
+      const response = yield call(registerNewProyectService, params)
       const {alert} = response.data
       const {message} = alert
 
       if(alert.type === "success") {
-        yield put({ type: REQUEST_SUCCESS, payload: message})
-        yield put({ type: GET_PROYECTS})
         yield put({ type: MODAL_CLOSE})
+        yield put({ type: GET_PROYECTS})
+        yield put({ type: REQUEST_SUCCESS, payload: message})
       } else {
         yield put({
           type: REQUEST_FAILURE,

@@ -15,8 +15,8 @@ const initialState = Map().merge({
     page: 0,
     search: {},
     rowsPerPage: 5,
-    order: 'asc',
-    orderBy: 'tipo',
+    order: 'desc',
+    orderBy: 'fecha',
     selected: []
   },
 

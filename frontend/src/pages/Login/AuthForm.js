@@ -14,12 +14,12 @@ import IconButton from '@material-ui/core/IconButton'
 // @React ReCAPTCHA
 import ReCAPTCHA from "react-google-recaptcha"
 
-const initialvalues = {
+const initial = {
   username: '',
   password: ''
 }
 
-function AuthForm({ initialValues = initialvalues, onSubmit, disabledButton=false}) {
+function AuthForm({ initialValues = initial, onSubmit, disabledButton=false}) {
   const [state, setState] = useState({
     showPassword: false
   })
@@ -64,14 +64,12 @@ function AuthForm({ initialValues = initialvalues, onSubmit, disabledButton=fals
                     autoFocus={true}
                  />
                 <CrsField
-                    id="password"
                     name="password"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.password}
                     label="Contraseña"
                     color="primary"
-                    type="password"
                     helperText={<ErrorMessage name="password"/>}
                     error={errors.password && touched.password}
                     type={state.showPassword ? "text" : "password"}
@@ -86,11 +84,10 @@ function AuthForm({ initialValues = initialvalues, onSubmit, disabledButton=fals
                                   {state.showPassword ? <Visibility /> : <VisibilityOff />}
                                 </IconButton>
                               </InputAdornment>
-
                         }}
                   />
                   <Button type="submit" variant="outlined" color="primary" disabled={disabledButton}>
-                      { disabledButton ? 'Cargando...' : 'Ingresar'}
+                      Ingresar
                   </Button>
 
                   <ReCAPTCHA

@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import ListAltIcon from '@material-ui/icons/ListAlt'
 import moment from 'moment'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
@@ -24,7 +23,7 @@ const useStyles = makeStyles({
 })
 
 
-function TablePeriodos({ columns = [], rows = [], handleView, handleEdit, handleDelete,  handleSubmit=null, onLoading, pagination =""}) {
+function TablePeriodos({ columns = [], rows = [], handleEdit, handleDelete,  handleSubmit=null, onLoading, pagination =""}) {
   const classes = useStyles()
 
   return (
@@ -68,18 +67,13 @@ function TablePeriodos({ columns = [], rows = [], handleView, handleEdit, handle
               </TableCell>
               
               <TableCell align="right">
-                <Tooltip title="Detalles">
-                  <IconButton aria-label="Ver" onClick={() => handleView(row.id)}>
-                    <ListAltIcon/>
-                  </IconButton>
-                </Tooltip>
                 <Tooltip title="Editar">
                   <IconButton aria-label="Editar" onClick={() => handleEdit(row.id, row.version)}>
                     <EditIcon/>
                   </IconButton>
                 </Tooltip>
                 <Tooltip title="Eliminar">
-                  <IconButton aria-label="Eliminar" onClick={() => handleDelete(row.id)}>
+                  <IconButton aria-label="Eliminar" onClick={() => handleDelete(row.id, row.version)}>
                     <DeleteIcon />
                   </IconButton>
                 </Tooltip>

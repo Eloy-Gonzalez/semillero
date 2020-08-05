@@ -15,7 +15,7 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import Button from '@material-ui/core/Button'
 
 
-export default function FormUpdateVideo({ actualValue="1", initialValues, onSubmit, data={} }) {
+export default function FormUpdateVideo({ loading=false, actualValue="1", initialValues, onSubmit, data={} }) {
 	const SignupSchema = Yup.object().shape({
 	  id_estatus: Yup.string().required("¡Campo obligatorio!") 
 	})
@@ -27,7 +27,7 @@ export default function FormUpdateVideo({ actualValue="1", initialValues, onSubm
 		validationSchema={SignupSchema}
 		>
 			{
-				({errors, touched, values, handleChange, handleBlur, handleSubmit}) => (
+				({errors, touched, values, handleChange, handleBlur, handleSubmit, isSubmitting}) => (
 					<form onSubmit={handleSubmit}>
 					    <FormControl component="fieldset">
 					      <FormLabel component="legend">Cambiar Estado</FormLabel>
@@ -45,8 +45,8 @@ export default function FormUpdateVideo({ actualValue="1", initialValues, onSubm
 					      <FormHelperText>
 					      	<ErrorMessage name="id_estatus"/>
 					      </FormHelperText>
-					      <Button type="submit" variant="outlined" disabled={values.id_estatus === actualValue ? true : false}>
-					      	Aceptar
+					      <Button type="submit" variant="outlined" disabled={values.id_estatus === actualValue || isSubmitting ? true : false}>
+					      	{isSubmitting ? "Cargando..." : "Aceptar"}
 					      </Button>
 					    </FormControl>
 					</form>

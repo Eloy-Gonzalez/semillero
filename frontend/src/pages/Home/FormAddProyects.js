@@ -4,7 +4,7 @@ import {Formik, ErrorMessage} from 'formik';
 import * as Yup from 'yup'
 
 // @Services
-import {getCategoriesService} from 'state/proyects/proyects.services'
+import {getCategoriasService} from 'state/categorias/categorias.services'
 
 // @Components
 import CrsField from 'components/Form/CrsField'
@@ -17,7 +17,7 @@ function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 	const [categorias, setCategorias] = useState([])
 	
 	const getCategories = React.useCallback(async () => {
-		const allCategories = await getCategoriesService()
+		const allCategories = await getCategoriasService()
 		const {data} = allCategories
 		
 		const rows = []

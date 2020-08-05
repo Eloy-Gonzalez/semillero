@@ -5,7 +5,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+//import Checkbox from '@material-ui/core/Checkbox';
 
 class EnhancedTableHead extends Component {
 	createSortHandler = property => event => {
@@ -15,11 +15,11 @@ class EnhancedTableHead extends Component {
 
 	render() {
 		const {
-			onSelectAllClick,
+			//onSelectAllClick,
 			order,
 			orderBy,
-			numSelected,
-			rowCount,
+			//numSelected,
+			//rowCount,
 			columns
 		} = this.props;
 

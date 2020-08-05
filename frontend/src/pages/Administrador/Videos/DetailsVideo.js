@@ -1,5 +1,6 @@
 // @Vendors
-import React from 'react'
+import React, {useCallback} from 'react'
+import {useDispatch} from 'react-redux'
 import {
 	isEmpty,
 	startCase,
@@ -15,29 +16,50 @@ import {
 	TableHead,
 	TableRow,
 	TableCell,
-	Tooltip
+	Tooltip,
+	Button
 } from '@material-ui/core'
+// @Icons
+import DeleteIcon from '@material-ui/icons/Delete'
 
 // @Components
 import FormUpdateVideo from './FormUpdateVideo'
 import Alert from 'components/Alert'
 
-function DetailsVideo({ data }) {
+// @ActionsTypes
+import {UPDATE_VIDEO, DELETE_VIDEO} from 'state/admin/videos/videos.actionsTypes'
+import {openDialogConfirm} from 'state/app/app.actions'
+
+function DetailsVideo({ data, loading=false }) {
+	console.log(data)
+	const dispatch = useDispatch()
 	const status = `${data.value}` ||  "1"
-	const {Usuario, nombre, descripcion, fecha, url_video} = data.row
+	const {Usuario, nombre, descripcion, fecha, url_video, version, id} = data.row
 	const {usuarios_perfil, username} = Usuario
 	const {cedula, primer_nombre,segundo_nombre, primer_apellido, segundo_apellido} = usuarios_perfil
 
 	const credenciales = startCase(toLower(`${primer_nombre} ${segundo_nombre} ${primer_apellido} ${segundo_apellido}`)) || "No hay Información."
 
-	const onSubmit = React.useCallback((data) => {
-		alert()
-		console.log(data)
-	},[])
+	const onSubmit = React.useCallback( (data, actions) => {
+		const id_estatus = Number(data.id_estatus)
+		const payload = {id_estatus, id, version, nombre, descripcion, fecha, url_video}
+		dispatch({type: UPDATE_VIDEO, payload})
+		actions.setSubmitting(false)
+	},[dispatch, id, version, nombre, descripcion, fecha, url_video])
 
 	const initialValues = {
 		id_estatus: status
 	}
+
+	const onDelete = useCallback((id, version) => {
+		const payload = {id, version}
+
+		dispatch(openDialogConfirm({
+			title:"Eliminar video",
+			description: "¿Seguro de Eliminar este video de forma permantene?",
+			onConfirm: () => dispatch({ type: DELETE_VIDEO, payload})
+		}))
+	}, [dispatch])
 
 	const alertOptions = {
 		"1": ["info", "¡Éste video aún no ha sido verificado!"],
@@ -74,7 +96,7 @@ function DetailsVideo({ data }) {
 							<TableCell padding="none">Link del video</TableCell>
 							<TableCell padding="none" >
 								<p>
-									<Tooltip title={isEmpty(descripcion) ? "No hay descripción" : descripcion}>
+									<Tooltip title={isEmpty(descripcion) ? "No hay descripción" : startCase(toLower(descripcion))}>
 										<a href={url_video} target="_blank" rel="noopener noreferrer"> {startCase(toLower(nombre))} </a>
 									</Tooltip>
 								</p>
@@ -97,7 +119,16 @@ function DetailsVideo({ data }) {
 					data={data.row}
 					actualValue={status}
 					onSubmit={onSubmit}
+					loading={loading}
 				/>
+			<Grid item sm={12} style={{textAlign: "center"}}>
+				<Tooltip title="¡Elimina este video de forma permante!">
+					<Button onClick={onDelete}>
+						<DeleteIcon style={{color: "#ca626c"}} />
+						<span style={{color:"#ca626c"}}>Eliminar este video</span>
+					</Button>
+				</Tooltip>
+			</Grid>
 			</Grid>
 		</Grid>
 	)

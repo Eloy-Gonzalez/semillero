@@ -15,9 +15,10 @@ import Logo from 'statics/images/logos/juventud.png'
 
 const Frame = styled.div`
 	display:grid;
-	grid-template-columns: 1fr;
+	grid-template-columns: 100%;
 	grid-template-rows: auto 1fr auto;
 	min-height: 100vh;
+    width: 100%;
 
     & .menu {
         margin: 0;
@@ -42,10 +43,7 @@ const Frame = styled.div`
         }
     }
 
-	@media (min-width: 720px){
-		grid-template-columns: 200px 1fr;
-	}
-	@media (min-width: 1024px){
+	@media (min-width: 1024px) {
 		grid-template-columns: 250px 1fr;
 	}
 `
@@ -58,7 +56,7 @@ function index({ title, children, user = {}, onLogout} = {}) {
                 <title>{title} - CRS</title> 
             </Helmet>
             <LeftMenu menu={<Menu user={user} logout={onLogout} admin={true} />}>
-                <Container maxWidth="lg">
+                <Container maxWidth="md">
                     <Breadcrumbs aria-label="Breadcrumb" className='breadscrumb'>
                         <Link color="primary" to="/admin">Inicio</Link>
                         <p>{title}</p>

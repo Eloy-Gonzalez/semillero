@@ -1,5 +1,5 @@
 // @Vendors
-import React, {Fragment, useState, useEffect, useCallback} from 'react'
+import React, {Fragment, useEffect, useCallback} from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 
 // @ActionsTypes
@@ -25,17 +25,22 @@ import {openModal, openDialogConfirm} from 'state/app/app.actions'
 
 // @ActionsTypes
 import {
-	//CREATE_PERIODO,
-	// UPDATE_PERIODO,
-	DELETE_PERIODO
+	CREATE_PERIODO,
+	UPDATE_PERIODO,
+	DELETE_PERIODO,
+	SHOW_FORM
 } from 'state/periodos/periodos.actionsTypes'
 
 function Periodos(){
 	const dispatch = useDispatch()
 	const periodos = useSelector(state => state.periodosReducer.get('periodos'))
 	const loading = useSelector(state => state.appReducer.get('loading'))
-	const [showForm, setShowForm] = useState(false)
+	const showForm = useSelector(state => state.periodosReducer.get('showForm'))
 	
+	const setShowForm = useCallback( (payload) => {
+		dispatch({ type: SHOW_FORM, payload})
+	}, [dispatch])
+
 	const {
 		currentPage,
 		currentPost,
@@ -54,10 +59,6 @@ function Periodos(){
   		dispatch({type: GET_PERIODOS})
   	}, [dispatch])
 
-  	const onView = (id) => {
-  		alert(id)
-  	}
-
   	const onEdit = (id) => {
   		const editPeriodo = periodos.filter((prd) => prd.id === id )
   		dispatch(openModal(
@@ -66,7 +67,8 @@ function Periodos(){
 				<FormPeriodos
 					initValues={editPeriodo}
 					onSubmit={(values) => {
-					console.log(values)
+						const payload = {id, ...values}
+						dispatch({type: UPDATE_PERIODO, payload})
 					}}
 					ActionsButtons={
 						<ActionsButtons disableButton={loading}/>
@@ -86,13 +88,13 @@ function Periodos(){
 	}, [periodos, dispatch])
 
   	const onCreate = (values) => {
-  		console.log(values)
+  		dispatch({ type: CREATE_PERIODO, payload: values})
   	}
 
 	return (
 		<Fragment>
 			<h1>{( showForm ? "Crear Nuevo Período" : "Administrar Periodos")}</h1>
-			<IconButton onClick={() => setShowForm(prev => !prev)}>
+			<IconButton onClick={() => setShowForm(!showForm)}>
 				{( showForm 
 					? <Tooltip title="Regresar">
 						<ArrowBackIosIcon/>
@@ -118,7 +120,6 @@ function Periodos(){
 						columns={columns}
 						rows={currentPost}
 						onLoading={loading}
-						handleView={onView}
 						handleEdit={onEdit}
 						handleDelete={onDelete}
 					/>

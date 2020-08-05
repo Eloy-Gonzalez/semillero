@@ -1,32 +1,33 @@
-import React, {Fragment} from 'react';
+import React, {Fragment} from 'react'
 import styled from 'styled-components'
 import {withRouter} from 'react-router-dom'
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/core/styles'
+import Drawer from '@material-ui/core/Drawer'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import List from '@material-ui/core/List'
+import Divider from '@material-ui/core/Divider'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Collapse from '@material-ui/core/Collapse'
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
 
 // @Icons - @Material UI
-import AlarmIcon from '@material-ui/icons/Alarm';
+import AlarmIcon from '@material-ui/icons/Alarm'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import LoopIcon from '@material-ui/icons/Loop';
-import CategoryIcon from '@material-ui/icons/Category';
-import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
+import LoopIcon from '@material-ui/icons/Loop'
+import CategoryIcon from '@material-ui/icons/Category'
+import OndemandVideoIcon from '@material-ui/icons/OndemandVideo'
 import Grid from '@material-ui/core/Grid'
+import HomeIcon from '@material-ui/icons/Home'
 
 // @Statics > Logos
 import LogoSemilleros from 'statics/images/logos/juventud.png'
@@ -60,7 +61,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     "& svg": {
       color: "#777"
-    }
+    },
+     [theme.breakpoints.up(1024)]: {
+      display: "none"
+    },
   },
   hide: {
     display: 'none',
@@ -81,13 +85,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
     justifyContent: 'center',
     minHeight: "300px",
     height: "auto",
     position: "relative", 
     padding: "20px",
-    boxSizing:"border-box"
+    boxSizing:"border-box",
+    ...theme.mixins.toolbar
   },
   content: {
     flexGrow: 1,
@@ -114,19 +118,20 @@ const useStyles = makeStyles((theme) => ({
   heightHeader: {
     height: "64px"
   }
-}));
+}))
 
 const BoxIcon = styled.div`
   width: 100%;
-    padding: 20px 30px 0 5px;
-    box-sizing: border-box;
-    max-width: 100%;
-    max-height: 100%;
-    img {
-      float: left;
-      width: 100%;
-      height: 100%;
-    }
+  padding: 20px 30px 0 5px;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  img {
+    float: left;
+    width: 100%;
+    height: 100%;
+  }
 `
 
 function LeftMenu({ history, children, menu }) {
@@ -138,7 +143,7 @@ function LeftMenu({ history, children, menu }) {
   const {width} = useWindowWidth()
 
   React.useEffect(() => {
-    if (width !== 0 &&  width < 720) {
+    if (width !== 0 &&  width < 1024) {
       setOpen(false)
     } else {
       setOpen(true)
@@ -151,12 +156,12 @@ function LeftMenu({ history, children, menu }) {
   }
 
   const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const handleDrawerClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleClick = () => {
     setOpenList(!openList)
@@ -226,6 +231,13 @@ function LeftMenu({ history, children, menu }) {
                 </ListSubheader>
             }
             >
+            <ListItem button onClick={() => link("")}>
+                <ListItemIcon>
+                  <HomeIcon/>
+                </ListItemIcon>
+                <ListItemText primary="Inicio" />
+            </ListItem>
+
             <ListItem button onClick={() => link("/periodos")}>
                 <ListItemIcon>
                   <AlarmIcon/>
@@ -274,9 +286,7 @@ function LeftMenu({ history, children, menu }) {
       </Drawer>
 
         <main
-          className={clsx(classes.content, {
-            [classes.contentShift]: open,
-          })}
+          className={clsx(classes.content, classes.contentShift)}
         >
           <div className={classes.heightHeader}/>
           {children}

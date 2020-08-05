@@ -1,7 +1,19 @@
 // @Vendors
-import axios from 'axios'
+import request from 'utils/request'
 import { BASE_API } from "constants/index"
 
-export function getPeriodosService(borrado = false) {
-	return axios.post(`${BASE_API}/periodos`, { params: borrado })
+export function getPeriodosService() {
+	return request.post(`${BASE_API}/periodos`, { params: {borrado: false} })
+}
+
+export function createPeriodoService(params) {
+	return request.post(`${BASE_API}/periodos/create`, { params })
+}
+
+export function updateProyectService(params) {
+	return request.post(`${BASE_API}/periodos/update`, { params })
+}
+
+export function deleteProyectService(params) {
+	return request.post(`${BASE_API}/periodos/delete`, { params })
 }

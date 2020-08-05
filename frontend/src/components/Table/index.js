@@ -1,6 +1,6 @@
 import React from 'react';
 import {  makeStyles } from '@material-ui/core/styles';
-import Checkbox from '@material-ui/core/Checkbox';
+// import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import Skeleton from 'react-loading-skeleton';
 import Table from '@material-ui/core/Table';
@@ -35,8 +35,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-function EnhancedTable(props) {
-	const {
+function EnhancedTable({
 		columns,
 		fieldId,
 		isLoading,
@@ -51,8 +50,9 @@ function EnhancedTable(props) {
 		setPage,
 		setRowsPerPage,
 		setSelected,
-		delClick
-	} = props;
+		delClick,
+		count = rows.length
+	}) {
 
 	const classes = useStyles();
 
@@ -70,7 +70,7 @@ function EnhancedTable(props) {
 		setSelected([]);
 	}
 
-	function handleClick(event, name) {
+	/*function handleClick(event, name) {
 		const selectedIndex = selected.indexOf(name);
 		let newSelected = [];
 		if (selectedIndex === -1) {
@@ -86,10 +86,10 @@ function EnhancedTable(props) {
 			);
 		}
 		setSelected(newSelected);
-	}
+	}*/
 
 	function handleChangePage(event, newPage) {
-		setPage(newPage);
+		setPage(newPage)
 	}
 
 	function handleChangeRowsPerPage(event) {
@@ -194,7 +194,7 @@ function EnhancedTable(props) {
 										.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 										.map((row, index) => {
 										const isItemSelected = isSelected(row[fieldId]);
-										const labelId = `enhanced-table-checkbox-${index}`;
+										//const labelId = `enhanced-table-checkbox-${index}`;
 
 										return (
 											<TableRow
@@ -243,7 +243,7 @@ function EnhancedTable(props) {
 				<TablePagination
 					rowsPerPageOptions={[5, 10, 25]}
 					component="div"
-					count={rows.length}
+					count={count}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					backIconButtonProps={{

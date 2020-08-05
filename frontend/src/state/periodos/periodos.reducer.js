@@ -2,11 +2,21 @@ import { Map } from 'immutable'
 
 import {
   SET_PERIODOS,
-  CLEAR_PERIODOS
+  CLEAR_PERIODOS,
+  SHOW_FORM
 } from './periodos.actionsTypes'
 
 const initialState = Map().merge({
-  periodos: []
+  periodos: [],
+  filters: {
+    page: 0,
+    search: {},
+    rowsPerPage: 5,
+    order: 'asc',
+    orderBy: 'tipo',
+    selected: []
+  },
+  showForm: false
 })
 
 const periodosReducer = (state = initialState, { type, payload }) => {
@@ -20,6 +30,11 @@ const periodosReducer = (state = initialState, { type, payload }) => {
       return state.merge({
         periodos: []
     })
+
+      case SHOW_FORM: 
+        return state.merge({
+          showForm: payload
+        })
 
     default:
       return state

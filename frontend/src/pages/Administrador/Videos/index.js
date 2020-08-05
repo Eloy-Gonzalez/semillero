@@ -3,6 +3,10 @@ import React, {useEffect, useCallback} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
+import 	{
+	startCase,
+	toLower
+} from 'lodash'
 
 // @ActionsTypes
 import {
@@ -23,7 +27,7 @@ import DetailsVideo from './DetailsVideo'
 // @Icons
 import DoneAllIcon from '@material-ui/icons/DoneAll'
 import CancelIcon from '@material-ui/icons/Cancel'
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import RefreshIcon from '@material-ui/icons/Refresh'
 
 function Videos(){
@@ -32,7 +36,7 @@ function Videos(){
 	const filters = useSelector( state => state.videosReducer.get("filters"))
 	const isLoading = useSelector(state => state.appReducer.get('loading'))
 
-	const {rows} = videos
+	const {rows, count} = videos
     const {
       order,
       orderBy,
@@ -42,9 +46,9 @@ function Videos(){
     } = filters
 
     const changeState = useCallback( (value, row) => {
-    	const payload = <DetailsVideo data={ {value, row} } />
+    	const payload = <DetailsVideo loading={isLoading} data={ {value, row} } />
     	dispatch({ type: MODAL_OPEN, payload })
-    }, [dispatch])
+    }, [dispatch, isLoading])
 
 	const columns = [
 		{
@@ -66,7 +70,7 @@ function Videos(){
 			disablePadding: false,
 			label: 'Video',
 			render: (value, row) => {
-				return <a href={row.url_video} target="_blank" rel="noopener noreferrer" style={{color: "#444"}}> {value} </a>
+				return <a href={row.url_video} target="_blank" rel="noopener noreferrer" style={{color: "#444"}}> {startCase(toLower(value))} </a>
 			}
 		},
 		{
@@ -74,7 +78,7 @@ function Videos(){
 			numeric: true,
 			disablePadding: false,
 			label: 'Fecha de Subida',
-			render: value => value ? moment(value).format("DD/MM/YYYY") : '-'
+			render: value => value ?moment(value,"YYYYMMDD").format("ll") : '-'
 		},
 		{
 			id: 'id_estatus',
@@ -85,10 +89,9 @@ function Videos(){
 				
 				const title = 
 				value === 1 
-				? "En espera..."
-				: value === 2 ? "¡Aprobado!"
+				? "En revisión..."
+				: value === 2 ? "¡Verificado!"
 				: "¡Rechazado!"
-
 
 				return <IconButton onClick={() => changeState(value, row)}>
 					<Tooltip title={title}>
@@ -112,17 +115,23 @@ function Videos(){
 		<Grid container maxwidth="md" spacing={2} justify="center">
 			<Grid item sm={12}>
 				<h1>Administrar Videos</h1>
-				<Tooltip title="Recargar datos">
-					<IconButton onClick={() => dispatch({ type: GET_VIDEOS })}>
-						<RefreshIcon style={{color:"#777"}}/>
-					</IconButton>
-				</Tooltip>
+				{
+					!isLoading && 
+					<div style={{textAlign:"center"}}>
+						<Tooltip title="Actualizar tabla">
+							<IconButton onClick={() => dispatch({ type: GET_VIDEOS })}>
+								<RefreshIcon style={{color:"#777"}}/>
+							</IconButton>
+						</Tooltip>
+					</div>
+				}
 
 	            <Table
 	              isLoading={isLoading}
 	              fieldId="id"
 	              columns={columns}
 	              rows={rows}
+	              count={count}
 	              order={order}
 	              orderBy={orderBy}
 	              page={page}

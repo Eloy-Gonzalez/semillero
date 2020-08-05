@@ -5,9 +5,6 @@ import {withRouter} from 'react-router-dom'
 
 // @MaterialUI
 import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 // @Components 
 import DatosPersonales from './Components/DatosPersonales'
@@ -48,16 +45,6 @@ function Profile({ history }) {
 	return (
 		<Fragment>
 			<Grid container maxwidth="md" spacing={4} justify="center" style={{textAlign: "center"}}>
-				<Grid item sm={12} style={{textAlign: "left", padding: "30px 0 0 0"}}>
-	              <IconButton 
-	                aria-label="Atrás"
-	                onClick={() => history.push("/")}
-	              >
-	                <Tooltip title="Volver A Inicio">
-	                  <ArrowBackIosIcon/>
-	                </Tooltip>
-	              </IconButton>
-				</Grid>
 				<Grid item sm={12} md={8}>
 					<DatosPersonales 
 						user={userProfile}
