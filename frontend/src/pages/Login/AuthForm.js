@@ -23,9 +23,10 @@ function AuthForm({ initialValues = initial, onSubmit, disabledButton=false}) {
   const [state, setState] = useState({
     showPassword: false
   })
+
   const handleClickShowPassword = useCallback(() => {
-    setState({ ...state, showPassword: !state.showPassword })
-  }, [setState, state])
+    setState(prev => ({showPassword: !prev.showPassword }))
+  }, [setState])
 
   const handleMouseDownPassword = useCallback((event) => {
       event.preventDefault()

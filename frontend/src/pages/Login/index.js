@@ -100,19 +100,18 @@ function Login() {
 		        	<div className="avatar">
 		        		<img src={avatar} alt="avatar"/>
 		        	</div>    
-		        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p>
-		            { loading ? <CircularProgress /> : 
-		            	<React.Fragment>
-		            	<AuthForm 
-		            		initialValues={state}
-		            		onSubmit={handleSubmit} 
-		            		disabledButton={loading}/>
-		            	<br />
-			            <Button onClick={() => recoverPass()}>
-			            	<span style={{color: "var(--darkBlue)"}}>Recuperar contraseña</span>
-			            </Button>
-			            </React.Fragment>
-			        }
+		        	<p style={{fontSize: "30px",fontWeight: "bold",color: "#2C395E"}}>Iniciar Sesión</p> 
+	            	<div style={{display: loading ? "none" : "block"}}>
+	            	<AuthForm 
+	            		initialValues={state}
+	            		onSubmit={handleSubmit} 
+	            		disabledButton={loading}/>
+	            	<br />
+		            <Button onClick={() => recoverPass()}>
+		            	<span style={{color: "var(--darkBlue)"}}>Recuperar contraseña</span>
+		            </Button>
+		            </div>
+		            {loading && <CircularProgress />}
 		        </div>
 	      	</Grid>
 	      </Grid>

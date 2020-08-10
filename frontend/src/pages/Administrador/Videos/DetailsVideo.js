@@ -31,7 +31,6 @@ import {UPDATE_VIDEO, DELETE_VIDEO} from 'state/admin/videos/videos.actionsTypes
 import {openDialogConfirm} from 'state/app/app.actions'
 
 function DetailsVideo({ data, loading=false }) {
-	console.log(data)
 	const dispatch = useDispatch()
 	const status = `${data.value}` ||  "1"
 	const {Usuario, nombre, descripcion, fecha, url_video, version, id} = data.row

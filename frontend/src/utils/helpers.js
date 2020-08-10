@@ -6,11 +6,12 @@ import {API_KEY, BASE_API} from 'constants/index'
 import moment from 'moment'
 import 'moment/locale/es'
 
+// @Constants
+import {ADMINISTRADOR, ROOT} from 'constants/index'
+
 import {AUTH_TOKEN} from 'state/auth/auth.actionsTypes'
 
-// Operaciones para el Token de Autenticación
 export function getToken({key = AUTH_TOKEN, recorted = false} = {}) {
-  
   if(recorted) {
     const TOKEN = JSON.parse(localStorage.getItem(key)) || false
     if(TOKEN) {
@@ -34,6 +35,19 @@ export function removeToken(key = AUTH_TOKEN) {
   if(getToken(key)) {
     localStorage.removeItem(key)
     return true
+  }
+  return false
+}
+
+export function verifyToken(tokenName = AUTH_TOKEN, recorted = false) {
+  const token = getToken({key: tokenName, recorted: recorted})
+  if(token) {
+    const {exp} = jsonwebtoken.decode(token) || 0
+    if(exp > Math.floor(Date.now() / 1000)){
+      return token
+    } else {
+      return false
+    }
   }
   return false
 }
@@ -74,4 +88,28 @@ export function compareAge(date, edadCompare){
   let years = moment.duration(diff).years()
     
   return years <= edadCompare ? years : false
+}
+
+export function userCan(rolName, rolId) {
+  try {
+    const rolesList = [ [ADMINISTRADOR, 3], [ROOT, 2] ]
+    for(let i = 0; i < rolesList.length; i++) {
+      if(rolesList[i][0] === rolName && rolesList[i][1] === rolId){
+        return true
+      }
+    }
+    return false
+  } catch(err) {
+    console.error(err)
+    return false
+  }
+
+/*    if(rolName === ADMINISTRADOR && rolId === 3) {
+        return true
+    } else if(rolName === ROOT && rolId === 2) {
+        return true
+    } else {
+        return false
+    }
+*/
 }

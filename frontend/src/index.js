@@ -1,13 +1,13 @@
 // @Vendors
-import React from 'react';
-import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './store';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import * as serviceWorker from './serviceWorker'
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from './store'
 
 // @Components
-import App from 'pages/App';
+import App from 'pages/App'
 
 // @Statics > Styles
 import 'statics/styles/index.scss'
@@ -18,5 +18,5 @@ ReactDOM.render(
 			<App />
 		</BrowserRouter>
 	</Provider>,
-	document.getElementById('root'));
-serviceWorker.unregister();
+	document.getElementById('root'))
+serviceWorker.unregister()

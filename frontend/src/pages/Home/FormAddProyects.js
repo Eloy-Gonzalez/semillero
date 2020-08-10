@@ -10,11 +10,12 @@ import {getCategoriasService} from 'state/categorias/categorias.services'
 import CrsField from 'components/Form/CrsField'
 
 // @Material UI
-import {Checkbox, FormControlLabel, FormHelperText, FormControl, FormLabel} from '@material-ui/core'
+import {Checkbox, FormControlLabel, FormHelperText, FormControl} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 
 function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 	const [categorias, setCategorias] = useState([])
+	const [loadingCategorias, setloadingCategorias] = useState(true)
 	
 	const getCategories = React.useCallback(async () => {
 		const allCategories = await getCategoriasService()
@@ -25,6 +26,7 @@ function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 			rows.push({ label: index.nombre, value: index.id})
 		})
 		setCategorias(rows)
+		setloadingCategorias(false)
 	}, [])
 
 	useEffect(() => {
@@ -71,20 +73,7 @@ function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 							error={errors.nombre && touched.nombre}
 						/>
 					</Grid>
-					<Grid item sm={12} md={4}>
-						<CrsField
-							name="descripcion"
-							onChange={handleChange}
-							onBlur={handleBlur}
-							value={values.descripcion}
-							label="Descripción (*)"
-							color="primary"
-							helperText={<ErrorMessage name='descripcion' />}
-							error={errors.descripcion && touched.descripcion}
-						/>
-					</Grid>
-
-					<Grid item sm={12} md={4}>
+					<Grid item sm={12} md={8}>
 						<CrsField
 							name="url_video"
 							onChange={handleChange}
@@ -96,16 +85,29 @@ function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 							error={errors.url_video && touched.url_video}
 						/>
 					</Grid>
+					<Grid item sm={12}>
+						<CrsField
+							name="descripcion"
+							onChange={handleChange}
+							onBlur={handleBlur}
+							value={values.descripcion}
+							label="Descripción (*)"
+							color="primary"
+							helperText={<ErrorMessage name='descripcion' />}
+							error={errors.descripcion && touched.descripcion}
+						/>
+					</Grid>
 					
-					<Grid item sm={12} md={6}>
+					<Grid item sm={12} md={12}>
 						 <FormControl required error={errors.categorias && touched.categorias && true} component="fieldset">
-						        <FormLabel className="app--text-second" component="legend">
-						        	Categorias
-						        </FormLabel>
+						        <p style={{margin: "0"}} className="app--text-second">
+						        	{ loadingCategorias ?  "Cargando categorías..." : "Categorias (*)" }
+						        </p>
+						        <Grid container spacing={2} justify="center">
 						        {
 						        	categorias.map( ({ label, value }) => (
+						        		<Grid item sm={12} md={6} key={label+value}>
 						        		<FormControlLabel
-						        			key={label+value}
 								            control={
 								        		<Checkbox
 								        			onChange={handleChange}
@@ -115,9 +117,11 @@ function FormAddProyect ({onSubmit, ActionsButtons=""}) {
 								            }
 								            label={label}
 								          />
+								          </Grid>
 						        		)
-					      			)
+					      			)				      			
 						        }
+					      		</Grid>
 						    <FormHelperText><ErrorMessage name='categorias' /></FormHelperText>
 						</FormControl>
 	            	</Grid>
