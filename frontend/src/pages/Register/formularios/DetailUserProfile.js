@@ -74,7 +74,7 @@ function DetailUserProfile({ ActionsButtons, onSubmit }){
 						<Title>Fecha de nacimiento</Title>
 					</label>
 					<span>
-						<Text>{moment(nacimiento,"YYYYMMDD").calendar()}</Text>
+						<Text>{moment(nacimiento,"YYYYMMDD").format("ll")}</Text>
 					</span>
 				</div>
 				<div>

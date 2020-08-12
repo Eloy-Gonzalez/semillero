@@ -34,7 +34,8 @@ const AvatarSettings = styled.div`
         font-size: 20px;
     }
     svg {
-        color: #fff
+        color: #999;
+        margin-left: 8px; 
     }
 `
 
@@ -82,8 +83,8 @@ function MenuC({ user = {}, logout = () => console.log("First login"), history, 
             style={{borderRadius: "10px"}}
             >
                 <AvatarSettings>
-                <Avatar width="45px" height="45px" />
-                <ExpandMoreIcon />
+                    <Avatar width="45px" height="45px" />
+                    <ExpandMoreIcon />
                 </AvatarSettings>
             </IconButton>
             <Menu

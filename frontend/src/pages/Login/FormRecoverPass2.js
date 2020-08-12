@@ -6,7 +6,6 @@ import * as Yup from 'yup'
 // @Components
 import CrsField from 'components/Form/CrsField'
 import Button from '@material-ui/core/Button'
-import CardSimple from 'components/CardSimple'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
@@ -38,10 +37,10 @@ function FormRecoverPass2({pregunta, onSubmit, disabledButton=false}) {
   })
   
   return (
-        <div>
-          <CardSimple>
-            {pregunta}
-          </CardSimple>
+      <React.Fragment>
+            <p className="app--text-second" style={{magin: "0"}}>
+              <span style={{textTransform: "capitalize", color: "var(--darkBlue)"}}>{`* ${pregunta.toLowerCase()} *`}</span>
+            </p>
           <br/>
           <Formik
             initialValues={initialValues}
@@ -88,7 +87,7 @@ function FormRecoverPass2({pregunta, onSubmit, disabledButton=false}) {
               )
             }
           </Formik>
-        </div>
+        </React.Fragment>
     )
 }
 

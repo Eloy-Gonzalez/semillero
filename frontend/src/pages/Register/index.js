@@ -32,11 +32,11 @@ import Ceduled from "./Ceduled"
 import NotCeduled from "./NotCeduled"
 
 // @material ui
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles'
+import Modal from '@material-ui/core/Modal'
+import Backdrop from '@material-ui/core/Backdrop'
+import Fade from '@material-ui/core/Fade'
+import Grid from '@material-ui/core/Grid'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -100,8 +100,27 @@ function Register() {
   ], [])
 
   return (
-    <Grid container justify="center" className={classes.container}>
-        <Grid item sm={12}>
+    <Grid container justify="center" spacing={2} className={classes.container}>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={() => setOpen(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+            <img src="images/normas.png" className={classes.img} alt="Normas"/>
+          </div>
+        </Fade>
+      </Modal>
+
+      <Grid item sm>
         <div className="card--box">
             { print !== "QUESTION" &&
             <IconButton 
@@ -114,10 +133,11 @@ function Register() {
               <br/>
             </IconButton>
             }
-            <h2 className="app--text-second" 
-              style={{textAlign: "center",fontSize: "30px",margin: "0",fontWeight: "bold",color: "#263c61", position:"relative"}}>
-                Registrar nuevo usuario { print === "QUESTION" ? "" : print === FORM_CEDULED ? "(Cedulado)" : "(No Cedulado)"}
+            {print !== "QUESTION" && <h2 className="app--text-second" 
+              style={{textAlign: "center",fontSize: "30px",margin: "0 0 20px",fontWeight: "bold",color: "#263c61", position:"relative"}}>
+                Nuevo usuario { print === "QUESTION" ? "" : print === FORM_CEDULED ? "(Cedulado)" : "(No Cedulado)"}
             </h2>
+            }
             <br/>
               {
                 print === FORM_NOT_CEDULED ?
@@ -153,29 +173,11 @@ function Register() {
                           />
                         }
                       />
-                    : <QuestionRegister 
-                        dispatch={setPrint}
-                        actions={[FORM_NOT_CEDULED, FORM_CEDULED]}
-                      />
+                  : <QuestionRegister 
+                      dispatch={setPrint}
+                      actions={[FORM_NOT_CEDULED, FORM_CEDULED]}
+                    />
               }
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            className={classes.modal}
-            open={open}
-            onClose={() => setOpen(false)}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 500,
-            }}
-          >
-            <Fade in={open}>
-              <div className={classes.paper}>
-                <img src="images/normas.png" className={classes.img} alt="Normas"/>
-              </div>
-            </Fade>
-          </Modal>
           </div>
         </Grid>
     </Grid>

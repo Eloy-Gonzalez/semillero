@@ -3,8 +3,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 // @Material UI
-import PortraitIcon from '@material-ui/icons/Portrait';
-import SubtitlesIcon from '@material-ui/icons/Subtitles';
+import PortraitIcon from '@material-ui/icons/Portrait'
+import SubtitlesIcon from '@material-ui/icons/Subtitles'
 
 const Wrapper = styled.div`
     display: flex;
@@ -33,16 +33,21 @@ const BoxIcon = styled.div`
     	transform: translateY(-5px);
     	box-shadow: 0px 3px 10px 1px #868686;
     }
+
+    .subtitles--icon {
+        font-size: 80px;
+        color: #29aff4;
+    }
 `
 function QuestionRegister({dispatch, actions}) {
 	return (
 		<Wrapper>
 			<BoxIcon onClick={() => dispatch(actions[1])}>
-				<SubtitlesIcon style={{fontSize:"50px", color:"#29aff4"}}/>
+				<SubtitlesIcon className="subtitles--icon"/>
 				<p className="app--text-second" style={{margin: 0}}>Usuario cedulado</p>
 			</BoxIcon>
 			<BoxIcon onClick={() => dispatch(actions[0])}>
-				<PortraitIcon style={{fontSize:"50px", color:"#29aff4"}}/>
+				<PortraitIcon className="subtitles--icon"/>
 				<p className="app--text-second" style={{margin: 0}}>Usuario no cedulado</p>
 			</BoxIcon>
 		</Wrapper>

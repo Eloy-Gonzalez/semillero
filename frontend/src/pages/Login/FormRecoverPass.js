@@ -22,8 +22,7 @@ function FormRecoverPass({onSubmit, disabledButton=false}) {
   })
   
   return (
-        <div>
-          <Formik
+    <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}
             validationSchema={SignupSchema}
@@ -56,7 +55,6 @@ function FormRecoverPass({onSubmit, disabledButton=false}) {
               )
             }
           </Formik>
-        </div>
     )
 }
 

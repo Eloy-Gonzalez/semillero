@@ -16,7 +16,6 @@ import {
 
 const initialState = Map().merge({
   user: {
-    isLoading: false,
     isAuthenticated: false,
     username: '',
     password: '',
@@ -85,7 +84,6 @@ const authReducer = (state = initialState, { type, payload }) => {
     case CLEAR_USER: 
       return state.merge({
       user: {
-        isLoading: false,
         isAuthenticated: false,
         username: '',
         password: '',

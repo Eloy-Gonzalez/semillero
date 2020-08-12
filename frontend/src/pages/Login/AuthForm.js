@@ -19,6 +19,8 @@ const initial = {
   password: ''
 }
 
+const passwordRegex = RegExp("^[a-zA-Z0-9!#$%&/_.,]+$")
+
 function AuthForm({ initialValues = initial, onSubmit, disabledButton=false}) {
   const [state, setState] = useState({
     showPassword: false
@@ -40,6 +42,7 @@ function AuthForm({ initialValues = initial, onSubmit, disabledButton=false}) {
     .min(5, '¡La contraseña debe tener como mínimo 5 carácteres!')
     .max(255, '¡La contraseña tener como máximo 255 carácteres!')
     .required('¡Campo requerido!')
+    .matches(passwordRegex, "¡Introduzca una contraseña válidá!")
   })
   
   return (

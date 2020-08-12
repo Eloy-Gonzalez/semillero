@@ -96,7 +96,7 @@ function* checkAuthenticationWorker() {
       username
       } = user
       // Agregar valores al estado
-      const _USER = {isAuthenticated: true, username: username, Permisos}
+      const _USER = {isAuthenticated: true, username, Permisos}
       yield put({ type: SET_ONE_USER, payload: _USER })
       yield put({ type: SET_PROFILES, payload: _PROFILES })
       yield put({ type: SET_UBICATION, payload: _UBICATION })

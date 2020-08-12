@@ -6,9 +6,6 @@ import {API_KEY, BASE_API} from 'constants/index'
 import moment from 'moment'
 import 'moment/locale/es'
 
-// @Constants
-import {ADMINISTRADOR, ROOT} from 'constants/index'
-
 import {AUTH_TOKEN} from 'state/auth/auth.actionsTypes'
 
 export function getToken({key = AUTH_TOKEN, recorted = false} = {}) {
@@ -92,9 +89,9 @@ export function compareAge(date, edadCompare){
 
 export function userCan(rolName, rolId) {
   try {
-    const rolesList = [ [ADMINISTRADOR, 3], [ROOT, 2] ]
+    const rolesList = [ ["ADMINISTRADOR", 3], ["ROOT", 2] ]
     for(let i = 0; i < rolesList.length; i++) {
-      if(rolesList[i][0] === rolName && rolesList[i][1] === rolId){
+      if(rolesList[i][0] === rolName.toUpperCase() && rolesList[i][1] === Number(rolId)){
         return true
       }
     }

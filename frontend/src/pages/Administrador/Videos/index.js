@@ -45,7 +45,7 @@ function Videos(){
       selected,
     } = filters
 
-    const changeState = useCallback( (value, row) => {
+    const changeStatus = useCallback( (value, row) => {
     	const payload = <DetailsVideo loading={isLoading} data={ {value, row} } />
     	dispatch({ type: MODAL_OPEN, payload })
     }, [dispatch, isLoading])
@@ -60,8 +60,14 @@ function Videos(){
 				component: 'th', scope: 'row'
 			},
 			render: (value, row) => {
-				const {cedula} = row.Usuario.usuarios_perfil
-				return <span>{cedula}</span>
+				let ci; 
+				try {
+					const {cedula} = row.Usuario.usuarios_perfil
+					ci = cedula
+				} catch(err){
+					ci = "(Valor no definido)"
+				}
+				return <span>{ci}</span>
 			}
 		},
 		{ 
@@ -70,7 +76,10 @@ function Videos(){
 			disablePadding: false,
 			label: 'Video',
 			render: (value, row) => {
-				return <a href={row.url_video} target="_blank" rel="noopener noreferrer" style={{color: "#444"}}> {startCase(toLower(value))} </a>
+				const {url_video, descripcion} = row
+				return <Tooltip title={descripcion}>
+				<a href={url_video} target="_blank" rel="noopener noreferrer" style={{color: "#444"}}> {startCase(toLower(value))} </a>
+				</Tooltip>
 			}
 		},
 		{
@@ -78,7 +87,7 @@ function Videos(){
 			numeric: true,
 			disablePadding: false,
 			label: 'Fecha de Subida',
-			render: value => value ?moment(value,"YYYYMMDD").format("ll") : '-'
+			render: value => value ? moment(value,"YYYYMMDD").format("ll") : '-'
 		},
 		{
 			id: 'id_estatus',
@@ -93,7 +102,7 @@ function Videos(){
 				: value === 2 ? "¡Verificado!"
 				: "¡Rechazado!"
 
-				return <IconButton onClick={() => changeState(value, row)}>
+				return <IconButton onClick={() => changeStatus(value, row)}>
 					<Tooltip title={title}>
 						{(
 							value === 1 

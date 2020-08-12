@@ -11,6 +11,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 
 // @React ReCAPTCHA
 import ReCAPTCHA from "react-google-recaptcha"
@@ -45,10 +46,10 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 		id_pregunta: '',
 		respuesta_seguridad: ''
 	}
-
+	const passwordRegex = RegExp("^[a-zA-Z0-9!#$%&/_.,]+$")
 	const AccountSchema = Yup.object().shape({
 		username: Yup.string().email("¡Ingrese un correo válido!").required("¡Campo requerido!"),
-		password: Yup.string().min(6, "¡Mínimo 6 caractéres!").max(255, "¡Máximo 255 caractéres!").required("¡Campo requerido!"),
+		password: Yup.string().min(6, "¡Mínimo 6 caractéres!").max(255, "¡Máximo 255 caractéres!").required("¡Campo requerido!").matches(passwordRegex, "¡Introduzca una contraseña válida!"),
 		passwordRepeat: Yup.string().oneOf([Yup.ref("password"),null], '¡Las contraseñas no coinciden!').required("¡Campo requerido!"),
 		id_pregunta: Yup.string().required("¡Campo requerido!"),
 		respuesta_seguridad: Yup.string().min(3, "¡Debes ingresar 3 o más caractéres!").required("¡Campo requerido!")
@@ -95,30 +96,32 @@ function FormCreateAccount({ title = "Datos de Acceso", ActionsButtons = "", onS
 						/>
 					</Grid>
 					<Grid item sm={12} md={4}>
-						<CrsField 
-							id="password"
-							name="password"
-							onChange={handleChange}
-							onBlur={handleBlur}
-							value={values.password}
-							label="Contraseña"
-							type={state.showPassword ? "text" : "password"}
-							InputProps={{
-					            endAdornment: 
-					             <InputAdornment position="end">
-					                <IconButton
-					                  aria-label="toggle password visibility"
-					                  onClick={handleClickShowPassword}
-					                  onMouseDown={handleMouseDownPassword}
-					                >
-					                  {state.showPassword ? <Visibility /> : <VisibilityOff />}
-					                </IconButton>
-				              	</InputAdornment>
+						<Tooltip title="Se recomienda utilizar una contraseña que contenta letras, números y al menos un caractér especial (!#$%&/_.,)">
+							<CrsField 
+								id="password"
+								name="password"
+								onChange={handleChange}
+								onBlur={handleBlur}
+								value={values.password}
+								label="Contraseña"
+								type={state.showPassword ? "text" : "password"}
+								InputProps={{
+						            endAdornment: 
+						             <InputAdornment position="end">
+						                <IconButton
+						                  aria-label="toggle password visibility"
+						                  onClick={handleClickShowPassword}
+						                  onMouseDown={handleMouseDownPassword}
+						                >
+						                  {state.showPassword ? <Visibility /> : <VisibilityOff />}
+						                 </IconButton>
+					              	</InputAdornment>
 
-					        }}
-							helperText={<ErrorMessage name="password"/>}
-							error={errors.password && touched.password}
-						/>
+						        }}
+								helperText={<ErrorMessage name="password"/>}
+								error={errors.password && touched.password}
+							/>
+						</Tooltip>
 					</Grid>
 					<Grid item sm={12} md={4}>
 						<CrsField

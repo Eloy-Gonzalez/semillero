@@ -1,20 +1,18 @@
-import React from 'react';
-import {  makeStyles } from '@material-ui/core/styles';
-// import Checkbox from '@material-ui/core/Checkbox';
-import Paper from '@material-ui/core/Paper';
-import Skeleton from 'react-loading-skeleton';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import isEmpty from 'lodash/isEmpty';
-import isNumber from 'lodash/isNumber';
-import toString from 'lodash/toString';
+import React from 'react'
+import {  makeStyles } from '@material-ui/core/styles'
+// import Checkbox from '@material-ui/core/Checkbox'
+import Paper from '@material-ui/core/Paper'
+import Skeleton from 'react-loading-skeleton'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TablePagination from '@material-ui/core/TablePagination'
+import TableRow from '@material-ui/core/TableRow'
+import {isNumber,toString, isEmpty} from 'lodash'
 
 // @Components
-import EnhancedTableHead from './EnhancedTableHead';
-import EnhancedTableToolbar from './EnhancedTableToolbar';
+import EnhancedTableHead from './EnhancedTableHead'
+import EnhancedTableToolbar from './EnhancedTableToolbar'
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -33,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 		width: "100%",
 		overflowX: 'auto',
 	},
-}));
+}))
 
 function EnhancedTable({
 		columns,
@@ -54,38 +52,38 @@ function EnhancedTable({
 		count = rows.length
 	}) {
 
-	const classes = useStyles();
+	const classes = useStyles()
 
 	const handleRequestSort = (event, property) => {
-		const isDesc = orderBy === property && order === 'desc';
+		const isDesc = orderBy === property && order === 'desc'
 		requestSort(isDesc ? 'asc' : 'desc', property)
 	}
 
 	const handleSelectAllClick = (event) => {
 		if (event.target.checked) {
-			const newSelecteds = rows.map(n => n[fieldId]);
-			setSelected(newSelecteds);
-			return;
+			const newSelecteds = rows.map(n => n[fieldId])
+			setSelected(newSelecteds)
+			return
 		}
-		setSelected([]);
+		setSelected([])
 	}
 
 	/*function handleClick(event, name) {
-		const selectedIndex = selected.indexOf(name);
-		let newSelected = [];
+		const selectedIndex = selected.indexOf(name)
+		let newSelected = []
 		if (selectedIndex === -1) {
-			newSelected = newSelected.concat(selected, name);
+			newSelected = newSelected.concat(selected, name)
 		} else if (selectedIndex === 0) {
-			newSelected = newSelected.concat(selected.slice(1));
+			newSelected = newSelected.concat(selected.slice(1))
 		} else if (selectedIndex === selected.length - 1) {
-			newSelected = newSelected.concat(selected.slice(0, -1));
+			newSelected = newSelected.concat(selected.slice(0, -1))
 		} else if (selectedIndex > 0) {
 			newSelected = newSelected.concat(
 				selected.slice(0, selectedIndex),
 				selected.slice(selectedIndex + 1),
-			);
+			)
 		}
-		setSelected(newSelected);
+		setSelected(newSelected)
 	}*/
 
 	function handleChangePage(event, newPage) {
@@ -93,36 +91,36 @@ function EnhancedTable({
 	}
 
 	function handleChangeRowsPerPage(event) {
-		setRowsPerPage(+event.target.value);
+		setRowsPerPage(+event.target.value)
 	}
 
 	function desc(a, b, orderBy) {
 	    if (b[orderBy] < a[orderBy]) {
-	        return -1;
+	        return -1
 	    }
 	    if (b[orderBy] > a[orderBy]) {
-	        return 1;
+	        return 1
 	    }
-	    return 0;
+	    return 0
 	}
 
 	function stableSort(array, cmp) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
+    const stabilizedThis = array.map((el, index) => [el, index])
     stabilizedThis.sort((a, b) => {
-        const order = cmp(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
+        const order = cmp(a[0], b[0])
+        if (order !== 0) return order
+        return a[1] - b[1]
+    })
+    return stabilizedThis.map(el => el[0])
 	}
 
 	function getSorting(order, orderBy) {
-		return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
+		return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy)
 	}
 
 	function buildLoading() {
-		let i;
-		let loadingList = [];
+		let i
+		let loadingList = []
 		const delimiterRows = rowsPerPage < 11 ? rowsPerPage : 5
 		
 		for (i = 1; i < delimiterRows; i++) {
@@ -139,23 +137,23 @@ function EnhancedTable({
 				</TableRow>
 			))
 		}
-		return loadingList;
+		return loadingList
 	}
 
-	const isSelected = id => selected.indexOf(id) !== -1;
+	const isSelected = id => selected.indexOf(id) !== -1
 
-	let rowsList = rows;
+	let rowsList = rows
 
 	if(!isEmpty(search, true)) {
 		Object.keys(search).forEach(key => {
 			if(search[key]){
 				rowsList = rowsList.filter(
 					row => {
-						const searchField = search[key];
-						const fieldValue = (isNumber(row[key])) ? toString(row[key]) : row[key];
-						return fieldValue.toLowerCase().search(searchField.toLowerCase()) !== -1;
+						const searchField = search[key]
+						const fieldValue = (isNumber(row[key])) ? toString(row[key]) : row[key]
+						return fieldValue.toLowerCase().search(searchField.toLowerCase()) !== -1
 					}
-				);
+				)
 			}
 		})
 	}
@@ -193,8 +191,8 @@ function EnhancedTable({
 										stableSort(rowsList, getSorting(order, orderBy))
 										.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 										.map((row, index) => {
-										const isItemSelected = isSelected(row[fieldId]);
-										//const labelId = `enhanced-table-checkbox-${index}`;
+										const isItemSelected = isSelected(row[fieldId])
+										//const labelId = `enhanced-table-checkbox-${index}`
 
 										return (
 											<TableRow
@@ -217,16 +215,16 @@ function EnhancedTable({
 													const rowContent =
 														headRow.render
 															? headRow.render(row[headRow.id], row)
-															: row[headRow.id];
+															: row[headRow.id]
 
 													return (
 														<TableCell key={`${headRow.id}_${index}`} {...headRow.rowProps}>
 															{rowContent}
 														</TableCell>
-													);
+													)
 												})}
 											</TableRow>
-										);
+										)
 									})
 								: (
 										<TableRow>
@@ -261,7 +259,7 @@ function EnhancedTable({
 				/>
 			</Paper>
 		</div>
-	);
+	)
 }
 
 export default React.memo(EnhancedTable)

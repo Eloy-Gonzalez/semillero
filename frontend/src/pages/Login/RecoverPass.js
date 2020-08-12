@@ -114,6 +114,7 @@ export default function RecoverPass() {
              </IconButton>
          	}
 			{!state.success && <h2 style={{color:"var(--lightGreen)"}}>Recuperar contraseña</h2> }
+			{ state.loading === false && state.errors.value && <p className="app-title-second" style={{fontSize:"20px",color:"#d65b5b"}}>{state.errors.value}</p> }
 			{ state.showForm && 
 				<FormRecoverPass 
 					onSubmit={handleRecoverPass}
@@ -128,7 +129,6 @@ export default function RecoverPass() {
 				/>
 			}
 			{ state.success && <h1 style={{textAlign:"center",color: "var(--lightGreen)"}}>{state.success}</h1> }
-			{ state.loading === false && state.errors.value && <p className="app-title-second" style={{fontSize:"20px",color:"#d65b5b"}}>{state.errors.value}</p> }
 		</Fragment>
 	)
 

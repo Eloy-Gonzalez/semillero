@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, useCallback, useState, useEffect, Suspense} from 'react'
 import styled from 'styled-components'
 import {withRouter} from 'react-router-dom'
 import clsx from 'clsx'
@@ -28,16 +28,13 @@ import CategoryIcon from '@material-ui/icons/Category'
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo'
 import Grid from '@material-ui/core/Grid'
 import HomeIcon from '@material-ui/icons/Home'
-
-// @Statics > Logos
-import LogoSemilleros from 'statics/images/logos/juventud.png'
+import Skeleton from 'react-loading-skeleton'
 
 // @Hooks 
 import useWindowWidth from 'hooks/useWindowWidth'
-
+const LogoSemilleros =  React.lazy(() => import('components/LogoSemilleros'))
 
 let drawerWidth = 240
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -136,36 +133,36 @@ const BoxIcon = styled.div`
 
 function LeftMenu({ history, children, menu }) {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
-  const [openList, setOpenList] = React.useState(false)
+  const [open, setOpen] = useState(true)
+  const [openList, setOpenList] = useState(false)
 
 
   const {width} = useWindowWidth()
 
-  React.useEffect(() => {
-    if (width !== 0 &&  width < 1024) {
-      setOpen(false)
-    } else {
-      setOpen(true)
-    }
-  }, [width, setOpen])
+  const handleDrawerOpen = useCallback(() => {
+    setOpen(true)
+  }, [setOpen])
+
+  const handleDrawerClose = useCallback(() => {
+    setOpen(false)
+  },[setOpen])
+
+  const handleClick = useCallback(() => {
+    setOpenList(prev => !prev)
+  }, [setOpenList])
 
   const prefix = "/admin"
-  const link = (href) => {
+  const link = useCallback((href) => {
     history.push(`${prefix}${href}`)
-  }
+  }, [history, prefix])
 
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
-
-  const handleDrawerClose = () => {
-    setOpen(false)
-  }
-
-  const handleClick = () => {
-    setOpenList(!openList)
-  }
+  useEffect(() => {
+    if (width !== 0 &&  width < 1024) {
+      handleDrawerClose()
+    } else {
+      handleDrawerOpen()
+    }
+  }, [width, handleDrawerClose, handleDrawerOpen])
 
 	return (
     <Fragment>
@@ -201,9 +198,7 @@ function LeftMenu({ history, children, menu }) {
             <Grid item sm={6}>
               {menu}
             </Grid>
-
           </Grid>
-
         </Toolbar>
       </AppBar>
 
@@ -218,7 +213,9 @@ function LeftMenu({ history, children, menu }) {
       >
         <div className={classes.drawerHeader}>
           <BoxIcon>
-              <img src={LogoSemilleros} alt="logo"/>
+            <Suspense fallback={<Skeleton circle={true} width={150} height={150} />}>
+              <LogoSemilleros/>
+            </Suspense>
           </BoxIcon>
         </div>
         <Divider />

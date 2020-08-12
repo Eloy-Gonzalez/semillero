@@ -1,19 +1,13 @@
-import React, { Fragment, Component } from "react"
-import { PieChart, Pie, Cell, Legend } from "recharts"
+import React, {Fragment, useCallback, useState, useEffect, memo} from "react"
+import {PieChart, Pie, Cell, Legend} from "recharts"
+import CircularProgress from '@material-ui/core/CircularProgress'
 
-const RADIAN = Math.PI / 180
 
-class PieChartComponent extends Component {
-	renderCustomizedLabel = ({
-		cx,
-		cy,
-		midAngle,
-		innerRadius,
-		outerRadius,
-		percent,
-		index,
-		value,
-	}) => {
+function PieChartComponent({ data, dataKey}) {
+	const RADIAN = Math.PI / 180
+	const [isLoading, setLoading] = useState(true)
+
+	const customizedLabel = useCallback(({cx, cy, midAngle, innerRadius, outerRadius, percent, index, value}) => {
 		const radius = innerRadius + (outerRadius - innerRadius) * 0.5
 		const x = cx + radius * Math.cos(-midAngle * RADIAN)
 		const y = cy + radius * Math.sin(-midAngle * RADIAN)
@@ -22,54 +16,55 @@ class PieChartComponent extends Component {
 
 		return (
 			<Fragment>
-				<text
-					x={x}
-					y={y}
-					fill="white"
-					textAnchor={x > cx ? "middle" : "middle"}
-					verticalanchor={y < cy ? "middle" : "middle"}
+				<text 
+				x={x}
+				y={y}
+				fill="white"
+				textAnchor="middle"
+				verticalanchor="middle"
 				>
 					{`${(percent * 100).toFixed(2)}%`}
 				</text>
 
 				<text
-					x={px}
-					y={py}
-					fill="black"
-					textAnchor={x > cx ? "start" : "end"}
-					dominantBaseline="middle"
+				x={px}
+				y={py}
+				fill="black"
+				textAnchor={x > cx ? "start" : "end"}
+				dominantBaseline="middle"
 				>
 					{value}
 				</text>
 			</Fragment>
-			)
-	}
-	render() {
-		if (this.props.data === undefined) return null
-		return (
-			<PieChart width={500} height={500}>
-				<Pie
-				data={this.props.data}
-				cx={500 / 2}
-				cy={400 / 2}
-				label={this.renderCustomizedLabel.bind()}
-				outerRadius={500 / 5}
-				fill="#8884d8"
-				dataKey={this.props.dataKey}
-				paddingAngle={2}
-				minAngle={40}
-				>
-				{this.props.data.map((entry, index) => (
-					<Cell
-					key={`cell-${index}`}
-					fill={entry.color}
-					/>
-					))}
-				</Pie>
-				<Legend name="name" align="center"  />
-			</PieChart>
-			)
-	}
+		)
+	}, [RADIAN])
+
+	useEffect(() => {
+		data && setLoading(false)
+	}, [data, setLoading])
+
+	if (isLoading) return <CircularProgress />
+
+	return (
+		<PieChart width={400} height={400}>
+			<Pie
+			data={data}
+			cx={500 / 2}
+			cy={400 / 2}
+			label={customizedLabel}
+			outerRadius={500 / 5}
+			fill="#8884d8"
+			dataKey={dataKey}
+			paddingAngle={1.5}
+			minAngle={45}
+			>
+				{data && data.map((entry, index) => (
+					<Cell key={`cell-${index}`} fill={entry.color} />
+				))}
+			</Pie>
+			<Legend name="name" align="center" />
+		</PieChart>
+	)
 }
 
-export default PieChartComponent
+export default memo(PieChartComponent)
