@@ -78,6 +78,10 @@ const useStyles = makeStyles((theme) => ({
       color: "#fff"
     }
   },
+  asideTitle : {
+    color: 'white',
+    fontSize : '18px'
+  },
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',
@@ -223,7 +227,7 @@ function LeftMenu({ history, children, menu }) {
               component="nav"
               aria-labelledby="nested-list-subheader"
               subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
+                <ListSubheader component="div" id="nested-list-subheader" className={classes.asideTitle}>
                   Listado de opciones
                 </ListSubheader>
             }
