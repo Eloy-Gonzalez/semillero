@@ -23,6 +23,8 @@ var transporter = nodemailer.createTransport({
 /* Model */
 const Proyectos = db.Proyectos;
 const ProyectosXCategorias = db.ProyectosXCategorias;
+const Usuarios = db.Usuarios;
+const UsuariosPerfil = db.UsuariosPerfil;
 
 /* API GET PROYECTOS
 	@params columns from database
@@ -35,7 +37,11 @@ exports.get = (req, res) => {
 		Proyectos.findAndCountAll({
 			where : conditions,
 			offset: 0, 
-			limit: 10
+			limit: 10,
+			include: [
+				{ model : Usuarios, include : [
+				 {model : UsuariosPerfil }] },
+			]
 		}).then(proyectos => {
 			res.status(200).json(proyectos);
 		}).catch(err => {
