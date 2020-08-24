@@ -36,8 +36,8 @@ exports.get = (req, res) => {
 		const conditions = req.body.params;
 		Proyectos.findAndCountAll({
 			where : conditions,
-			offset: 0, 
-			limit: 10,
+			//offset: 0, 
+			//limit: 10,
 			include: [
 				{ model : Usuarios, include : [
 				 {model : UsuariosPerfil }] },

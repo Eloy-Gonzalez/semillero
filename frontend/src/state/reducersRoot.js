@@ -13,6 +13,7 @@ import categoriasReducer from './categorias/categorias.reducer'
 Admin Reducers
 */
 import videosReducer from './admin/videos/videos.reducer'
+import usuariosReducer from './admin/usuarios/usuarios.reducer'
 
 
 export default combineReducers({
@@ -22,5 +23,6 @@ export default combineReducers({
   periodosReducer,
   fasesReducer,
   categoriasReducer,
-  videosReducer
+  videosReducer,
+  usuariosReducer
 })

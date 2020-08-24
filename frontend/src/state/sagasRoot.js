@@ -10,6 +10,7 @@ import fases from './fases/fases.sagas'
 import categorias from './categorias/categorias.sagas'
 /** Admin Sagas **/
 import videos from './admin/videos/videos.sagas'
+import usuarios from './admin/usuarios/usuarios.sagas'
 
 export default function*() {
   yield all([...Object.values(auth)].map(fork));
@@ -19,4 +20,5 @@ export default function*() {
   yield all([...Object.values(fases)].map(fork));
   yield all([...Object.values(categorias)].map(fork));
   yield all([...Object.values(videos)].map(fork));
+  yield all([...Object.values(usuarios)].map(fork));
 }

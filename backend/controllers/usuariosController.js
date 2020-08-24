@@ -21,15 +21,17 @@ const Estatus = db.Estatus;
 */
 exports.get = (req, res) => {
 	console.log('func -> getUsuarios');
+	console.log(req.body.params != undefined);
+
 	if (req.body.params != undefined) {
 		const conditions = req.body.params;
-		Usuarios.findAll({
+		Usuarios.findAndCountAll({
 			where: conditions,
 			include: [
-				{ model : UsuariosPermisos, include : [{ 
-					model : Permisos
-				}] },
-				{ model : UsuariosPerfil },
+			// 	{ model : UsuariosPermisos, include : [{ 
+			// 		model : Permisos
+			// 	}] },
+			 	{ model : UsuariosPerfil },
 				{ model : UsuariosRepresentante },
 				{ 
 					model: UsuariosDomicilio, include: [{ 
