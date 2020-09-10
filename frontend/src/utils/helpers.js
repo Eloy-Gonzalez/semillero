@@ -89,7 +89,7 @@ export function compareAge(date, edadCompare){
 
 export function userCan(rolName, rolId) {
   try {
-    const rolesList = [ ["ADMINISTRADOR", 3], ["ROOT", 2] ]
+    const rolesList = [ ["ADMINISTRADOR", 3], ["ROOT", 2], ["ANALISTA", 1] ]
     for(let i = 0; i < rolesList.length; i++) {
       if(rolesList[i][0] === rolName.toUpperCase() && rolesList[i][1] === Number(rolId)){
         return true

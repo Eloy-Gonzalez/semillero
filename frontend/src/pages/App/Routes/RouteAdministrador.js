@@ -11,8 +11,8 @@ import AdminFrame from 'components/AdminFrame'
 import {logout} from 'state/auth/auth.actions'
 import {verifyToken, userCan} from 'utils/helpers'
 
-function Route({ component: Component, alias, user, ...rest } = {}) {
-    const [user_rol_id, setUser_rol_id] = useState(1)
+function RouteAdministrador({ component: Component, alias, user, ...rest } = {}) {
+    const [user_rol_id, setUser_rol_id] = useState(3)
     const dispatch = useDispatch()
 
     const doLogout = useCallback(() => {
@@ -20,25 +20,26 @@ function Route({ component: Component, alias, user, ...rest } = {}) {
     }, [dispatch])
 
     useEffect(() => {
-        if(user.isAuthenticated) {
-            try {
-            const {Permisos} = user
-            const {id_permiso} = Permisos[0]
-            setUser_rol_id(id_permiso)
-            } catch(err) {
-                // Silenct
-            }
+      if(user.isAuthenticated) {
+        try {
+          const {Permisos} = user
+          const {id_permiso} = Permisos[0]
+          setUser_rol_id(id_permiso)
+        } catch(err) {
+          // Silenct
         }
+      }
     }, [user,setUser_rol_id])
-
 
     return  verifyToken()
     ? <VendorRoute {...rest} render={ (routeProps) =>
-         <AppFrame title={alias} user={user} onLogout={doLogout}>
-            <Component {...routeProps}/>
-        </AppFrame>
+        userCan("ROOT", user_rol_id) || userCan("ADMINISTRADOR", user_rol_id)
+        ?   <AdminFrame title={alias} user={user} onLogout={doLogout}>
+                <Component {...routeProps}/>
+            </AdminFrame>
+        :   <Redirect to="acceder" />
     } />
     : <Redirect to="acceder"/>
 }
 
-export default memo(Route)
+export default memo(RouteAdministrador)

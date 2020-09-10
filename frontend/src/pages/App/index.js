@@ -6,6 +6,8 @@ import {useDispatch, useSelector} from 'react-redux'
 // @Routes
 import LoginRoute from './Routes/LoginRoute'
 import Route from './Routes/Route'
+import RouteAdministrador from './Routes/RouteAdministrador'
+import RouteAnalista from './Routes/RouteAnalista'
 
 // @Actions
 import {clearServerErrors, clearServerSuccess, closeModal, closeDialogConfirm} from 'state/app/app.actions'
@@ -29,7 +31,7 @@ import Categorias from 'pages/Administrador/Categorias'
 import Usuarios from 'pages/Administrador/Usuarios'
 import Videos from 'pages/Administrador/Videos'
 
-// @Pages 
+// @Pages
 import Home from 'pages/Home'
 import Register from 'pages/Register'
 import Perfil from 'pages/Profile'
@@ -43,38 +45,38 @@ function App() {
     const serverSuccess = useSelector(state => selectServerSuccess(state))
     const modal = useSelector(state => selectModal(state))
     const dialogConfirm = useSelector(state => selectDialogConfirm(state))
-    const user = useSelector(state => selectUser(state))  
+    const user = useSelector(state => selectUser(state))
 
     useEffect(() => {
         dispatch(checkAutentication())
     }, [dispatch])
-    
+
     return (
         <React.Fragment>
             <Snackbars onClose={() => dispatch(clearServerErrors())} message={serverErrors} open={!!serverErrors} />
             <SnackbarsSuccess  onClose={() => dispatch(clearServerSuccess())} message={serverSuccess} open={!!serverSuccess} />
-            
-            <Switch>
-                <Route exact path="/admin/videos" alias="Administrar videos" component={Videos} user={user}/>
-                <Route exact path="/admin/usuarios" alias="Administrar Usuarios" component={Usuarios} user={user}/>
-                <Route exact path="/admin/categorias" alias="Administrar Categorias" component={Categorias} user={user}/>
-                <Route exact path="/admin/fases" alias="Administrar Fases" component={Fases} user={user}/>
-                <Route exact path="/admin/periodos" alias="Administrar Períodos" component={Periodos} user={user}/>
-                <Route exact path="/admin" alias="Administrador" component={Administrador} user={user}/>
-                <Route exact path="/perfil" alias="Perfil" component={Perfil} user={user}/>
-                <Route exact path="/" alias="Inicio" component={Home} user={user}/>
-                <LoginRoute exact path="/acceder" alias="Iniciar Sesión" component={Login} />
-                <LoginRoute exact path="/crear-cuenta" alias="Crear cuenta" component={Register}/>
-                <LoginRoute exact path="/activateuser/:token" alias="Activar cuenta" component={ActivateAccount}/>
-                <LoginRoute exact path="/updatepassword/:token" alias="Restablecer contraseña" component={ResetPassword}/>
-                <Redirect to="/acceder" />
-            </Switch>
+
+	    <Switch>
+		<RouteAdministrador exact path="/admin/usuarios" alias="Administrar Usuarios" component={Usuarios} user={user}/>
+		<RouteAdministrador exact path="/admin/categorias" alias="Administrar Categorias" component={Categorias} user={user}/>
+		<RouteAdministrador exact path="/admin/fases" alias="Administrar Fases" component={Fases} user={user}/>
+		<RouteAdministrador exact path="/admin/periodos" alias="Administrar Períodos" component={Periodos} user={user}/>
+		<RouteAnalista exact path="/admin/videos" alias="Administrar videos" component={Videos} user={user}/>
+		<RouteAnalista exact path="/admin" alias="Administrador" component={Administrador} user={user}/>
+		<Route exact path="/perfil" alias="Perfil" component={Perfil} user={user}/>
+		<Route exact path="/" alias="Inicio" component={Home} user={user}/>
+		<LoginRoute exact path="/acceder" alias="Iniciar Sesión" component={Login} />
+		<LoginRoute exact path="/crear-cuenta" alias="Crear cuenta" component={Register}/>
+		<LoginRoute exact path="/activateuser/:token" alias="Activar cuenta" component={ActivateAccount}/>
+		<LoginRoute exact path="/updatepassword/:token" alias="Restablecer contraseña" component={ResetPassword}/>
+		<Redirect to="/acceder" />
+	    </Switch>
 
             <MaterialModal open={modal.open} handleClose={() => dispatch(closeModal())} >
                 {modal.description}
             </MaterialModal>
 
-            <DialogConfirm 
+            <DialogConfirm
                 dialogTitle={dialogConfirm.title}
                 dialogText={dialogConfirm.description}
                 open={dialogConfirm.open}
