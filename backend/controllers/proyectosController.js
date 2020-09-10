@@ -35,8 +35,8 @@ exports.get = (req, res) => {
 	if (req.body.params != undefined) {
 		const conditions = req.body.params;
 		Proyectos.findAndCountAll({
-			where: conditions,
-			//	offset: 0, 
+			where : conditions,
+			//offset: 0, 
 			//limit: 10,
 			include: [
 				{
