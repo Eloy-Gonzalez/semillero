@@ -27,6 +27,7 @@ import  {
 	GET_PROYECTS,
 	UPDATE_FILTERS
 } from 'state/proyects/proyects.actionsTypes'
+import {GET_PERIODOS} from 'state/periodos/periodos.actionsTypes'
 
 // @Components
 import FormAddProyects from './FormAddProyects'
@@ -38,6 +39,7 @@ function ProyectsProfiles() {
 	const proyects = useSelector(state => state.proyectsReducer.get("proyects"))
 	const filters = useSelector(state => state.proyectsReducer.get("filters"))
 	const isLoading = useSelector(state => state.appReducer.get("loading"))
+	const periodos = useSelector(state => state.periodosReducer.get('periodos'))
 
     const {
       order,
@@ -45,8 +47,7 @@ function ProyectsProfiles() {
       page,
       rowsPerPage,
       selected,
-    } = filters 
-
+    } = filters
 
 	const onSubmit = useCallback((values, actions) => {
 		dispatch(createProyectAction(values))
@@ -54,7 +55,6 @@ function ProyectsProfiles() {
 
 	const onDelete = useCallback((id, version) => {
 		const payload = {id, version, proyects}
-
 		dispatch(openDialogConfirm({
 			title:"Eliminar video",
 			description: "¿Seguro de Eliminar este elemento?",
@@ -126,8 +126,10 @@ function ProyectsProfiles() {
 	] 
 
 	useEffect(() => {
+		dispatch({type: GET_PERIODOS})
 		dispatch(getProyects())
 	}, [dispatch])
+
 	return (
 		<Fragment>
 			<p style={{textAlign:"center"}}>
@@ -139,16 +141,20 @@ function ProyectsProfiles() {
 						<RefreshIcon />
 	                 </IconButton>
                 </Tooltip>
-				<Tooltip title="Registrar nuevo video">
-					<IconButton 
-						aria-label="Crear nuevo"
-						onClick={createProyect}
-					>
-	                    <AddCircleOutlineIcon />
-	                 </IconButton>
-                </Tooltip>
-			</p>
+                
+                { /** Verificar si hay un periodo y si esta activo para habilitar boton de agregar nuevo proyecto **/}
+                { periodos.length && !isLoading && periodos[0].estado && 
+					<Tooltip title="Registrar nuevo video">
+						<IconButton 
+							aria-label="Crear nuevo"
+							onClick={createProyect}
+						>
+		                    <AddCircleOutlineIcon />
+		                 </IconButton>
+	                </Tooltip>
+                }
 
+			</p>
 	            <Table
 	              isLoading={isLoading}
 	              fieldId="id"
