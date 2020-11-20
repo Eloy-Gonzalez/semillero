@@ -8,6 +8,7 @@ import {
 } from 'lodash'
 import moment from 'moment'
 import 'moment/locale/es'
+import jwt from 'jsonwebtoken'
 
 // @Material UI
 import Grid from '@material-ui/core/Grid'
@@ -25,18 +26,20 @@ import DeleteIcon from '@material-ui/icons/Delete'
 // @Components
 import FormUpdateVideo from './FormUpdateVideo'
 import Alert from 'components/Alert'
+import { getToken } from 'utils/helpers'
 
 // @ActionsTypes
 import {UPDATE_VIDEO, DELETE_VIDEO} from 'state/admin/videos/videos.actionsTypes'
 import {openDialogConfirm} from 'state/app/app.actions'
 
 function DetailsVideo({ data, loading=false }) {
+	const TOKEN = jwt.decode( getToken())
+	const { id: idAdmin } = TOKEN.user
 	const dispatch = useDispatch()
 	const status = `${data.value}` ||  "1"
 	const {Usuario, nombre, descripcion, fecha, url_video, version, id} = data.row
 	const {usuarios_perfil, username} = Usuario
 	const {cedula, primer_nombre,segundo_nombre, primer_apellido, segundo_apellido} = usuarios_perfil
-
 	const credenciales = startCase(toLower(`${primer_nombre} ${segundo_nombre} ${primer_apellido} ${segundo_apellido}`)) || "No hay Información."
 
 	const onSubmit = React.useCallback( (data, actions) => {
@@ -50,15 +53,14 @@ function DetailsVideo({ data, loading=false }) {
 		id_estatus: status
 	}
 
-	const onDelete = useCallback((id, version) => {
-		const payload = {id, version}
-
+	const onDelete = useCallback(() => {
+		const payload = { id, version, actualizado_por: idAdmin }
 		dispatch(openDialogConfirm({
 			title:"Eliminar video",
 			description: "¿Seguro de Eliminar este video de forma permantene?",
 			onConfirm: () => dispatch({ type: DELETE_VIDEO, payload})
 		}))
-	}, [dispatch])
+	}, [id, version, dispatch, idAdmin])
 
 	const alertOptions = {
 		"1": ["info", "¡Éste video aún no ha sido verificado!"],
